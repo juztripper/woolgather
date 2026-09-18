@@ -15,6 +15,7 @@ import {
   Menu,
   MessageCircle,
   Paperclip,
+  Star,
 } from "lucide-react";
 import { planOffer } from "../../../../packages/domain/src/plans";
 import { Brand } from "../ui/Brand";
@@ -34,6 +35,8 @@ import {
   DropdownMenuItem,
 } from "../components/ui/dropdown-menu";
 import "./marketing.css";
+
+const sourceRepositoryUrl = "https://github.com/juztripper/woolgather";
 
 export const MarketingSession = createContext<boolean | null>(null);
 function useEntryAction() {
@@ -128,7 +131,18 @@ export function MarketingFooter() {
         <a href="/" aria-label="woolgather home">
           <Brand />
         </a>
-        <p>Room to think. Space to make.</p>
+        <p>Open source. Contributions welcome.</p>
+        <div className="marketing-community-links">
+          <a
+            href={`${sourceRepositoryUrl}/blob/main/CONTRIBUTING.md`}
+            className="marketing-source-link"
+          >
+            Contribute <ArrowUpRight aria-hidden="true" />
+          </a>
+          <a href={sourceRepositoryUrl} className="marketing-source-link">
+            <Star aria-hidden="true" /> Star on GitHub
+          </a>
+        </div>
       </div>
       <nav aria-label="More information">
         <a href="/pricing">Pricing</a>
@@ -163,6 +177,13 @@ function Hero() {
             Explore woolgather <ArrowUpRight aria-hidden="true" />
           </a>
         </div>
+        <a
+          href={sourceRepositoryUrl}
+          className="marketing-source-link marketing-hero-source"
+        >
+          <img src="/brand/github.svg" width="16" height="16" alt="" />
+          Open source on GitHub <ArrowUpRight aria-hidden="true" />
+        </a>
       </div>
       <div className="marketing-hero-scene">
         <aside className="marketing-floating-note" aria-label="Example idea">
