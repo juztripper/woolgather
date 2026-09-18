@@ -422,7 +422,7 @@ test("Checkout uses server identities, inclusive monthly pricing, verified tax s
     "checkout",
     extended as unknown as StripeClient,
   );
-  assert.match(managed.url, /^https:\/\/billing.stripe.com\//);
+  assert.match(managed.url, /^https:\/\/billing\.stripe\.com\//);
   assert.equal(
     created.length,
     2,

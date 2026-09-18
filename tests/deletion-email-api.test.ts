@@ -103,16 +103,15 @@ test("Anonymous scanners cannot consume a deletion link or trigger sending", asy
   assert.equal(response.status, 401);
 });
 test("Branded email escapes values and keeps confirmation consequences clear", () => {
-  assert.doesNotMatch(
-    brandedEmail({
-      title: "<script>",
-      body: "a & b",
-      footer: "safe",
-      url: 'https://example.test/" onclick="bad',
-      button: "Go",
-    }),
-    /<script>|href="[^"]*" onclick=/,
-  );
+  const branded = brandedEmail({
+    title: "<script>",
+    body: "a & b",
+    footer: "safe",
+    url: 'https://example.test/" onclick="bad',
+    button: "Go",
+  });
+  assert.equal(branded.toLowerCase().includes("<script>"), false);
+  assert.equal(branded.includes('" onclick='), false);
   const mail = deletionEmail(
     "owner@example.test",
     "https://woolgathering.app/account/delete#test",

@@ -62,7 +62,12 @@ export function avatarId(
 }
 export function shuffledAvatar(current: AvatarSelection): AvatarId {
   const options = avatars.filter((a) => a.id !== current);
-  const value = crypto.getRandomValues(new Uint32Array(1))[0];
+  const range = 0x1_0000_0000;
+  const unbiasedLimit = Math.floor(range / options.length) * options.length;
+  let value: number;
+  do {
+    value = crypto.getRandomValues(new Uint32Array(1))[0];
+  } while (value >= unbiasedLimit);
   return options[value % options.length].id;
 }
 export function Avatar({
