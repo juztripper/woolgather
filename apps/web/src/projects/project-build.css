@@ -200,13 +200,18 @@
   .project-build-requirement:last-child {
     border: 0;
   }
-  .project-build-requirement-trigger {
+  .project-build-requirement > .ui-disclosure-trigger {
+    width: 100%;
+  }
+  .project-build-requirement > .ui-disclosure-trigger > span {
+    flex: 1;
+  }
+  .project-build-requirement-label {
     display: flex;
     width: 100%;
     min-width: 0;
     align-items: center;
     gap: 12px;
-    padding: 14px 0;
   }
   .project-build-requirement-title {
     flex: 1;
@@ -224,10 +229,6 @@
   .project-build-status[data-verified="true"] {
     color: var(--success-foreground);
   }
-  .project-build-requirement-trigger > svg {
-    flex: none;
-    color: var(--muted-foreground);
-  }
   .project-build-evidence {
     display: grid;
     justify-items: start;
@@ -236,6 +237,9 @@
   }
   .project-build-evidence > p {
     white-space: pre-wrap;
+  }
+  .project-build-reading {
+    font: var(--weight-regular) var(--text-reading)/1.65 var(--serif);
   }
   .project-build-small-heading {
     font-size: var(--text-caption);
@@ -270,8 +274,12 @@
     align-items: center;
     color: var(--muted-foreground);
   }
-  .project-build-connect {
-    padding-top: 4px;
+  .project-build-connect > .ui-disclosure {
+    margin-block: 0;
+  }
+  .project-build-setup-agent {
+    display: grid;
+    gap: 8px;
   }
   .project-build-connection-body {
     display: grid;
@@ -361,17 +369,10 @@
     .project-build-scope-heading {
       gap: 12px;
     }
-    .project-build-requirement-trigger {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 4px 8px;
-    }
-    .project-build-status {
-      grid-row: 2;
-    }
-    .project-build-requirement-trigger > svg {
-      grid-column: 2;
-      grid-row: 1 / 3;
+    .project-build-requirement-label {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
     }
     .project-build-criterion {
       margin-left: 0;

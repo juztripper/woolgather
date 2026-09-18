@@ -22,6 +22,7 @@ import { ProjectText } from "./ProjectText";
 import {
   relationLabel,
   inverseRelationLabel,
+  bodyStartsWithTitleAtWordBoundary,
   visualConcepts,
   type VisualConcept,
 } from "./PlanningMap";
@@ -89,6 +90,10 @@ export function PlanThoughtDetails({
     });
   const wording = chosen.proposal?.item || chosen;
   const question = ["question", "gap"].includes(chosen.category);
+  const bodyStartsWithTitle = bodyStartsWithTitleAtWordBoundary(
+    wording.title,
+    wording.body,
+  );
   return (
     <PanelPage
       title={`About ${chosen.title}`}
@@ -186,7 +191,7 @@ export function PlanThoughtDetails({
         )}
         {question && chosen.item && <span>{labels[chosen.item.status]}</span>}
       </div>
-      {(!wording.body.trim().startsWith(wording.title.trim()) ||
+      {(!bodyStartsWithTitle ||
         wording.body.trim() === wording.title.trim()) && (
         <h3 className="plan-thought-title">{wording.title}</h3>
       )}

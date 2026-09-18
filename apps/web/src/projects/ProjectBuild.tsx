@@ -1,13 +1,5 @@
 import { useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import {
-  ArrowLeft,
-  Check,
-  ChevronDown,
-  Copy,
-  Link2,
-  Plus,
-  RefreshCw,
-} from "lucide-react";
+import { ArrowLeft, Check, Copy, Link2, Plus, RefreshCw } from "lucide-react";
 import type { Project } from "../../../../packages/domain/src";
 import {
   deliveryProgress,
@@ -21,11 +13,7 @@ import {
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
 import { Checkbox } from "../components/ui/checkbox";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../components/ui/collapsible";
+import { Disclosure } from "../ui/Disclosure";
 import { Button, IconButton } from "../ui/Button";
 import { Select } from "../ui/Select";
 import { Modal, ModalPresence } from "../ui/Modal";
@@ -33,6 +21,7 @@ import { useToast } from "../ui/Toast";
 import { ApiError } from "../client";
 import { ProjectTransport } from "./ProjectTransport";
 import { clearDraft, readDraft, storeDraft } from "./model";
+import { agentSetup, codingAgents, type CodingAgent } from "./agentSetup";
 import "./project-build.css";
 
 type Lane = BuildScope["lane"];
@@ -721,116 +710,113 @@ function Scope({
             project,
           );
           return (
-            <Collapsible
+            <Disclosure
               className="project-build-requirement"
+              variant="plain"
               key={requirement.id}
+              title={
+                <span className="project-build-requirement-label">
+                  <span className="project-build-requirement-title">
+                    {requirement.title}
+                  </span>
+                  <span
+                    className="project-build-status"
+                    data-verified={status.state === "verified"}
+                  >
+                    {status.state === "verified" && <Check size={14} />}
+                    {statusNames[status.state]}
+                  </span>
+                </span>
+              }
             >
-              <CollapsibleTrigger
-                render={
-                  <Button
-                    variant="surface"
-                    className="project-build-requirement-trigger flex w-full gap-3 py-3.5 max-[600px]:grid max-[600px]:gap-x-2 max-[600px]:gap-y-1"
-                  />
-                }
-              >
-                <span className="project-build-requirement-title">
-                  {requirement.title}
-                </span>
-                <span
-                  className="project-build-status"
-                  data-verified={status.state === "verified"}
-                >
-                  {status.state === "verified" && <Check size={14} />}
-                  {statusNames[status.state]}
-                </span>
-                <ChevronDown size={16} />
-              </CollapsibleTrigger>
-              <CollapsibleContent>
-                <div className="project-build-evidence">
-                  <p className="project-build-small-heading">Done when</p>
-                  <p>{requirement.criterion}</p>
-                  {status.stale && (
-                    <p className="project-build-notice">
-                      This thought, its references, decisions or constraints
-                      have changed since the version was saved. Create a new
-                      version with its current meaning before verifying it.
+              <div className="project-build-evidence">
+                <p className="project-build-small-heading">Done when</p>
+                <p className="project-build-reading">{requirement.criterion}</p>
+                {status.stale && (
+                  <p className="project-build-notice">
+                    This thought, its references, decisions or constraints have
+                    changed since the version was saved. Create a new version
+                    with its current meaning before verifying it.
+                  </p>
+                )}
+                {status.report && (
+                  <>
+                    <p className="project-build-small-heading">
+                      {status.report.actor === "agent"
+                        ? "Agent report"
+                        : "Reported outcome"}
+                    </p>
+                    <p className="project-build-reading">
+                      {status.report.summary}
+                    </p>
+                    {status.report.commit && (
+                      <p>
+                        Commit <code>{status.report.commit}</code>
+                      </p>
+                    )}
+                    {status.report.checks.length > 0 && (
+                      <ul className="project-build-checks">
+                        {status.report.checks.map((check, index) => (
+                          <li key={index}>
+                            <code>{check.command}</code>
+                            <span>{check.result.replaceAll("_", " ")}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <p className="project-build-help">
+                      Reported {new Date(status.report.at).toLocaleString()}.
+                      Reports do not verify completion.
+                    </p>
+                  </>
+                )}
+                {status.review?.note && (
+                  <p className="project-build-reading">{status.review.note}</p>
+                )}
+                {!status.stale &&
+                  status.state !== "verified" &&
+                  status.report?.state !== "implemented" && (
+                    <p className="project-build-help">
+                      An implemented result is needed before you can verify this
+                      criterion.
                     </p>
                   )}
-                  {status.report && (
-                    <>
-                      <p className="project-build-small-heading">
-                        {status.report.actor === "agent"
-                          ? "Agent report"
-                          : "Reported outcome"}
-                      </p>
-                      <p>{status.report.summary}</p>
-                      {status.report.commit && (
-                        <p>
-                          Commit <code>{status.report.commit}</code>
-                        </p>
-                      )}
-                      {status.report.checks.length > 0 && (
-                        <ul className="project-build-checks">
-                          {status.report.checks.map((check, index) => (
-                            <li key={index}>
-                              <code>{check.command}</code>
-                              <span>{check.result.replaceAll("_", " ")}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                      <p className="project-build-help">
-                        Reported {new Date(status.report.at).toLocaleString()}.
-                        Reports do not verify completion.
-                      </p>
-                    </>
+                {!status.stale &&
+                  status.report?.checks.some(
+                    (check) => check.result === "failed",
+                  ) && (
+                    <p className="project-build-help">
+                      Resolve the failed checks in your agent before verifying
+                      this criterion.
+                    </p>
                   )}
-                  {status.review?.note && <p>{status.review.note}</p>}
-                  {!status.stale &&
-                    status.state !== "verified" &&
-                    status.report?.state !== "implemented" && (
-                      <p className="project-build-help">
-                        An implemented result is needed before you can verify
-                        this criterion.
-                      </p>
-                    )}
-                  {!status.stale &&
-                    status.report?.checks.some(
-                      (check) => check.result === "failed",
-                    ) && (
-                      <p className="project-build-help">
-                        Resolve the failed checks in your agent before verifying
-                        this criterion.
-                      </p>
-                    )}
-                  <Button
-                    size="sm"
-                    disabled={
-                      disabled ||
-                      (status.state !== "verified" &&
-                        (status.stale ||
-                          status.report?.state !== "implemented" ||
-                          status.report.checks.some(
-                            (check) => check.result === "failed",
-                          )))
-                    }
-                    onClick={() =>
-                      onAction({
-                        type: "review_requirement",
-                        scopeId: scope.id,
-                        requirementId: requirement.id,
-                        verified: status.state !== "verified",
-                        note: "",
-                      })
-                    }
-                  >
-                    {status.state === "verified"
-                      ? "Reopen criterion"
-                      : "Mark verified"}
-                  </Button>
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
+                <Button
+                  size="sm"
+                  disabled={
+                    disabled ||
+                    (status.state !== "verified" &&
+                      (status.stale ||
+                        status.report?.state !== "implemented" ||
+                        status.report.checks.some(
+                          (check) => check.result === "failed",
+                        )))
+                  }
+                  onClick={() =>
+                    onAction({
+                      type: "review_requirement",
+                      scopeId: scope.id,
+                      requirementId: requirement.id,
+                      verified: status.state !== "verified",
+                      note: "",
+                    })
+                  }
+                >
+                  {status.state === "verified"
+                    ? "Reopen criterion"
+                    : "Mark verified"}
+                </Button>
+              </div>
+            </Disclosure>
           );
         })}
       </div>
@@ -855,6 +841,7 @@ function AgentConnection({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [unknownCreation, setUnknownCreation] = useState(false);
+  const [codingAgent, setCodingAgent] = useState<CodingAgent>("codex");
   const [accessListReady, setAccessListReady] = useState(false);
   const [revoke, setRevoke] = useState<TokenMetadata | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -935,34 +922,18 @@ function AgentConnection({
       );
     }
   }
-  const configuration = JSON.stringify(
-    {
-      mcpServers: {
-        woolgather: {
-          command: "node",
-          args: [
-            "/absolute/path/to/woolgather/packages/agent-connector/bin/woolgather-mcp.mjs",
-          ],
-          env: {
-            WOOLGATHER_URL: location.origin,
-            WOOLGATHER_TOKEN: "YOUR_PROJECT_TOKEN",
-          },
-        },
-      },
-    },
-    null,
-    2,
-  );
+  const setup = agentSetup(codingAgent);
   return (
-    <Collapsible
-      className="project-build-connect"
-      open={open}
-      onOpenChange={setOpen}
-    >
-      <CollapsibleTrigger render={<Button variant="quiet" />}>
-        <Link2 /> Connect your coding agent <ChevronDown />
-      </CollapsibleTrigger>
-      <CollapsibleContent>
+    <div className="project-build-connect">
+      <Disclosure
+        title={
+          <>
+            <Link2 /> Connect your coding agent
+          </>
+        }
+        open={open}
+        onOpenChange={setOpen}
+      >
         <div className="project-build-connection-body">
           <p>
             Use your own Codex, Claude Code, Cursor or another MCP client.
@@ -1045,30 +1016,56 @@ function AgentConnection({
               </Button>
             </form>
           )}
-          <Collapsible>
-            <CollapsibleTrigger render={<Button variant="quiet" size="sm" />}>
-              <ChevronDown /> MCP setup
-            </CollapsibleTrigger>
-            <CollapsibleContent>
-              <div className="project-build-setup">
-                <p>
-                  Use the open-source connector from your woolgather checkout.
-                  Run npm ci --prefix packages/agent-connector --ignore-scripts
-                  once with Node 24. Set the absolute connector path and replace
-                  YOUR_PROJECT_TOKEN in your agent’s private MCP configuration.
-                </p>
-                <pre>{configuration}</pre>
-                <Button size="sm" onClick={() => void copy(configuration)}>
-                  <Copy /> Copy configuration
-                </Button>
-                <p className="project-build-help">
-                  Setup and supported client instructions:
-                  packages/agent-connector/README.md. Keep your token out of
-                  repository files.
-                </p>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
+          <Disclosure title="Set up connection" variant="plain">
+            <div className="project-build-setup">
+              <label className="project-build-setup-agent">
+                Coding agent
+                <Select
+                  label="Coding agent"
+                  value={codingAgent}
+                  options={codingAgents}
+                  onValueChange={(value) =>
+                    setCodingAgent(value as CodingAgent)
+                  }
+                />
+              </label>
+              <p>
+                With Node 24 installed, run this once from your woolgather
+                checkout:
+              </p>
+              <pre tabIndex={0} aria-label="Connector installation command">
+                <code>
+                  npm ci --prefix packages/agent-connector --ignore-scripts
+                </code>
+              </pre>
+              <p>
+                Set <code>WOOLGATHER_URL</code> to{" "}
+                <code>{location.origin}</code> and
+                <code> WOOLGATHER_TOKEN</code> to your project token in your
+                agent’s environment. Restart the agent after changing its
+                environment.
+              </p>
+              <p>
+                Add this entry to <code>{setup.file}</code>, keeping any
+                existing settings. Replace the example connector path with your
+                checkout path.
+              </p>
+              <pre
+                tabIndex={0}
+                aria-label={`${codingAgents.find((agent) => agent.value === codingAgent)?.label} configuration`}
+              >
+                <code>{setup.configuration}</code>
+              </pre>
+              <Button size="sm" onClick={() => void copy(setup.configuration)}>
+                <Copy /> Copy configuration
+              </Button>
+              <p className="project-build-help">
+                Full setup instructions are included in your checkout at
+                <code> packages/agent-connector/README.md</code>. Keep your
+                token out of prompts and repository files.
+              </p>
+            </div>
+          </Disclosure>
           {!!tokens.length && (
             <div className="project-build-token-list">
               <h3>Project access</h3>
@@ -1097,7 +1094,7 @@ function AgentConnection({
             </div>
           )}
         </div>
-      </CollapsibleContent>
+      </Disclosure>
       <ModalPresence>
         {revoke && (
           <Modal
@@ -1126,6 +1123,6 @@ function AgentConnection({
           </Modal>
         )}
       </ModalPresence>
-    </Collapsible>
+    </div>
   );
 }
