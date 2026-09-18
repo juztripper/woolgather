@@ -13,4 +13,4 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v4
       - name: Review dependency changes
-        uses: actions/dependency-review-action@v4
+        uses: actions/dependency-review-action@v5
