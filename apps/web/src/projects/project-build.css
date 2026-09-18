@@ -1,0 +1,380 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .project-build-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+    padding: 24px 32px 56px;
+  }
+  .project-build-content {
+    width: min(100%, 800px);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .project-build-project-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: var(--weight-medium);
+  }
+  .project-build-heading,
+  .project-build-scope-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .project-build h1 {
+    margin: 0 0 8px;
+    font: var(--weight-medium) var(--text-title)/var(--leading-tight)
+      var(--sans);
+    letter-spacing: -0.03em;
+  }
+  .project-build h2 {
+    margin: 0;
+    font: var(--weight-medium) var(--text-section)/var(--leading-tight)
+      var(--sans);
+  }
+  .project-build h3 {
+    margin: 0;
+    font: var(--weight-medium) var(--text-subheading)/var(--leading-body)
+      var(--sans);
+  }
+  .project-build p {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .project-build-heading p,
+  .project-build-help,
+  .project-build-counts,
+  .project-build-scope-heading p span {
+    color: var(--muted-foreground);
+  }
+  .project-build-heading > .button {
+    flex: none;
+  }
+  .project-build-notice {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--muted);
+  }
+  .project-build-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .project-build-create {
+    display: grid;
+    gap: 20px;
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+  }
+  .project-build-fields {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 140px;
+    gap: 16px;
+  }
+  .project-build-fields label,
+  .project-build-token-form label,
+  .project-build-criterion {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+  .project-build-thoughts {
+    display: grid;
+    gap: 0;
+  }
+  .project-build-thought {
+    border-bottom: 1px solid var(--border);
+    padding: 16px 0;
+  }
+  .project-build-thought:first-child {
+    padding-top: 0;
+  }
+  .project-build-thought:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .project-build-choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .project-build-choice > [data-slot="checkbox"] {
+    margin-top: 3px;
+  }
+  .project-build-choice label {
+    display: grid;
+    gap: 2px;
+    cursor: pointer;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .project-build-choice label span {
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+  }
+  .project-build-criterion {
+    margin-top: 12px;
+    margin-left: 28px;
+  }
+  .project-build-criterion textarea {
+    min-height: 88px;
+    resize: vertical;
+  }
+  .project-build-empty {
+    display: grid;
+    justify-items: start;
+    gap: 16px;
+    padding: 28px 0;
+  }
+  .project-build-empty p {
+    max-width: 60ch;
+    color: var(--muted-foreground);
+  }
+  .project-build-lane {
+    display: grid;
+    gap: 20px;
+  }
+  .project-build-lane > h2 {
+    font-size: var(--text-body);
+    color: var(--muted-foreground);
+  }
+  .project-build-scope {
+    min-width: 0;
+    display: grid;
+    gap: 12px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .project-build-scope-heading h3 {
+    overflow-wrap: anywhere;
+  }
+  .project-build-scope-heading > div {
+    min-width: 0;
+  }
+  .project-build-scope-heading > [data-slot="select-trigger"] {
+    width: 112px;
+    flex: none;
+  }
+  .project-build-scope-heading p {
+    margin-top: 4px;
+  }
+  .project-build-progress {
+    width: 100%;
+    height: 5px;
+    appearance: none;
+    border: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--muted);
+  }
+  .project-build-progress::-webkit-progress-bar {
+    background: var(--muted);
+  }
+  .project-build-progress::-webkit-progress-value {
+    background: var(--primary);
+  }
+  .project-build-progress::-moz-progress-bar {
+    background: var(--primary);
+  }
+  .project-build-counts {
+    font-size: var(--text-caption);
+  }
+  .project-build-requirement {
+    border-bottom: 1px solid var(--border);
+  }
+  .project-build-requirement:last-child {
+    border: 0;
+  }
+  .project-build-requirement-trigger {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+  }
+  .project-build-requirement-title {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .project-build-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex: none;
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+  }
+  .project-build-status[data-verified="true"] {
+    color: var(--success-foreground);
+  }
+  .project-build-requirement-trigger > svg {
+    flex: none;
+    color: var(--muted-foreground);
+  }
+  .project-build-evidence {
+    display: grid;
+    justify-items: start;
+    gap: 12px;
+    padding: 0 0 20px;
+  }
+  .project-build-evidence > p {
+    white-space: pre-wrap;
+  }
+  .project-build-small-heading {
+    font-size: var(--text-caption);
+    color: var(--muted-foreground);
+  }
+  .project-build-checks {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .project-build-checks li {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .project-build-checks code {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .project-build-checks span {
+    flex: none;
+    font-size: var(--text-caption);
+    color: var(--muted-foreground);
+  }
+  .project-build-repository {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: var(--muted-foreground);
+  }
+  .project-build-connect {
+    padding-top: 4px;
+  }
+  .project-build-connection-body {
+    display: grid;
+    gap: 24px;
+    padding-top: 16px;
+  }
+  .project-build-connection-body > p {
+    max-width: 72ch;
+    color: var(--muted-foreground);
+  }
+  .project-build-token-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+  }
+  .project-build-token-form > label {
+    flex: 1;
+  }
+  .project-build-token-form > .button {
+    flex: none;
+  }
+  .project-build-secret {
+    display: grid;
+    gap: 12px;
+  }
+  .project-build-setup {
+    display: grid;
+    justify-items: start;
+    gap: 12px;
+    padding-top: 12px;
+  }
+  .project-build-setup pre {
+    max-width: 100%;
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    background: var(--muted);
+    border-radius: var(--radius);
+    font-size: var(--text-caption);
+  }
+  .project-build-token-list {
+    display: grid;
+    gap: 8px;
+  }
+  .project-build-token {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+  }
+  .project-build-token > div {
+    min-width: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .project-build-token strong {
+    font-weight: var(--weight-medium);
+    overflow-wrap: anywhere;
+  }
+  .project-build-token span {
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+  }
+  @media (max-width: 600px) {
+    .project-build-scroll {
+      padding: 16px 16px 32px;
+    }
+    .project-build h1 {
+      font-size: var(--text-heading);
+    }
+    .project-build-heading {
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .project-build-create {
+      padding: 16px;
+    }
+    .project-build-fields {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .project-build-token-form {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .project-build-scope-heading {
+      gap: 12px;
+    }
+    .project-build-requirement-trigger {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 4px 8px;
+    }
+    .project-build-status {
+      grid-row: 2;
+    }
+    .project-build-requirement-trigger > svg {
+      grid-column: 2;
+      grid-row: 1 / 3;
+    }
+    .project-build-criterion {
+      margin-left: 0;
+    }
+  }
+}

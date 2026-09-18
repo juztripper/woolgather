@@ -37,6 +37,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install agent connector dependencies
+        run: npm ci --prefix packages/agent-connector --ignore-scripts
+
       - name: Check formatting
         run: npm run check:format
 

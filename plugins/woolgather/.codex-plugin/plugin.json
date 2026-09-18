@@ -1,0 +1,20 @@
+{
+  "name": "woolgather",
+  "version": "0.1.0",
+  "description": "Build from your woolgather plan using your own coding agent and account.",
+  "author": {
+    "name": "Ripper's Games"
+  },
+  "license": "AGPL-3.0-only",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "woolgather",
+    "shortDescription": "Build from your plan. Keep progress connected.",
+    "longDescription": "Read your woolgather project and report implementation evidence from your own coding agent. Building and inference stay on your account.",
+    "developerName": "Ripper's Games",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "defaultPrompt": "Read my connected woolgather project and help me build the version I choose."
+  },
+  "mcpServers": "./.mcp.json"
+}

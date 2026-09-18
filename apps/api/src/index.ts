@@ -26,6 +26,13 @@ import { commandSchema } from "../../../packages/domain/src/commands";
 import { createClient } from "@supabase/supabase-js";
 import { exportMarkdown, type Project } from "../../../packages/domain/src";
 import { projectSourceCommandSchema } from "../../../packages/domain/src/projectSources";
+import {
+  deliveryProjectId,
+  integrationActor,
+  integrationTokens,
+  readDelivery,
+  writeDelivery,
+} from "./projectDelivery";
 
 const json = (body: unknown, status = 200) =>
   Response.json(body, {
@@ -150,6 +157,36 @@ export default {
       );
     }
     const authorization = request.headers.get("Authorization");
+    if (url.pathname.startsWith("/api/integrations/")) {
+      const actor = await integrationActor(authorization);
+      if (!actor)
+        return json({ error: "A project integration token is required." }, 401);
+      if (
+        url.pathname === "/api/integrations/context" &&
+        request.method === "GET"
+      )
+        return readDelivery(billingRpc(env), env, actor);
+      if (
+        url.pathname === "/api/integrations/delivery" &&
+        request.method === "POST"
+      ) {
+        if (
+          !request.headers.get("Content-Type")?.startsWith("application/json")
+        )
+          return json({ error: "JSON required" }, 415);
+        try {
+          return await writeDelivery(
+            billingRpc(env),
+            env,
+            actor,
+            await boundedBody(request, 128000),
+          );
+        } catch {
+          return json({ error: "Invalid or oversized delivery request." }, 422);
+        }
+      }
+      return json({ error: "Not found" }, 404);
+    }
     if (!authorization?.startsWith("Bearer "))
       return json({ error: "Sign in to open your projects." }, 401);
     // Fresh client per request. The caller token reaches Postgres RLS; no service key.
@@ -222,6 +259,55 @@ export default {
           },
           access.data === "mfa_required" ? 403 : 401,
         );
+      const deliveryRoute = url.pathname.match(
+        /^\/api\/projects\/([0-9a-f-]{36})\/(delivery|integration-tokens)$/i,
+      );
+      if (deliveryRoute) {
+        const actor = {
+          actor: "owner" as const,
+          ownerId: user.id,
+          projectId: deliveryRoute[1],
+        };
+        const rpc = async (name: string, args: Record<string, unknown>) =>
+          client.rpc(name, args);
+        if (request.method === "GET")
+          return deliveryRoute[2] === "delivery"
+            ? readDelivery(rpc, env, actor)
+            : integrationTokens(rpc, env, actor);
+        if (
+          deliveryRoute[2] !== "integration-tokens" ||
+          request.method !== "POST"
+        )
+          return json({ error: "Method not allowed" }, 405);
+        if (
+          !request.headers.get("Content-Type")?.startsWith("application/json")
+        )
+          return json({ error: "JSON required" }, 415);
+        return integrationTokens(
+          rpc,
+          env,
+          actor,
+          await boundedBody(request, 4000),
+        );
+      }
+      if (
+        url.pathname === "/api/project-delivery" &&
+        request.method === "POST"
+      ) {
+        if (
+          !request.headers.get("Content-Type")?.startsWith("application/json")
+        )
+          return json({ error: "JSON required" }, 415);
+        const body = await boundedBody(request, 128000);
+        const projectId = deliveryProjectId(body);
+        if (!projectId) return json({ error: "Invalid project." }, 422);
+        return writeDelivery(
+          async (name, args) => client.rpc(name, args),
+          env,
+          { actor: "owner", ownerId: user.id, projectId },
+          body,
+        );
+      }
       if (
         ["/api/billing/checkout", "/api/billing/portal"].includes(url.pathname)
       ) {
