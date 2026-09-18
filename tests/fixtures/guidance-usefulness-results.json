@@ -1,0 +1,431 @@
+{
+  "evaluationVersion": "focused-review-v4-usefulness-1",
+  "cases": [
+    {
+      "name": "cooking-first-feedback",
+      "idea": {
+        "id": "00000000-0000-4000-8000-000000000041",
+        "revision": 1,
+        "body": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.\n\nFor people who never know what to eat and want to try new food out.\n\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+        "document": {
+          "version": 2,
+          "title": "Cooking App",
+          "answers": {
+            "purpose": "Guidance question: What could it make possible?\nYour answer:\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+            "audience": "Guidance question: Who might it be for?\nYour answer:\nFor people who never know what to eat and want to try new food out.",
+            "experience": "",
+            "context": "",
+            "constraints": "",
+            "possibilities": ""
+          },
+          "covered": [],
+          "later": [],
+          "questions": [],
+          "references": [],
+          "blocks": [
+            {
+              "id": "cooking",
+              "type": "paragraph",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "audience",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "audience",
+                "prompt": "Who might it be for?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "For people who never know what to eat and want to try new food out.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "feedback",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "purpose",
+                "prompt": "What could it make possible?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            }
+          ],
+          "attachments": []
+        }
+      },
+      "dispositions": [],
+      "model": "gpt-5.6-sol",
+      "effort": "low",
+      "result": {
+        "finding": {
+          "title": "Taste feedback may confuse preference with cooking success",
+          "detail": "A disliked meal could mean the recipe was a poor match or that cooking it went badly. Treating both as the same signal might make recommendations less accurate.",
+          "nextStep": null,
+          "evidence": [
+            {
+              "sourceId": "block:cooking",
+              "quote": "guide him on the cooking"
+            },
+            {
+              "sourceId": "block:feedback",
+              "quote": "feedback over food tasted would make the algorithm more accurate"
+            }
+          ]
+        },
+        "recognition": [],
+        "question": {
+          "text": "After cooking, could feedback separately capture whether the user liked the dish and whether it turned out as intended?",
+          "why": "This distinction would help the app learn taste without penalizing recipes for execution problems.",
+          "evidence": [
+            {
+              "sourceId": "block:feedback",
+              "quote": "The user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options."
+            }
+          ]
+        }
+      },
+      "usage": {
+        "inputTokens": 917,
+        "cachedTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 277,
+        "reasoningTokens": 89,
+        "costMicrousd": 9208,
+        "model": "gpt-5.6-sol",
+        "responseId": "resp_04dd4c2ac7a81397016aa45c88244887d292b8729fe6f4d474",
+        "requestId": "req_6ef59aa31ebc4be19d3ec1db905f9e47",
+        "serviceTier": "default",
+        "latencyMs": 6733,
+        "priceVersion": "2026-09-11",
+        "responseModel": "gpt-5.6-sol",
+        "outputLimitExceeded": false
+      }
+    },
+    {
+      "name": "cooking-resolved-first-use",
+      "idea": {
+        "id": "00000000-0000-4000-8000-000000000041",
+        "revision": 1,
+        "body": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.\n\nFor people who never know what to eat and want to try new food out.\n\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.\n\nFor a new user, ask for three foods they like and ingredients they have, then suggest three recipes. They pick one and read one cooking step at a time. No voice guidance in the first version. We can test with a paper walkthrough before choosing technology.",
+        "document": {
+          "version": 2,
+          "title": "",
+          "answers": {
+            "purpose": "Guidance question: What could it make possible?\nYour answer:\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+            "audience": "Guidance question: Who might it be for?\nYour answer:\nFor people who never know what to eat and want to try new food out.",
+            "experience": "",
+            "context": "",
+            "constraints": "",
+            "possibilities": ""
+          },
+          "covered": [],
+          "later": [],
+          "questions": [],
+          "references": [],
+          "blocks": [
+            {
+              "id": "cooking",
+              "type": "paragraph",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "audience",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "audience",
+                "prompt": "Who might it be for?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "For people who never know what to eat and want to try new food out.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "feedback",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "purpose",
+                "prompt": "What could it make possible?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "first-use",
+              "type": "paragraph",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "For a new user, ask for three foods they like and ingredients they have, then suggest three recipes. They pick one and read one cooking step at a time. No voice guidance in the first version. We can test with a paper walkthrough before choosing technology.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            }
+          ],
+          "attachments": []
+        }
+      },
+      "dispositions": [],
+      "model": "gpt-5.6-sol",
+      "effort": "low",
+      "result": {
+        "finding": {
+          "title": "Choices may not reveal taste",
+          "detail": "A skipped recipe could reflect missing ingredients or effort rather than dislike. Treating every choice as preference data might narrow suggestions and work against trying new foods.",
+          "nextStep": null,
+          "evidence": [
+            {
+              "sourceId": "block:feedback",
+              "quote": "The user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options."
+            },
+            {
+              "sourceId": "block:audience",
+              "quote": "For people who never know what to eat and want to try new food out."
+            }
+          ]
+        },
+        "recognition": [],
+        "question": {
+          "text": "Should the app learn mainly from tasted-food ratings, or also ask why a recipe was skipped—for example ingredients, time, difficulty, or taste?",
+          "why": "This determines whether recommendations learn food preferences separately from situational constraints.",
+          "evidence": [
+            {
+              "sourceId": "block:first-use",
+              "quote": "For a new user, ask for three foods they like and ingredients they have, then suggest three recipes."
+            }
+          ]
+        }
+      },
+      "usage": {
+        "inputTokens": 969,
+        "cachedTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 377,
+        "reasoningTokens": 165,
+        "costMicrousd": 11416,
+        "model": "gpt-5.6-sol",
+        "responseId": "resp_00bb6f6f0a90aaa2016aa45c8f467487d2bf72eb342b5e277c",
+        "requestId": "req_0854d98eb1e04710b29d477e59646cbb",
+        "serviceTier": "default",
+        "latencyMs": 9746,
+        "priceVersion": "2026-09-11",
+        "responseModel": "gpt-5.6-sol",
+        "outputLimitExceeded": false
+      }
+    },
+    {
+      "name": "cooking-deferred-choice",
+      "idea": {
+        "id": "00000000-0000-4000-8000-000000000041",
+        "revision": 1,
+        "body": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.\n\nFor people who never know what to eat and want to try new food out.\n\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.\n\nI know a new user has no feedback history. Leave the initial recommendation method undecided for now; I want to explore how the cooking guidance feels. Do not ask about the initial recommendations again.",
+        "document": {
+          "version": 2,
+          "title": "",
+          "answers": {
+            "purpose": "Guidance question: What could it make possible?\nYour answer:\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+            "audience": "Guidance question: Who might it be for?\nYour answer:\nFor people who never know what to eat and want to try new food out.",
+            "experience": "",
+            "context": "",
+            "constraints": "",
+            "possibilities": ""
+          },
+          "covered": [],
+          "later": [],
+          "questions": [],
+          "references": [],
+          "blocks": [
+            {
+              "id": "cooking",
+              "type": "paragraph",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "audience",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "audience",
+                "prompt": "Who might it be for?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "For people who never know what to eat and want to try new food out.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "feedback",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "purpose",
+                "prompt": "What could it make possible?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "deferred",
+              "type": "paragraph",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "I know a new user has no feedback history. Leave the initial recommendation method undecided for now; I want to explore how the cooking guidance feels. Do not ask about the initial recommendations again.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            }
+          ],
+          "attachments": []
+        }
+      },
+      "dispositions": [
+        {
+          "question": "How should the app choose recipes before it has any feedback?",
+          "disposition": "dismissed"
+        }
+      ],
+      "model": "gpt-5.6-sol",
+      "effort": "low",
+      "result": {
+        "finding": {
+          "title": "Guidance may need to support recovery, not just instructions",
+          "detail": "Because users are trying unfamiliar food, they may encounter uncertain doneness, timing mistakes, or unexpected textures. The cooking experience could feel more helpful if it includes moments to check progress and adapt rather than only presenting sequential recipe steps.",
+          "nextStep": null,
+          "evidence": [
+            {
+              "sourceId": "block:audience",
+              "quote": "For people who never know what to eat and want to try new food out."
+            },
+            {
+              "sourceId": "block:cooking",
+              "quote": "guide him on the cooking."
+            }
+          ]
+        },
+        "recognition": [],
+        "question": {
+          "text": "During cooking, should the first version mainly provide paced steps, ask users for progress checks, or help recover when something goes wrong?",
+          "why": "Choosing one primary guidance behavior would clarify the experience you want to explore without requiring the whole cooking assistant to be designed.",
+          "evidence": [
+            {
+              "sourceId": "block:deferred",
+              "quote": "I want to explore how the cooking guidance feels."
+            }
+          ]
+        }
+      },
+      "usage": {
+        "inputTokens": 979,
+        "cachedTokens": 0,
+        "cacheWriteTokens": 0,
+        "outputTokens": 287,
+        "reasoningTokens": 72,
+        "costMicrousd": 9656,
+        "model": "gpt-5.6-sol",
+        "responseId": "resp_031b471d6a5fe221016aa45c98801487d29e843f36e455afc7",
+        "requestId": "req_48cafde327284d2199bfa9452885207f",
+        "serviceTier": "default",
+        "latencyMs": 10121,
+        "priceVersion": "2026-09-11",
+        "responseModel": "gpt-5.6-sol",
+        "outputLimitExceeded": false
+      }
+    }
+  ]
+}

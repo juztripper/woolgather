@@ -1,0 +1,103 @@
+@layer components {
+  .modal.wide.project-file-preview-compact {
+    height: auto;
+  }
+  .project-file-preview .modal-body {
+    min-height: 120px;
+  }
+  .project-file-preview-image {
+    display: block;
+    width: 100%;
+    max-height: min(65dvh, 620px);
+    object-fit: contain;
+    border-radius: var(--radius);
+  }
+  .project-file-preview-pdf {
+    display: flex;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .project-file-preview-pdf-stage {
+    position: relative;
+    display: grid;
+    min-height: 0;
+    flex: 1;
+    place-items: center;
+    overflow: auto;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--muted);
+  }
+  .project-file-preview-pdf-canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    background: white;
+    box-shadow: 0 8px 24px
+      color-mix(in oklch, var(--foreground) 14%, transparent);
+  }
+  .project-file-preview-pdf-rendering {
+    position: absolute;
+    right: 12px;
+    bottom: 10px;
+    color: var(--muted-foreground);
+    font-size: var(--text-small);
+  }
+  .project-file-preview-pdf-controls {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .project-file-preview-pdf-controls > span {
+    min-width: 96px;
+    color: var(--muted-foreground);
+    font-size: var(--text-small);
+    text-align: center;
+  }
+  .project-file-preview-text pre {
+    margin: 0;
+    font-size: var(--text-small);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .project-file-preview-text p {
+    color: var(--muted-foreground);
+    font-size: var(--text-small);
+  }
+  .project-file-preview-status {
+    display: flex;
+    min-height: 180px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--muted-foreground);
+    text-align: center;
+  }
+  .project-file-preview-status p {
+    margin: 0;
+  }
+  .project-source-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .project-source-editor-name {
+    margin: 0 0 4px;
+    overflow-wrap: anywhere;
+    color: var(--muted-foreground);
+    font-size: var(--text-small);
+  }
+  .project-source-editor-conflict {
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: var(--text-small);
+  }
+}

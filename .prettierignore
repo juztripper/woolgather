@@ -1,0 +1,4 @@
+worker-configuration.d.ts
+
+# Rendered email artifacts; edit packages/emails/src/index.ts and run the renderer.
+apps/web/emails/*.html

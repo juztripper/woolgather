@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="640" viewBox="30 160 640 640" role="img" aria-labelledby="title description">
+<title id="title">woolgather character B — neutral</title>
+<desc id="description">Editable vector artwork proposal. Ivory body, curled tuft, tiny feet and a centered gentle smile. Expression: neutral.</desc>
+<g id="character-b">
+<path id="ground-shadow" d="M114 704 C114 684 600 684 600 704 C600 724 114 724 114 704Z" fill="#d3dfe3" opacity=".5"/>
+<g id="feet" fill="#f6eddd" stroke="#40596f" stroke-width="3.4" stroke-linejoin="round">
+<path id="foot-left" d="M219 674 C233 656 261 663 282 682 C300 697 286 710 264 709 C231 711 212 699 219 674Z"/>
+<path id="foot-right" d="M478 679 C490 667 509 666 509 682 C511 700 486 710 465 705 C447 701 455 690 478 679Z"/>
+</g>
+<g id="body-and-curl">
+<path id="body-fill" d="M285 449
+C225 506 175 550 176 600
+C170 661 225 694 328 699
+C454 718 547 660 588 586
+C621 526 614 443 578 381
+C541 318 475 280 404 245
+C348 218 276 211 212 226
+C151 239 103 273 86 320
+C66 373 92 421 134 439
+C174 457 216 437 237 408
+C246 395 240 382 229 386
+C216 391 217 403 197 411
+C164 429 128 414 115 389
+C98 354 119 318 147 299
+C185 271 235 269 273 281
+C306 291 326 311 327 340
+C331 380 311 420 285 449Z" fill="#fbf5e9"/>
+<path id="belly-shading" d="M176 600 C177 573 184 551 201 533 C224 514 238 590 329 617 C419 649 528 628 588 586 C547 660 454 718 328 699 C225 694 170 661 176 600Z" fill="#e8ddcc"/>
+<path id="curl-shading" d="M134 439 C174 457 216 437 237 408 C246 395 240 382 229 386 C216 391 217 403 197 411 C164 429 128 414 115 389 C111 404 117 426 134 439Z" fill="#e8ddcc"/>
+<path id="body-outline" d="M285 449
+C225 506 175 550 176 600
+C170 661 225 694 328 699
+C454 718 547 660 588 586
+C621 526 614 443 578 381
+C541 318 475 280 404 245
+C348 218 276 211 212 226
+C151 239 103 273 86 320
+C66 373 92 421 134 439
+C174 457 216 437 237 408
+C246 395 240 382 229 386
+C216 391 217 403 197 411
+C164 429 128 414 115 389
+C98 354 119 318 147 299
+C185 271 235 269 273 281
+C306 291 326 311 327 340
+C331 380 311 420 285 449Z" fill="none" stroke="#40596f" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g id="face" fill="#40596f" stroke="#40596f" stroke-width="0" stroke-linecap="round">
+<path id="eye-left" d="M442 426 C459 426 459 468 442 468 C425 468 425 426 442 426Z"/>
+<path id="eye-right" d="M548 426 C565 426 565 468 548 468 C531 468 531 426 548 426Z"/>
+<path id="mouth" d="M483 462 Q495 473 507 462" fill="none" stroke="#40596f" stroke-width="4.5"/>
+</g>
+</g>
+</svg>

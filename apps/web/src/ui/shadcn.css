@@ -1,0 +1,125 @@
+@import "tailwindcss" source("../");
+@source "../../../../node_modules/@blocknote/shadcn/src";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--sans);
+  --font-serif: var(--serif);
+  /* Utilities and retained CSS consume the same type and control contract. */
+  --text-xs: var(--text-caption);
+  --text-sm: var(--control-font);
+  --text-sm--line-height: var(--control-leading);
+  --text-base: var(--text-body-large);
+  --text-lg: var(--text-subheading);
+  --text-xl: var(--text-section);
+  --text-2xl: var(--text-title);
+  --spacing-control: var(--control-height);
+  --spacing-control-sm: var(--control-height-sm);
+  --spacing-control-xs: var(--control-height-xs);
+  --spacing-control-lg: var(--control-height-lg);
+  --spacing-icon-xs: var(--control-icon-xs);
+  --spacing-control-padding: var(--control-padding);
+  --spacing-control-padding-sm: var(--control-padding-sm);
+  --spacing-control-padding-xs: var(--control-padding-xs);
+  --spacing-control-padding-lg: var(--control-padding-lg);
+  --spacing-control-gap: var(--control-gap);
+  --spacing-field-padding: var(--field-padding);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.875rem;
+  --glass-fill: linear-gradient(145deg, #ffffffb8, #f3f8fa85 48%, #e7f0f596);
+  --glass-edge: #ffffffd9;
+  --glass-shadow:
+    inset 0 1px 0 #ffffff, inset 0 -1px 0 #b9cbd52b, 0 4px 18px #23455d0d,
+    0 1px 3px #23455d0a;
+  --glass-blur: blur(24px) saturate(1.35);
+  /* The agents' white-to-sky portrait field, expanded into quiet app chrome. */
+  --workspace-backdrop: radial-gradient(
+    ellipse 115% 95% at 52% -8%,
+    #fffdfa 0%,
+    #f2f6f4 44%,
+    #dce8eb 100%
+  );
+  /* Paper for work, cool chrome for navigation, ink blue for an action or selection. */
+  --background: #f7f8f7;
+  --foreground: #24343c;
+  --card: #ffffff;
+  --card-foreground: var(--foreground);
+  --popover: #f8fbfacf;
+  --popover-foreground: var(--foreground);
+  --primary: #284e60;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf0f3;
+  --secondary-foreground: #34576b;
+  --muted: #edf1f2;
+  --muted-foreground: #5b6871;
+  --accent: #eaf0f3;
+  --accent-foreground: #294e63;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #dce2e3;
+  --input: #d2dbde;
+  --ring: #6a93ad;
+  --sidebar: #f3f8fa85;
+  --sidebar-foreground: #4a555b;
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: #ffffffa8;
+  --sidebar-accent-foreground: #294e63;
+  --sidebar-border: #d9e1e5;
+  --sidebar-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background font-sans text-sm text-foreground;
+    line-height: var(--leading-body);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-slot] {
+    animation-duration: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+html[data-motion="reduce"] [data-slot] {
+  animation-duration: 0s !important;
+  transition-duration: 0s !important;
+}

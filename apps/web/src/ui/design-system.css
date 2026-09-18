@@ -1,0 +1,68 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .design-system {
+    padding: 48px max(24px, calc((100vw - 1040px) / 2));
+  }
+  .design-system > header {
+    margin-bottom: 36px;
+  }
+  .design-system h1 {
+    margin-top: 16px;
+  }
+  .design-system p {
+    font-size: var(--text-body);
+  }
+  .system-panel {
+    margin: 20px 0;
+    padding: 28px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .system-panel h2 {
+    font-size: var(--text-title);
+  }
+  .system-panel h3 {
+    font-size: var(--text-subheading);
+  }
+  .system-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .system-providers {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .system-panel label {
+    margin-top: 16px;
+  }
+  @media (max-width: 720px) {
+    .design-system {
+      padding: 32px 20px;
+    }
+    .system-providers {
+      grid-template-columns: 1fr;
+    }
+    .system-panel {
+      padding: 20px;
+    }
+  }
+
+  .system-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 28px;
+  }
+  .system-checkboxes > label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin: 0;
+  }
+}

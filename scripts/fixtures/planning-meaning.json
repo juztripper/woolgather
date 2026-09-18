@@ -1,0 +1,939 @@
+[
+  {
+    "name": "selection",
+    "project": {
+      "id": "00000000-0000-4000-8000-000000000100",
+      "name": "Meadow journal",
+      "description": "A gentle nature exploration game with a discovery journal.",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000010",
+          "title": "Missing preparation feedback",
+          "body": "How should missing preparation be communicated?",
+          "category": "question",
+          "certainty": "stated",
+          "status": "open",
+          "answer": "",
+          "links": [],
+          "removed": false,
+          "source": "From your conversation",
+          "promotedFrom": null,
+          "evidence": {
+            "turnId": "00000000-0000-4000-8000-000000000001",
+            "quote": "How should missing preparation be communicated?"
+          }
+        }
+      ],
+      "thinking": {
+        "version": 1,
+        "turns": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "text": "How should missing preparation be communicated?",
+            "reply": "1. Display a red warning.\n2. Make the creature flee.\n3. Keep the creature calm and show an incomplete journal clue.",
+            "status": "complete",
+            "focusId": null,
+            "changedIds": [],
+            "createdAt": "2026-09-17T09:00:00Z"
+          },
+          {
+            "id": "a129610e-44e0-45dd-aa28-0faebc309630",
+            "text": "3 sounds the best for me, let's go for it",
+            "reply": "",
+            "status": "pending",
+            "focusId": null,
+            "createdAt": "2026-09-17T09:01:00Z",
+            "changedIds": [],
+            "composer": {
+              "reasoning": "quick",
+              "autoCeiling": "thoughtful",
+              "tool": "discuss",
+              "attachments": [],
+              "agentIds": [],
+              "sourceIds": [],
+              "references": [],
+              "quotes": []
+            },
+            "routing": {
+              "level": "quick",
+              "model": "gpt-5.6-luna",
+              "effort": "none"
+            }
+          }
+        ],
+        "conversations": [
+          {
+            "id": "main",
+            "title": "Main conversation",
+            "agentIds": [],
+            "createdAt": "2026-09-17T10:20:29.794Z",
+            "updatedAt": "2026-09-17T10:20:29.794Z",
+            "archived": false,
+            "branch": null
+          }
+        ],
+        "agents": [],
+        "relations": [],
+        "proposals": [],
+        "focusId": null,
+        "view": "map",
+        "undo": null
+      },
+      "revision": 4,
+      "updatedAt": "2026-09-17T09:00:00Z"
+    },
+    "interpretation": {
+      "language": "en",
+      "intent": "adopt_existing",
+      "reclassifiedThoughtIds": [],
+      "resolvedThoughtIds": ["00000000-0000-4000-8000-000000000010"]
+    },
+    "result": {
+      "reply": "We’ll communicate missing preparation gently: the creature stays calm, while the discovery journal shows an incomplete clue. This fits the game’s gentle nature-exploration tone without using a punitive warning or making the creature flee.",
+      "concepts": [
+        {
+          "ref": "c1",
+          "title": "Missing preparation feedback",
+          "body": "How should missing preparation be communicated? The selected approach is to keep the creature calm and show an incomplete journal clue.",
+          "category": "question",
+          "certainty": "confirmed",
+          "status": "answered",
+          "answer": "Keep the creature calm and show an incomplete journal clue.",
+          "origin": "author",
+          "sourceTurn": "t2",
+          "quote": "3 sounds the best for me, let's go for it",
+          "reason": "The author explicitly selected option 3."
+        }
+      ],
+      "remove": [],
+      "relations": [],
+      "removeRelations": [],
+      "dismissProposals": [],
+      "sourceReferences": [],
+      "sourceUpdates": [],
+      "focus": "c1",
+      "view": "map"
+    }
+  },
+  {
+    "name": "adoption",
+    "project": {
+      "id": "00000000-0000-4000-8000-000000000100",
+      "name": "Meadow journal",
+      "description": "A gentle nature exploration game with a discovery journal.",
+      "items": [],
+      "thinking": {
+        "version": 1,
+        "turns": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "text": "The journal uses a silhouette that becomes colourful. I have not decided whether this survives losing trust.",
+            "reply": "I suggest keeping the colourful journal entry after trust is lost. It records the discovery; current trust remains separate.",
+            "status": "complete",
+            "focusId": null,
+            "changedIds": [],
+            "createdAt": "2026-09-17T09:00:00Z"
+          },
+          {
+            "id": "a67e5251-558c-4a27-87d1-95a42b6504e6",
+            "text": "Yes, let's use that persistence rule. Anything else to decide here?",
+            "reply": "",
+            "status": "pending",
+            "focusId": null,
+            "createdAt": "2026-09-17T09:01:00Z",
+            "changedIds": [],
+            "composer": {
+              "reasoning": "quick",
+              "autoCeiling": "thoughtful",
+              "tool": "discuss",
+              "attachments": [],
+              "agentIds": [],
+              "sourceIds": [],
+              "references": [],
+              "quotes": []
+            },
+            "routing": {
+              "level": "quick",
+              "model": "gpt-5.6-luna",
+              "effort": "none"
+            }
+          }
+        ],
+        "conversations": [
+          {
+            "id": "main",
+            "title": "Main conversation",
+            "agentIds": [],
+            "createdAt": "2026-09-17T10:20:29.794Z",
+            "updatedAt": "2026-09-17T10:20:29.794Z",
+            "archived": false,
+            "branch": null
+          }
+        ],
+        "agents": [],
+        "relations": [],
+        "proposals": [
+          {
+            "id": "00000000-0000-4000-8000-000000000020",
+            "itemId": "00000000-0000-4000-8000-000000000010",
+            "item": {
+              "id": "00000000-0000-4000-8000-000000000010",
+              "title": "Journal progress survives trust loss",
+              "body": "Keep the colourful journal entry after trust is lost; current trust remains separate.",
+              "category": "decision",
+              "certainty": "tentative",
+              "status": "open",
+              "answer": "",
+              "links": [],
+              "removed": false,
+              "source": "From your conversation",
+              "promotedFrom": null,
+              "evidence": {
+                "turnId": "00000000-0000-4000-8000-000000000001",
+                "quote": "Keep the colourful journal entry after trust is lost; current trust remains separate."
+              }
+            },
+            "reason": "Suggested persistence rule",
+            "turnId": "00000000-0000-4000-8000-000000000001"
+          }
+        ],
+        "focusId": null,
+        "view": "map",
+        "undo": null
+      },
+      "revision": 4,
+      "updatedAt": "2026-09-17T09:00:00Z"
+    },
+    "interpretation": {
+      "language": "en",
+      "intent": "adopt_existing",
+      "reclassifiedThoughtIds": [],
+      "resolvedThoughtIds": []
+    },
+    "result": {
+      "reply": "The persistence rule is now confirmed: the colourful journal entry records the discovery even if trust is later lost, while current trust remains separate. Other journal decisions are still open; the main follow-ups are what creates an entry, how entries change visually, and whether entries capture context beyond the discovery.",
+      "concepts": [
+        {
+          "ref": "p1",
+          "title": "Journal progress survives trust loss",
+          "body": "Keep the colourful journal entry after trust is lost; current trust remains separate.",
+          "category": "decision",
+          "certainty": "confirmed",
+          "status": "open",
+          "answer": "",
+          "origin": "author",
+          "sourceTurn": "t2",
+          "quote": "Yes, let's use that persistence rule. Anything else to decide here?",
+          "reason": "You explicitly adopted this persistence rule."
+        },
+        {
+          "ref": "new:journal-scope",
+          "title": "What else should the journal decide?",
+          "body": "Potential follow-up areas include what discoveries create entries, how entries change visually, and whether the journal records context beyond the discovery itself.",
+          "category": "question",
+          "certainty": "tentative",
+          "status": "answered",
+          "answer": "The remaining decisions are open for later discussion; no additional rule is established yet.",
+          "origin": "suggestion",
+          "sourceTurn": "",
+          "quote": "",
+          "reason": "These are useful design questions, but you have not decided them yet."
+        }
+      ],
+      "remove": [],
+      "relations": [],
+      "removeRelations": [],
+      "dismissProposals": ["s1"],
+      "sourceReferences": [],
+      "sourceUpdates": [],
+      "focus": "p1",
+      "view": "map"
+    }
+  },
+  {
+    "name": "opinion",
+    "project": {
+      "id": "00000000-0000-4000-8000-000000000100",
+      "name": "Meadow journal",
+      "description": "A gentle nature exploration game with a discovery journal.",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000010",
+          "title": "Possible voxel creatures",
+          "body": "Maybe simple voxel creatures would fit; I have not chosen the art direction.",
+          "category": "decision",
+          "certainty": "tentative",
+          "status": "open",
+          "answer": "",
+          "links": [],
+          "removed": false,
+          "source": "From your conversation",
+          "promotedFrom": null,
+          "evidence": {
+            "turnId": "00000000-0000-4000-8000-000000000001",
+            "quote": "Maybe simple voxel creatures would fit; I have not chosen the art direction."
+          }
+        }
+      ],
+      "thinking": {
+        "version": 1,
+        "turns": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "text": "Maybe simple voxel creatures would fit; I have not chosen the art direction.",
+            "reply": "A small prototype could test their expression and readability.",
+            "status": "complete",
+            "focusId": null,
+            "changedIds": [],
+            "createdAt": "2026-09-17T09:00:00Z"
+          },
+          {
+            "id": "c936b2f3-4596-4391-aaa3-d390c2f89b9a",
+            "text": "Do you believe voxel would be a good art style for this game?",
+            "reply": "",
+            "status": "pending",
+            "focusId": null,
+            "createdAt": "2026-09-17T09:01:00Z",
+            "changedIds": [],
+            "composer": {
+              "reasoning": "quick",
+              "autoCeiling": "thoughtful",
+              "tool": "discuss",
+              "attachments": [],
+              "agentIds": [],
+              "sourceIds": [],
+              "references": [],
+              "quotes": []
+            },
+            "routing": {
+              "level": "quick",
+              "model": "gpt-5.6-luna",
+              "effort": "none"
+            }
+          }
+        ],
+        "conversations": [
+          {
+            "id": "main",
+            "title": "Main conversation",
+            "agentIds": [],
+            "createdAt": "2026-09-17T10:20:29.795Z",
+            "updatedAt": "2026-09-17T10:20:29.795Z",
+            "archived": false,
+            "branch": null
+          }
+        ],
+        "agents": [],
+        "relations": [],
+        "proposals": [],
+        "focusId": null,
+        "view": "map",
+        "undo": null
+      },
+      "revision": 4,
+      "updatedAt": "2026-09-17T09:00:00Z"
+    },
+    "interpretation": {
+      "language": "en",
+      "intent": "discussion",
+      "reclassifiedThoughtIds": [],
+      "resolvedThoughtIds": []
+    },
+    "result": {
+      "reply": "Yes—voxel could be a good fit, especially for making creatures and discovered objects feel tangible and collectible. The main risk is tonal: hard-edged cubes can feel mechanical rather than gentle. I’d keep the geometry simple but use rounded silhouettes where possible, soft colors, expressive faces, and calm lighting. A small prototype should test four things: creature readability, emotional warmth, environmental softness, and how naturally voxel discoveries sit in the journal. I’d treat voxel as a promising direction, not a final decision yet.",
+      "concepts": [
+        {
+          "ref": "new:voxel-style-assessment",
+          "title": "Voxel style assessment",
+          "body": "Voxel art could suit the gentle nature exploration game if the forms remain simple, readable, and warm. It offers a coherent way to make creatures and environments feel tangible, but it may also introduce a more constructed or game-like tone than the intended atmosphere. A small visual prototype should test creature expression, environmental softness, readability at exploration distance, and whether the style supports the discovery journal's sense of wonder.",
+          "category": "note",
+          "certainty": "tentative",
+          "status": "open",
+          "answer": "",
+          "origin": "suggestion",
+          "sourceTurn": "",
+          "quote": "",
+          "reason": "This directly evaluates the author's open art-direction question without treating the style as chosen."
+        }
+      ],
+      "remove": [],
+      "relations": [],
+      "removeRelations": [],
+      "dismissProposals": [],
+      "sourceReferences": [],
+      "sourceUpdates": [],
+      "focus": "new:voxel-style-assessment",
+      "view": "map"
+    }
+  },
+  {
+    "name": "connections",
+    "project": {
+      "id": "00000000-0000-4000-8000-000000000100",
+      "name": "Meadow journal",
+      "description": "A gentle nature exploration game with a discovery journal.",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000010",
+          "title": "Release",
+          "body": "Release the game.",
+          "category": "feature",
+          "certainty": "stated",
+          "status": "open",
+          "answer": "",
+          "links": [],
+          "removed": false,
+          "source": "From your conversation",
+          "promotedFrom": null,
+          "evidence": {
+            "turnId": "00000000-0000-4000-8000-000000000001",
+            "quote": "Release the game."
+          }
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000011",
+          "title": "Accessibility review",
+          "body": "Check accessibility before release.",
+          "category": "feature",
+          "certainty": "stated",
+          "status": "open",
+          "answer": "",
+          "links": [],
+          "removed": false,
+          "source": "From your conversation",
+          "promotedFrom": null,
+          "evidence": {
+            "turnId": "00000000-0000-4000-8000-000000000001",
+            "quote": "Check accessibility before release."
+          }
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000012",
+          "title": "Startled retreat",
+          "body": "A startled creature retreats.",
+          "category": "feature",
+          "certainty": "stated",
+          "status": "open",
+          "answer": "",
+          "links": [],
+          "removed": false,
+          "source": "From your conversation",
+          "promotedFrom": null,
+          "evidence": {
+            "turnId": "00000000-0000-4000-8000-000000000001",
+            "quote": "A startled creature retreats."
+          }
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000013",
+          "title": "Preparation stall",
+          "body": "An unprepared player receives a calm hint.",
+          "category": "feature",
+          "certainty": "stated",
+          "status": "open",
+          "answer": "",
+          "links": [],
+          "removed": false,
+          "source": "From your conversation",
+          "promotedFrom": null,
+          "evidence": {
+            "turnId": "00000000-0000-4000-8000-000000000001",
+            "quote": "An unprepared player receives a calm hint."
+          }
+        }
+      ],
+      "thinking": {
+        "version": 1,
+        "turns": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "text": "Release and the accessibility review are separate planning items. A startled creature fleeing and a calm preparation stall are different situations, not competing choices.",
+            "reply": "We can record their relationships when you specify them.",
+            "status": "complete",
+            "focusId": null,
+            "changedIds": [],
+            "createdAt": "2026-09-17T09:00:00Z"
+          },
+          {
+            "id": "2ad13be4-8de1-45a6-83dd-b2af1ee391ce",
+            "text": "Release requires the accessibility review first. Connect those. The startled retreat and preparation stall coexist; don't treat them as alternatives.",
+            "reply": "",
+            "status": "pending",
+            "focusId": null,
+            "createdAt": "2026-09-17T09:01:00Z",
+            "changedIds": [],
+            "composer": {
+              "reasoning": "quick",
+              "autoCeiling": "thoughtful",
+              "tool": "discuss",
+              "attachments": [],
+              "agentIds": [],
+              "sourceIds": [],
+              "references": [],
+              "quotes": []
+            },
+            "routing": {
+              "level": "quick",
+              "model": "gpt-5.6-luna",
+              "effort": "none"
+            }
+          }
+        ],
+        "conversations": [
+          {
+            "id": "main",
+            "title": "Main conversation",
+            "agentIds": [],
+            "createdAt": "2026-09-17T10:20:29.795Z",
+            "updatedAt": "2026-09-17T10:20:29.795Z",
+            "archived": false,
+            "branch": null
+          }
+        ],
+        "agents": [],
+        "relations": [],
+        "proposals": [],
+        "focusId": null,
+        "view": "map",
+        "undo": null
+      },
+      "revision": 4,
+      "updatedAt": "2026-09-17T09:00:00Z"
+    },
+    "interpretation": {
+      "language": "en",
+      "intent": "authored_update",
+      "reclassifiedThoughtIds": [],
+      "resolvedThoughtIds": []
+    },
+    "result": {
+      "reply": "I connected Release to the accessibility review as a prerequisite. I left Startled retreat and Preparation stall unconnected: they coexist as separate situations, so no alternative relationship is appropriate.",
+      "concepts": [],
+      "remove": [],
+      "relations": [
+        {
+          "from": "c1",
+          "to": "c2",
+          "kind": "requires",
+          "reason": "Release requires the accessibility review first."
+        }
+      ],
+      "removeRelations": [],
+      "dismissProposals": [],
+      "sourceReferences": [],
+      "sourceUpdates": [],
+      "focus": null,
+      "view": "map"
+    }
+  },
+  {
+    "name": "language",
+    "project": {
+      "id": "00000000-0000-4000-8000-000000000100",
+      "name": "Meadow journal",
+      "description": "A gentle nature exploration game with a discovery journal.",
+      "items": [],
+      "thinking": {
+        "version": 1,
+        "turns": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "text": "Can you help me compare possible working titles?",
+            "reply": "Yes. We can compare tone and meaning while treating availability as unverified.",
+            "status": "complete",
+            "focusId": null,
+            "changedIds": [],
+            "createdAt": "2026-09-17T09:00:00Z"
+          },
+          {
+            "id": "25168612-c89b-40a8-b540-bc048258c490",
+            "text": "Would this reference change how we should approach naming?\n\n\"Este nome já é usado por um estúdio criativo. A empresa trabalha com design e software. Existem aplicações publicadas com esse nome. Ainda não foi consultada uma base oficial de marcas. Não sabemos se há direitos exclusivos nem em que países estão protegidos.\"",
+            "reply": "",
+            "status": "pending",
+            "focusId": null,
+            "createdAt": "2026-09-17T09:01:00Z",
+            "changedIds": [],
+            "composer": {
+              "reasoning": "quick",
+              "autoCeiling": "thoughtful",
+              "tool": "discuss",
+              "attachments": [],
+              "agentIds": [],
+              "sourceIds": [],
+              "references": [],
+              "quotes": []
+            },
+            "routing": {
+              "level": "quick",
+              "model": "gpt-5.6-luna",
+              "effort": "none"
+            }
+          }
+        ],
+        "conversations": [
+          {
+            "id": "main",
+            "title": "Main conversation",
+            "agentIds": [],
+            "createdAt": "2026-09-17T10:20:29.795Z",
+            "updatedAt": "2026-09-17T10:20:29.795Z",
+            "archived": false,
+            "branch": null
+          }
+        ],
+        "agents": [],
+        "relations": [],
+        "proposals": [],
+        "focusId": null,
+        "view": "map",
+        "undo": null
+      },
+      "revision": 4,
+      "updatedAt": "2026-09-17T09:00:00Z"
+    },
+    "interpretation": {
+      "language": "en",
+      "intent": "discussion",
+      "reclassifiedThoughtIds": [],
+      "resolvedThoughtIds": []
+    },
+    "result": {
+      "reply": "Yes. It changes the naming approach from purely creative comparison to creative plus risk-aware comparison. The existing studio and published apps make the name less distinctive in software-related contexts, but the absence of an official trademark search means we should not call it unavailable or legally blocked. For each candidate, compare tone and fit with the nature-journal game, then separately note existing uses, likely confusion, and whether formal checks are still needed. I’d keep the name as a provisional working title only, not a final brand, until relevant trademark databases and jurisdictions are checked.",
+      "concepts": [
+        {
+          "ref": "new:naming-clearance-risk",
+          "title": "Naming requires clearance checks",
+          "body": "The working-title process should treat an existing creative studio, published applications, and possible geographic or exclusive rights as a risk signal. Official trademark and jurisdiction checks have not yet been completed, so availability remains unverified rather than rejected outright.",
+          "category": "constraint",
+          "certainty": "tentative",
+          "status": "open",
+          "answer": "",
+          "origin": "suggestion",
+          "sourceTurn": "",
+          "quote": "",
+          "reason": "The reference indicates meaningful name collision risk while explicitly leaving legal status unknown."
+        },
+        {
+          "ref": "new:title-comparison-criteria",
+          "title": "Compare titles for distinctiveness",
+          "body": "When comparing possible working titles for the gentle nature exploration game, include practical distinctiveness alongside tone, memorability, and fit with the discovery-journal premise. A title that is evocative but already strongly associated with software or creative services should be treated as less attractive until clearance is checked.",
+          "category": "feature",
+          "certainty": "tentative",
+          "status": "open",
+          "answer": "",
+          "origin": "suggestion",
+          "sourceTurn": "",
+          "quote": "",
+          "reason": "This makes the naming discussion responsive to the reported existing use without claiming a legal conclusion."
+        }
+      ],
+      "remove": [],
+      "relations": [
+        {
+          "from": "new:naming-clearance-risk",
+          "to": "new:title-comparison-criteria",
+          "kind": "affects",
+          "reason": "Unverified existing use affects how confidently a candidate title can be recommended and adds distinctiveness and clearance risk to the comparison."
+        }
+      ],
+      "removeRelations": [],
+      "dismissProposals": [],
+      "sourceReferences": [],
+      "sourceUpdates": [],
+      "focus": "new:title-comparison-criteria",
+      "view": "map"
+    }
+  },
+  {
+    "name": "trigger",
+    "project": {
+      "id": "00000000-0000-4000-8000-000000000100",
+      "name": "Meadow journal",
+      "description": "A gentle nature exploration game with a discovery journal.",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000010",
+          "title": "Journal completion trigger",
+          "body": "I have not decided what gameplay action completes a journal entry.",
+          "category": "question",
+          "certainty": "stated",
+          "status": "open",
+          "answer": "",
+          "links": [],
+          "removed": false,
+          "source": "From your conversation",
+          "promotedFrom": null,
+          "evidence": {
+            "turnId": "00000000-0000-4000-8000-000000000001",
+            "quote": "I have not decided what gameplay action completes a journal entry."
+          }
+        }
+      ],
+      "thinking": {
+        "version": 1,
+        "turns": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "text": "I have not decided what gameplay action completes a journal entry.",
+            "reply": "What completes it?",
+            "status": "complete",
+            "focusId": null,
+            "changedIds": [],
+            "createdAt": "2026-09-17T09:00:00Z"
+          },
+          {
+            "id": "2f34e367-c0a9-498b-abed-bec06e521d39",
+            "text": "The entry changes from a silhouette into a colourful icon! I need help with what the player actually has to do.",
+            "reply": "",
+            "status": "pending",
+            "focusId": null,
+            "createdAt": "2026-09-17T09:01:00Z",
+            "changedIds": [],
+            "composer": {
+              "reasoning": "quick",
+              "autoCeiling": "thoughtful",
+              "tool": "discuss",
+              "attachments": [],
+              "agentIds": [],
+              "sourceIds": [],
+              "references": [],
+              "quotes": []
+            },
+            "routing": {
+              "level": "quick",
+              "model": "gpt-5.6-luna",
+              "effort": "none"
+            }
+          }
+        ],
+        "conversations": [
+          {
+            "id": "main",
+            "title": "Main conversation",
+            "agentIds": [],
+            "createdAt": "2026-09-17T10:20:29.795Z",
+            "updatedAt": "2026-09-17T10:20:29.795Z",
+            "archived": false,
+            "branch": null
+          }
+        ],
+        "agents": [],
+        "relations": [],
+        "proposals": [],
+        "focusId": null,
+        "view": "map",
+        "undo": null
+      },
+      "revision": 4,
+      "updatedAt": "2026-09-17T09:00:00Z"
+    },
+    "interpretation": {
+      "language": "en",
+      "intent": "authored_update",
+      "reclassifiedThoughtIds": [],
+      "resolvedThoughtIds": []
+    },
+    "result": {
+      "reply": "The colourful icon is clear as feedback, but the gameplay trigger is still open. My strongest starting point is: the player encounters a subject, performs a contextual “inspect/observe” action, and the journal entry fills in immediately. That keeps the loop gentle and legible without requiring a separate checklist.\n\nIf you want more discovery depth, make it a short sequence—encounter, approach, then inspect—rather than adding arbitrary objectives. The key choice is whether the journal records recognition from one deliberate interaction or requires a small amount of observation first.",
+      "concepts": [
+        {
+          "ref": "new:journal-icon-feedback",
+          "title": "Journal discovery feedback",
+          "body": "When a journal entry is completed, its display changes from a silhouette into a colourful icon.",
+          "category": "feature",
+          "certainty": "stated",
+          "status": "open",
+          "answer": "",
+          "origin": "author",
+          "sourceTurn": "t2",
+          "quote": "The entry changes from a silhouette into a colourful icon! I need help with what the player actually has to do.",
+          "reason": "This is an explicit description of the visible result, distinct from the still-undecided player action."
+        },
+        {
+          "ref": "new:observation-based-completion",
+          "title": "Observation-based journal completion",
+          "body": "A possible completion rule is to require the player to observe or interact with the discovered subject in the world, then record it in the journal. The exact interaction and any evidence threshold remain open.",
+          "category": "feature",
+          "certainty": "tentative",
+          "status": "open",
+          "answer": "",
+          "origin": "suggestion",
+          "sourceTurn": "",
+          "quote": "",
+          "reason": "This preserves the discovery-journal fantasy while keeping the trigger separate from its visual feedback."
+        },
+        {
+          "ref": "new:multi-step-discovery-loop",
+          "title": "Multi-step discovery loop",
+          "body": "Another possible rule is a short sequence: encounter the subject, perform a contextual action such as approach or inspect, then receive the colourful journal icon as confirmation. This should be prototyped only if a single interaction feels too shallow.",
+          "category": "feature",
+          "certainty": "tentative",
+          "status": "open",
+          "answer": "",
+          "origin": "suggestion",
+          "sourceTurn": "",
+          "quote": "",
+          "reason": "The author needs help defining the player's action, and a concrete alternative makes the design trade-off testable."
+        },
+        {
+          "ref": "c1",
+          "title": "Journal completion trigger",
+          "body": "I have not decided what gameplay action completes a journal entry.",
+          "category": "question",
+          "certainty": "stated",
+          "status": "open",
+          "answer": "",
+          "origin": "author",
+          "sourceTurn": "t2",
+          "quote": "The entry changes from a silhouette into a colourful icon! I need help with what the player actually has to do.",
+          "reason": "The latest passage explicitly asks for help defining the action, while describing only the resulting icon change."
+        }
+      ],
+      "remove": [],
+      "relations": [
+        {
+          "from": "new:journal-icon-feedback",
+          "to": "c1",
+          "kind": "affects",
+          "reason": "The colourful icon is visible completion feedback, but it does not itself determine which player action completes the entry."
+        },
+        {
+          "from": "new:observation-based-completion",
+          "to": "new:journal-icon-feedback",
+          "kind": "enables",
+          "reason": "If observation-based completion is chosen, it would trigger the colourful icon feedback."
+        },
+        {
+          "from": "new:multi-step-discovery-loop",
+          "to": "new:journal-icon-feedback",
+          "kind": "enables",
+          "reason": "If the multi-step loop is chosen, completing its sequence would trigger the colourful icon feedback."
+        }
+      ],
+      "removeRelations": [],
+      "dismissProposals": [],
+      "sourceReferences": [],
+      "sourceUpdates": [],
+      "focus": "c1",
+      "view": "map"
+    }
+  },
+  {
+    "name": "consolidation",
+    "project": {
+      "id": "00000000-0000-4000-8000-000000000100",
+      "name": "Meadow journal",
+      "description": "A gentle nature exploration game with a discovery journal.",
+      "items": [
+        {
+          "id": "00000000-0000-4000-8000-000000000010",
+          "title": "Calm preparation hint",
+          "body": "A creature stays calm when the player lacks preparation; a journal clue shows what is missing.",
+          "category": "decision",
+          "certainty": "stated",
+          "status": "open",
+          "answer": "",
+          "links": [],
+          "removed": false,
+          "source": "From your conversation",
+          "promotedFrom": null,
+          "evidence": {
+            "turnId": "00000000-0000-4000-8000-000000000001",
+            "quote": "A creature stays calm when the player lacks preparation; a journal clue shows what is missing."
+          }
+        }
+      ],
+      "thinking": {
+        "version": 1,
+        "turns": [
+          {
+            "id": "00000000-0000-4000-8000-000000000001",
+            "text": "A creature stays calm when the player lacks preparation; a journal clue shows what is missing.",
+            "reply": "The calm hint is already saved. No new decisions are needed to recap it.",
+            "status": "complete",
+            "focusId": null,
+            "changedIds": [],
+            "createdAt": "2026-09-17T09:00:00Z"
+          },
+          {
+            "id": "affeda90-bd03-419a-b5db-a39336ff3f4e",
+            "text": "Please consolidate that duplicate suggestion into the saved decision and recap it. Keep all the meaning; don't add new mechanics.",
+            "reply": "",
+            "status": "pending",
+            "focusId": null,
+            "createdAt": "2026-09-17T09:01:00Z",
+            "changedIds": [],
+            "composer": {
+              "reasoning": "quick",
+              "autoCeiling": "thoughtful",
+              "tool": "discuss",
+              "attachments": [],
+              "agentIds": [],
+              "sourceIds": [],
+              "references": [],
+              "quotes": []
+            },
+            "routing": {
+              "level": "quick",
+              "model": "gpt-5.6-luna",
+              "effort": "none"
+            }
+          }
+        ],
+        "conversations": [
+          {
+            "id": "main",
+            "title": "Main conversation",
+            "agentIds": [],
+            "createdAt": "2026-09-17T10:20:29.795Z",
+            "updatedAt": "2026-09-17T10:20:29.795Z",
+            "archived": false,
+            "branch": null
+          }
+        ],
+        "agents": [],
+        "relations": [],
+        "proposals": [
+          {
+            "id": "00000000-0000-4000-8000-000000000020",
+            "itemId": "00000000-0000-4000-8000-000000000021",
+            "item": {
+              "title": "Show a clue when unprepared",
+              "body": "A creature stays calm when the player lacks preparation; a journal clue shows what is missing.",
+              "category": "decision",
+              "certainty": "tentative",
+              "status": "open",
+              "answer": "",
+              "links": []
+            },
+            "reason": "An old duplicate suggestion of the saved decision",
+            "turnId": "00000000-0000-4000-8000-000000000001"
+          }
+        ],
+        "focusId": null,
+        "view": "map",
+        "undo": null
+      },
+      "revision": 4,
+      "updatedAt": "2026-09-17T09:00:00Z"
+    },
+    "interpretation": {
+      "language": "en",
+      "intent": "prune_duplicates",
+      "reclassifiedThoughtIds": [],
+      "resolvedThoughtIds": []
+    },
+    "result": {
+      "reply": "Consolidated the duplicate suggestion into the saved decision. The project meaning remains: when the player lacks preparation, the creature stays calm, and the journal shows a clue identifying what is missing. No new mechanics were added.",
+      "concepts": [],
+      "remove": [],
+      "relations": [],
+      "removeRelations": [],
+      "dismissProposals": ["s1"],
+      "sourceReferences": [],
+      "sourceUpdates": [],
+      "focus": null,
+      "view": "map"
+    }
+  }
+]

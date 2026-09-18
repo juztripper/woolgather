@@ -1,0 +1,433 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .idea-block-editor {
+    position: relative;
+    min-height: 220px;
+    margin: 12px -24px 32px;
+    color: var(--ink);
+  }
+  .idea-drag-handle {
+    cursor: grab;
+  }
+  .idea-drag-handle:active {
+    cursor: grabbing;
+  }
+  .idea-block-editor.idea-block-drag-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    min-height: 0;
+    max-height: 180px;
+    padding: 10px 12px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    font-family: var(--sans);
+    font-size: var(--text-body);
+    line-height: 1.6;
+    box-shadow: 0 4px 14px #263d4824;
+  }
+  .idea-block-editor.idea-block-drag-preview :is(h1, h2, h3, p) {
+    margin: 0;
+    font: inherit;
+  }
+  .idea-block-editor.idea-block-drag-preview
+    .bn-block-content[data-content-type="heading"] {
+    --level: var(--text-section);
+    --prev-level: var(--text-section);
+    font-size: var(--text-section);
+    padding-top: 3px;
+  }
+  .idea-block-editor
+    :is(.prosemirror-dropcursor-block, .prosemirror-dropcursor-vertical) {
+    border-radius: 2px;
+    /* An insertion target must follow the pointer without trailing behind. */
+    transition: none;
+  }
+  /* BlockNote's structural transitions are outside the shared [data-slot]
+   * reduced-motion rule. Keep app-level reduction immediate, including the
+   * list marker and nested connector pseudo-elements. */
+  html[data-motion="reduce"] .idea-block-editor .bn-block-outer,
+  html[data-motion="reduce"] .idea-block-editor .bn-block-content,
+  html[data-motion="reduce"] .idea-block-editor .bn-block-content::before,
+  html[data-motion="reduce"]
+    .idea-block-editor
+    .bn-block-group
+    .bn-block-group
+    > .bn-block-outer:not([data-prev-depth-changed])::before {
+    transition: none !important;
+  }
+  .idea-block-motion-ghost {
+    position: fixed;
+    margin: 0;
+    min-height: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 2;
+    transform-origin: top left;
+  }
+  .idea-block-editor.idea-block-motion-ghost .bn-editor {
+    padding: 0;
+    margin: 0;
+    min-height: 0;
+  }
+  .idea-block-dissolve-fragment {
+    position: absolute;
+    inset: 0;
+    transform-origin: center;
+  }
+  .idea-block-dissolve-mask {
+    height: 100%;
+    mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+  }
+  .idea-block-editor .bn-container,
+  .idea-block-editor.bn-container {
+    font-family: inherit;
+    --bn-colors-editor-background: transparent;
+    --bn-colors-editor-text: var(--ink);
+    --bn-colors-menu-text: var(--ink);
+    --bn-font-family: inherit;
+  }
+  .idea-block-editor .bn-editor {
+    padding: 12px 24px;
+    background: transparent;
+    font-family: inherit;
+    font-size: var(--text-body-large);
+    line-height: 1.75;
+    min-height: 180px;
+  }
+  .idea-block-editor .bn-block-content[data-content-type="heading"] {
+    font-size: var(--text-section);
+    line-height: 1.4;
+    font-weight: 600;
+  }
+  .idea-block-editor
+    .bn-block-content[data-content-type="heading"][data-level="2"],
+  .idea-block-editor
+    .bn-block-content[data-content-type="heading"][data-level="3"] {
+    font-size: var(--text-body);
+  }
+  .idea-block-editor .bn-block-content[data-content-type="image"] {
+    max-width: 100%;
+  }
+  .idea-context-block,
+  .idea-question-block {
+    width: 100%;
+    padding: 8px 0;
+  }
+  .idea-answer-section {
+    width: 100%;
+    padding: 4px 0;
+  }
+  .idea-answer-section > [data-slot="collapsible-trigger"] {
+    align-items: flex-start !important;
+    font-size: var(--text-body) !important;
+    font-weight: var(--weight-medium) !important;
+  }
+  .idea-answer-section
+    > [data-slot="collapsible-trigger"]
+    > .ui-disclosure-caret {
+    margin-top: 3px;
+  }
+  .idea-answer-section
+    > [data-slot="collapsible-content"]
+    > .ui-disclosure-content {
+    padding: 4px 0 4px 24px;
+  }
+  .idea-answer-content {
+    min-height: 1.5em;
+    line-height: 1.75;
+  }
+  .idea-answer-content:has(> .ProseMirror-trailingBreak:only-child)::before,
+  .idea-answer-content:has(
+      > [data-node-view-content-react] > .ProseMirror-trailingBreak:only-child
+    )::before,
+  .idea-answer-content:empty::before {
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    color: var(--muted-foreground);
+    pointer-events: none;
+  }
+  .idea-context-block > span,
+  .idea-block-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted-foreground);
+    font-size: var(--text-label);
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+  .idea-block-label label {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-label);
+  }
+  .idea-block-label input {
+    width: 14px;
+    height: 14px;
+  }
+  .idea-upload-recovery {
+    margin: 12px 24px;
+    font-size: var(--text-small);
+  }
+  .idea-attachment {
+    width: 100%;
+    padding: 6px 0;
+  }
+  .idea-block-editor > .idea-attachment-input {
+    display: none;
+  }
+  .idea-attachment-empty,
+  .idea-attachment-progress {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+  }
+  .idea-attachment-progress {
+    padding: 8px 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-small);
+  }
+  .idea-attachment-progress span {
+    overflow-wrap: anywhere;
+  }
+  .idea-attachment-progress > svg {
+    flex: none;
+    animation: idea-upload-spin 900ms linear infinite;
+  }
+  @keyframes idea-upload-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  html[data-motion="reduce"] .idea-attachment-progress > svg {
+    animation: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .idea-attachment-progress > svg {
+      animation: none;
+    }
+  }
+  .idea-attachment-preview {
+    max-width: 100%;
+  }
+  .idea-attachment-preview .bn-file-block-content-wrapper {
+    max-width: 100%;
+  }
+  /* A selected transparent image must keep the paper's colour. The editor's
+ * default overlay fills the entire custom block, including empty margins. */
+  .idea-block-editor [data-content-type="image"] .idea-attachment::after {
+    content: none;
+  }
+  .idea-block-editor .bn-visual-media-wrapper {
+    position: relative;
+  }
+  .idea-block-editor
+    .bn-visual-media-wrapper:has(.idea-image-resize-grip):is(
+      :hover,
+      :focus-within
+    ),
+  .idea-block-editor .ProseMirror-selectednode .bn-visual-media-wrapper,
+  .idea-block-editor [data-resizing] .bn-visual-media-wrapper {
+    outline: 1px solid var(--muted-foreground);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  /* Resize grips are direct-manipulation targets, not action buttons. Keep a
+     generous transparent hit area around the small visible edge marker. */
+  .idea-block-editor .idea-image-resize-grip {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 44px;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    cursor: ew-resize;
+    touch-action: none;
+    opacity: 0;
+    transition: none;
+    z-index: 2;
+  }
+  .idea-block-editor .idea-image-resize-grip[data-side="left"] {
+    left: -12px;
+  }
+  .idea-block-editor .idea-image-resize-grip[data-side="right"] {
+    right: -12px;
+  }
+  .idea-block-editor .idea-image-resize-grip > span {
+    width: 5px;
+    height: 24px;
+    border: 1px solid var(--muted-foreground);
+    border-radius: 3px;
+    background: var(--paper);
+    box-shadow: 0 1px 3px #304a5b26;
+  }
+  .idea-block-editor
+    .bn-visual-media-wrapper:is(:hover, :focus-within)
+    .idea-image-resize-grip,
+  .idea-block-editor .ProseMirror-selectednode .idea-image-resize-grip,
+  .idea-block-editor [data-resizing] .idea-image-resize-grip {
+    opacity: 1;
+  }
+  .idea-block-editor [data-resizing] {
+    cursor: ew-resize;
+  }
+  .idea-block-editor .idea-image-resize-grip:focus-visible > span {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  @media (pointer: coarse) {
+    .idea-block-editor .idea-image-resize-grip {
+      width: 44px;
+      opacity: 1;
+    }
+    .idea-block-editor .idea-image-resize-grip[data-side="left"] {
+      left: -22px;
+    }
+    .idea-block-editor .idea-image-resize-grip[data-side="right"] {
+      right: -22px;
+    }
+  }
+  .idea-block-editor
+    [data-content-type="image"][data-text-alignment="center"]
+    .bn-file-block-content-wrapper {
+    margin-inline: auto;
+  }
+  .idea-block-editor
+    [data-content-type="image"][data-text-alignment="right"]
+    .bn-file-block-content-wrapper {
+    margin-left: auto;
+  }
+  .bn-shadcn .idea-image-size {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding-left: 8px;
+    font-size: var(--text-small);
+    white-space: nowrap;
+  }
+  .bn-shadcn .bn-formatting-toolbar:has(.idea-image-size) {
+    background: var(--paper) !important;
+    max-width: calc(100vw - 24px);
+    flex-wrap: wrap;
+  }
+  body:has(.idea-block-editor [data-resizing]) .bn-formatting-toolbar {
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .idea-attachment-preview .bn-file-name-with-icon {
+    font-size: var(--text-small);
+  }
+  .idea-upload-recovery > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  @media (max-width: 640px) {
+    .idea-block-editor {
+      margin-left: -12px;
+      margin-right: -12px;
+    }
+    .idea-block-editor .bn-editor {
+      padding: 8px 12px;
+    }
+    .idea-block-label {
+      flex-wrap: wrap;
+    }
+    .idea-block-label label {
+      margin-left: 0;
+    }
+  }
+
+  .idea-block-editor .bn-add-file-button-text {
+    color: var(--ink);
+  }
+  .idea-block-editor .bn-inline-content:before {
+    color: var(--muted-foreground);
+    opacity: 1;
+  }
+
+  .idea-block-editor[data-read-only="true"] .bn-inline-content::before {
+    content: none !important;
+  }
+
+  .idea-block-editor .bn-block-content[data-content-type="codeBlock"] {
+    display: block;
+  }
+  .idea-block-editor .bn-block-content[data-content-type="codeBlock"] > pre {
+    padding: 16px;
+    line-height: 1.5;
+  }
+  .idea-block-editor
+    .bn-block-content[data-content-type="codeBlock"]
+    > .idea-code-language {
+    position: absolute;
+    display: none;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+  }
+  .idea-block-editor:not([data-read-only="true"])
+    .bn-editor:focus-within
+    .bn-block-content[data-content-type="codeBlock"][data-code-selected="true"]
+    > .idea-code-language {
+    display: flex;
+  }
+  .idea-block-editor
+    .bn-block-content[data-content-type="codeBlock"]
+    > .idea-code-language
+    > select {
+    position: static;
+    width: auto;
+    appearance: auto;
+    opacity: 1;
+    transition: none;
+    height: 24px;
+    min-height: 0;
+    max-width: 160px;
+    padding: 0 5px;
+    margin: 0;
+    border: 0;
+    border-radius: 4px;
+    box-shadow: none;
+    font-family: var(--sans);
+    font-size: var(--text-small);
+    line-height: 1;
+    color: #bfc4cb;
+    background: #252525;
+    color-scheme: dark;
+  }
+  .idea-block-editor
+    .bn-block-content[data-content-type="codeBlock"]
+    > .idea-code-language
+    > select:focus-visible {
+    outline: 2px solid #9ac6e1 !important;
+    outline-offset: 2px;
+  }
+  .idea-block-editor
+    .bn-block-content[data-content-type="codeBlock"]
+    > .idea-code-language
+    > select
+    > option {
+    color: #ffffff;
+    background: #252525;
+  }
+}

@@ -1,0 +1,154 @@
+@layer components {
+  .attachment-card {
+    flex: 0 0 160px;
+    width: 160px;
+    min-width: 0;
+    font-size: var(--text-menu);
+    line-height: 20px;
+  }
+  .attachment-card--image {
+    flex-basis: 112px;
+    width: 112px;
+  }
+  .attachment-card-tile {
+    position: relative;
+    height: 112px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--muted);
+    box-shadow: inset 0 1px 0 var(--glass-edge);
+  }
+  .attachment-card-tile[data-error] {
+    border-color: var(--destructive);
+  }
+  .attachment-card-open,
+  .attachment-card-open.button {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    overflow: hidden;
+    border: 0;
+    border-radius: inherit;
+    padding: 0;
+    font-size: inherit;
+    font-weight: var(--weight-regular);
+    line-height: inherit;
+  }
+  .attachment-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .attachment-card-art {
+    display: grid;
+    height: 62px;
+    place-items: center;
+    color: var(--muted-foreground);
+  }
+  .attachment-card-caption {
+    display: block;
+    padding: 5px 10px;
+    text-align: left;
+  }
+  .attachment-card-name {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .attachment-card-detail {
+    display: block;
+    font-size: var(--text-caption);
+    line-height: 16px;
+    color: var(--muted-foreground);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .attachment-card-image + .attachment-card-caption {
+    position: absolute;
+    inset: auto 0 0;
+    opacity: 0;
+    background: var(--glass-fill);
+    backdrop-filter: var(--glass-blur);
+    transition: opacity var(--motion-fast);
+  }
+  .attachment-card-remove.button {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    border: 1px solid var(--border);
+    background: var(--background);
+    box-shadow: 0 1px 3px #2c485713;
+    opacity: 0;
+    transition:
+      opacity var(--motion-fast),
+      background-color var(--motion-fast);
+  }
+  .attachment-card:hover .attachment-card-remove,
+  .attachment-card:focus-within .attachment-card-remove,
+  .attachment-card:hover .attachment-card-image + .attachment-card-caption,
+  .attachment-card:focus-within
+    .attachment-card-image
+    + .attachment-card-caption {
+    opacity: 1;
+  }
+  .attachment-card-state {
+    position: absolute;
+    inset: auto 4px 4px;
+    display: flex;
+    justify-content: center;
+    border-radius: 12px;
+    background: var(--glass-fill);
+    backdrop-filter: var(--glass-blur);
+  }
+  .attachment-card-state > span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 6px;
+    font-size: var(--text-caption);
+  }
+  .attachment-card:not(.attachment-card--image) .attachment-card-state {
+    inset: 16px 8px auto;
+    justify-content: flex-start;
+    background: transparent;
+    backdrop-filter: none;
+  }
+  .attachment-card-tile[data-pending] .attachment-card-art > svg {
+    visibility: hidden;
+  }
+  .attachment-card-error {
+    display: block;
+    max-height: 5rem;
+    overflow-y: auto;
+    margin-top: 6px;
+    color: var(--destructive);
+    font-size: var(--text-caption);
+    line-height: 16px;
+    overflow-wrap: anywhere;
+  }
+  @media (hover: none), (pointer: coarse) {
+    .attachment-card-remove.button,
+    .attachment-card-image + .attachment-card-caption {
+      opacity: 1;
+    }
+  }
+  @media (pointer: coarse) {
+    .attachment-card-remove.button {
+      min-width: 44px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .attachment-card-remove.button,
+    .attachment-card-image + .attachment-card-caption {
+      transition: none;
+    }
+  }
+  html[data-motion="reduce"] .attachment-card-remove.button,
+  html[data-motion="reduce"] .attachment-card-image + .attachment-card-caption {
+    transition: none;
+  }
+}

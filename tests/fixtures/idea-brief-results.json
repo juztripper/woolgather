@@ -1,0 +1,309 @@
+{
+  "evaluationVersion": "idea-brief-v5.0-boundary-1",
+  "maxOutputTokens": 600,
+  "cases": [
+    {
+      "name": "answered-taste-profile",
+      "idea": {
+        "id": "00000000-0000-4000-8000-000000000041",
+        "revision": 2,
+        "body": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.\n\nFor people who never know what to eat and want to try new food out.\n\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.\n\nI was thinking on having a nice onboarding experience which would allow the user to choose from that kind of food that everyone has already eaten and rate them. Based on the food kind and ingredients it would be able to create a first version of his taste profile.",
+        "document": {
+          "version": 2,
+          "title": "Cooking App",
+          "answers": {
+            "purpose": "Guidance question: What could it make possible?\nYour answer:\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+            "audience": "Guidance question: Who might it be for?\nYour answer:\nFor people who never know what to eat and want to try new food out.",
+            "experience": "",
+            "context": "",
+            "constraints": "",
+            "possibilities": ""
+          },
+          "covered": [],
+          "later": [],
+          "questions": [],
+          "references": [],
+          "blocks": [
+            {
+              "id": "cooking",
+              "type": "paragraph",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "audience",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "audience",
+                "prompt": "Who might it be for?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "For people who never know what to eat and want to try new food out.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "feedback",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "purpose",
+                "prompt": "What could it make possible?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "taste-profile-answer",
+              "type": "reviewAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "prompt": "How should the app make its first useful suggestions without any history: a short taste quiz, reactions to sample dishes, or an intentionally varied starter set?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "I was thinking on having a nice onboarding experience which would allow the user to choose from that kind of food that everyone has already eaten and rate them. Based on the food kind and ingredients it would be able to create a first version of his taste profile.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            }
+          ],
+          "attachments": []
+        }
+      },
+      "question": "ready",
+      "language": "en",
+      "continuationBlockId": "taste-profile-answer",
+      "dispositions": [
+        {
+          "question": "How should the app make its first useful suggestions without any history: a short taste quiz, reactions to sample dishes, or an intentionally varied starter set?",
+          "disposition": "kept"
+        }
+      ],
+      "result": {
+        "outcome": "ready",
+        "finding": null,
+        "recognition": [],
+        "question": null
+      },
+      "model": "gpt-5.6-sol",
+      "effort": "low",
+      "evaluation": {
+        "outcomePassed": true,
+        "questionPolicyPassed": true,
+        "noExperiment": true,
+        "semanticReview": "pending"
+      },
+      "usage": {
+        "costMicrousd": 5736,
+        "latencyMs": 2357,
+        "inputTokens": 1299,
+        "outputTokens": 27,
+        "reasoningTokens": 0
+      }
+    },
+    {
+      "name": "clear-cooking-concept",
+      "idea": {
+        "id": "00000000-0000-4000-8000-000000000041",
+        "revision": 1,
+        "body": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.\n\nFor people who never know what to eat and want to try new food out.\n\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+        "document": {
+          "version": 2,
+          "title": "Cooking App",
+          "answers": {
+            "purpose": "Guidance question: What could it make possible?\nYour answer:\nThe user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+            "audience": "Guidance question: Who might it be for?\nYour answer:\nFor people who never know what to eat and want to try new food out.",
+            "experience": "",
+            "context": "",
+            "constraints": "",
+            "possibilities": ""
+          },
+          "covered": [],
+          "later": [],
+          "questions": [],
+          "references": [],
+          "blocks": [
+            {
+              "id": "cooking",
+              "type": "paragraph",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "I was thinking on an AI cooking app that would help the user to find recipes that he may like and guide him on the cooking.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "audience",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "audience",
+                "prompt": "Who might it be for?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "For people who never know what to eat and want to try new food out.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            },
+            {
+              "id": "feedback",
+              "type": "ideaAnswer",
+              "props": {
+                "backgroundColor": "default",
+                "textColor": "default",
+                "textAlignment": "left",
+                "field": "purpose",
+                "prompt": "What could it make possible?"
+              },
+              "content": [
+                {
+                  "type": "text",
+                  "text": "The user choices over time and feedback over food tasted would make the algorithm more accurate and provide better options.",
+                  "styles": {}
+                }
+              ],
+              "children": []
+            }
+          ],
+          "attachments": []
+        }
+      },
+      "question": "ready",
+      "language": "en",
+      "dispositions": [],
+      "result": {
+        "outcome": "ready",
+        "finding": null,
+        "recognition": [],
+        "question": null
+      },
+      "model": "gpt-5.6-sol",
+      "effort": "low",
+      "evaluation": {
+        "outcomePassed": true,
+        "questionPolicyPassed": true,
+        "noExperiment": true,
+        "semanticReview": "pending"
+      },
+      "usage": {
+        "costMicrousd": 5000,
+        "latencyMs": 1948,
+        "inputTokens": 1115,
+        "outputTokens": 27,
+        "reasoningTokens": 0
+      }
+    },
+    {
+      "name": "ambiguous-companion",
+      "idea": {
+        "id": "00000000-0000-4000-8000-000000000041",
+        "revision": 1,
+        "body": "I want to make a companion app.",
+        "document": {
+          "version": 1,
+          "title": "",
+          "answers": {
+            "purpose": "",
+            "audience": "",
+            "experience": "",
+            "context": "",
+            "constraints": "",
+            "possibilities": ""
+          },
+          "covered": [],
+          "later": [],
+          "questions": [],
+          "references": []
+        }
+      },
+      "question": "clarify",
+      "language": "en",
+      "dispositions": [],
+      "result": {
+        "outcome": "clarify",
+        "finding": {
+          "title": "The app’s purpose is unclear",
+          "detail": "“Companion app” does not yet indicate what it helps someone do or what it accompanies, so the project could start in materially different directions.",
+          "nextStep": null,
+          "evidence": [
+            {
+              "sourceId": "block:original-writing",
+              "quote": "I want to make a companion app."
+            }
+          ]
+        },
+        "recognition": [],
+        "question": {
+          "text": "What will the companion app accompany, and how should it help the user?",
+          "why": "This establishes the app’s broad purpose and intended user experience.",
+          "evidence": [
+            {
+              "sourceId": "block:original-writing",
+              "quote": "I want to make a companion app."
+            }
+          ]
+        }
+      },
+      "model": "gpt-5.6-sol",
+      "effort": "low",
+      "evaluation": {
+        "outcomePassed": true,
+        "questionPolicyPassed": true,
+        "noExperiment": true,
+        "semanticReview": "pending"
+      },
+      "usage": {
+        "costMicrousd": 7008,
+        "latencyMs": 3508,
+        "inputTokens": 1002,
+        "outputTokens": 150,
+        "reasoningTokens": 0
+      }
+    }
+  ]
+}

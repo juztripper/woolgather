@@ -1,0 +1,205 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .focused-guidance {
+    display: grid;
+    gap: 16px;
+    font-size: var(--text-small);
+  }
+  .focused-guidance h2,
+  .focused-guidance h3,
+  .focused-guidance p {
+    margin: 0;
+  }
+  .focused-guidance h2 {
+    font-size: var(--text-body);
+    font-weight: var(--weight-semibold);
+    line-height: 1.6;
+  }
+  .focused-guidance h3 {
+    font-size: var(--text-body);
+    font-weight: var(--weight-semibold);
+    line-height: 1.5;
+  }
+  .focused-guidance p {
+    line-height: 1.65;
+  }
+  .focused-guidance-intro {
+    display: grid;
+    gap: 8px;
+  }
+  .focused-guidance-intro p {
+    color: color-mix(in oklab, var(--foreground) 70%, transparent);
+  }
+  .focused-recognition {
+    display: grid;
+    gap: 18px;
+  }
+  .focused-recognition > div {
+    display: grid;
+    gap: 0;
+  }
+  .focused-guidance blockquote {
+    margin: 4px 0;
+    padding: 0 0 0 12px;
+    border-left: 2px solid var(--line);
+    color: var(--muted-foreground);
+    line-height: 1.6;
+  }
+  .focused-question {
+    display: grid;
+    gap: 12px;
+    padding-top: 4px;
+  }
+  .focused-question-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 8px;
+  }
+  .focused-question-actions > :first-child {
+    grid-column: 1 / -1;
+  }
+
+  .focused-review-action {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+  }
+  .focused-review-action > .idea-field-hint {
+    flex-basis: 100%;
+  }
+  .focused-manual-prompts {
+    display: grid;
+    margin: 0;
+  }
+  .focused-manual-prompts > .button {
+    justify-content: flex-start;
+    text-align: left;
+  }
+  .focused-guidance
+    .ui-disclosure--plain
+    > [data-slot="collapsible-content"]
+    > .ui-disclosure-content {
+    padding: 0;
+  }
+  .focused-stop {
+    color: var(--muted-foreground);
+  }
+
+  .focused-finding {
+    display: grid;
+    gap: 10px;
+  }
+  .focused-next-step {
+    color: var(--action-ink);
+  }
+  .focused-question-text {
+    font-weight: var(--weight-medium);
+    color: var(--ink);
+  }
+  .idea-review-surface {
+    overflow: clip;
+  }
+  .idea-review-surface > div {
+    display: grid;
+    gap: 16px;
+  }
+  .idea-review-surface .ui-disclosure {
+    margin-block: 0;
+  }
+  .idea-review-surface:has(> div:empty) {
+    display: none;
+  }
+  .idea-review-pending {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    min-height: 228px;
+    padding: 0 0 12px;
+  }
+  .idea-review-pending > div {
+    display: grid;
+    gap: 6px;
+  }
+  .review-weave {
+    width: min(100%, 240px);
+    height: 108px;
+    overflow: visible;
+    margin-left: -12px;
+  }
+  .review-weave use {
+    stroke-linecap: round;
+  }
+  .review-weave-thread {
+    transform-origin: 120px 54px;
+    animation: review-weave-drift 6200ms ease-in-out infinite alternate;
+  }
+  .review-weave-thread-1 {
+    animation-delay: -3100ms;
+    animation-direction: alternate-reverse;
+  }
+  .review-weave-thread-2 {
+    animation-delay: -1600ms;
+    animation-duration: 7800ms;
+  }
+  .review-weave-halo {
+    stroke-width: 9px;
+    opacity: 0.12;
+    filter: blur(5px);
+  }
+  .review-weave-line {
+    stroke-width: 1.25px;
+    opacity: 0.38;
+  }
+  .review-weave-trace {
+    stroke-width: 1.8px;
+    stroke-dasharray: 24 76;
+    animation: review-weave-flow 4800ms linear infinite;
+  }
+  .review-weave-thread-1 .review-weave-trace {
+    animation-delay: -1600ms;
+    animation-direction: reverse;
+  }
+  .review-weave-thread-2 .review-weave-trace {
+    animation-delay: -3200ms;
+    animation-duration: 6400ms;
+  }
+  .focused-continuation {
+    display: grid;
+    gap: 12px;
+  }
+  .focused-continuation > .button {
+    justify-self: start;
+  }
+  @keyframes review-weave-drift {
+    from {
+      transform: translateY(-3px) scaleY(0.82);
+    }
+    to {
+      transform: translateY(3px) scaleY(1.12);
+    }
+  }
+  @keyframes review-weave-flow {
+    from {
+      stroke-dashoffset: 100;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  html[data-motion="reduce"] .review-weave-thread,
+  html[data-motion="reduce"] .review-weave-trace {
+    animation: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .review-weave-thread,
+    .review-weave-trace {
+      animation: none;
+    }
+  }
+  .idea-review-message {
+    display: grid;
+    gap: 10px;
+  }
+}

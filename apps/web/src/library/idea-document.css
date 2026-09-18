@@ -1,0 +1,558 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .idea-page {
+    animation: idea-detail-arrive 220ms ease-out both;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    background: transparent;
+  }
+  .idea-page-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: none;
+    gap: 16px;
+    min-height: 56px;
+    padding: 16px 22px;
+    border-bottom: 0;
+  }
+  .idea-page-navigation,
+  .idea-page-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+  .idea-page-navigation {
+    flex: 1;
+  }
+  .idea-page-navigation .idea-save-state {
+    margin-right: 0;
+    white-space: nowrap;
+  }
+  .idea-page-heading {
+    font-family: var(--sans);
+    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+    line-height: 1.6;
+    letter-spacing: 0;
+    color: var(--muted-foreground);
+    margin: 0;
+  }
+  .idea-page-heading:focus {
+    outline: none;
+  }
+  .idea-page-actions {
+    flex: none;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-shadow);
+  }
+  .idea-page-actions .idea-save-state {
+    margin: 0;
+    white-space: nowrap;
+  }
+  .idea-workspace-content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .idea-workspace-content[hidden] {
+    display: none;
+  }
+  .idea-paper-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .idea-studio-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+  }
+  .idea-paper {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    min-width: 0;
+    scrollbar-gutter: stable;
+    padding: 32px 48px 64px;
+  }
+  .idea-guide {
+    padding: 28px 24px;
+    background: #ffffffe6;
+    border: 1px solid white;
+    border-radius: 22px;
+    margin: 0 16px 16px 0;
+    transition:
+      opacity 200ms,
+      padding var(--motion-layout) var(--motion-ease),
+      margin var(--motion-layout) var(--motion-ease);
+  }
+  .idea-paper .idea-title-label {
+    margin: 0 0 12px;
+  }
+  .idea-studio .idea-title-input {
+    font-size: var(--text-heading);
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.8px;
+    line-height: var(--leading-tight);
+    padding: 8px 0;
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .idea-title-input::placeholder {
+    color: var(--muted-foreground);
+    opacity: 1;
+  }
+  .idea-paper .idea-writing-label {
+    margin: 0;
+    font-size: var(--text-label);
+    color: var(--muted-foreground);
+  }
+  .idea-studio .idea-writing {
+    min-height: 162px;
+    resize: none;
+    overflow: hidden;
+    line-height: 1.85;
+    font-size: var(--text-body);
+    color: var(--ink);
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+    padding: 12px 0;
+    border-radius: 0;
+  }
+  .idea-studio .idea-writing:not(:placeholder-shown) {
+    min-height: 88px;
+  }
+  .idea-studio .idea-writing:focus,
+  .idea-studio .idea-title-input:focus {
+    border-color: transparent;
+    border-bottom-color: var(--ring);
+    box-shadow: none;
+    outline: none;
+  }
+  .idea-writing::placeholder {
+    color: var(--muted-foreground);
+  }
+  .idea-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 36px;
+  }
+  .idea-paper h2,
+  .idea-guide h2 {
+    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .idea-detail {
+    margin-top: 18px;
+    animation: idea-detail-arrive 240ms ease-out both;
+  }
+  .idea-detail p {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    margin: 4px 0 0;
+    font-size: var(--text-body);
+    line-height: 1.85;
+  }
+  .idea-field-hint {
+    color: var(--muted-foreground);
+    font-size: var(--text-label);
+    line-height: 1.7;
+    font-weight: var(--weight-regular);
+  }
+  .idea-visual-section,
+  .idea-open-section {
+    margin-top: 30px;
+  }
+  .idea-visual-section > .idea-section-heading {
+    margin-bottom: 8px;
+  }
+  .idea-eyebrow {
+    font-size: var(--text-caption);
+    color: var(--muted-foreground);
+    margin: 0 0 10px;
+  }
+  .idea-readiness h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .idea-readiness-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--muted-foreground);
+    flex: none;
+    transition: background 300ms;
+  }
+  .idea-readiness--ready .idea-readiness-dot {
+    background: var(--success-foreground);
+  }
+  .idea-readiness p:not(.idea-eyebrow),
+  .idea-prompt > p:not(.idea-eyebrow) {
+    color: var(--muted-foreground);
+    font-size: var(--text-small);
+    line-height: 1.8;
+    margin: 9px 0 0;
+  }
+  .idea-foundation {
+    margin: 18px 0 26px;
+    display: grid;
+    gap: 2px;
+  }
+  .idea-guide .idea-foundation-row {
+    justify-content: flex-start;
+    width: 100%;
+    gap: 10px;
+    text-align: left;
+  }
+  .idea-foundation-row small {
+    margin-left: auto;
+    font-size: var(--text-caption);
+    color: var(--muted-foreground);
+  }
+  .idea-foundation-row[aria-current="step"] {
+    background: var(--card);
+  }
+  .idea-prompt {
+    animation: idea-detail-arrive 260ms ease-out both;
+  }
+  .idea-prompt h2 {
+    font-size: var(--text-body);
+    line-height: 1.65;
+  }
+  .idea-prompt h2:focus {
+    outline: none;
+  }
+  .idea-guide .idea-answer-label {
+    margin: 14px 0 10px;
+  }
+  .idea-answer-label textarea {
+    min-height: 105px;
+    resize: vertical;
+    font-size: var(--text-small);
+    line-height: 1.75;
+    background: var(--card);
+  }
+  .idea-examples {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 8px 0 12px;
+  }
+  .idea-examples .button {
+    text-align: left;
+  }
+  .idea-guide-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .idea-covered-action {
+    margin-top: 8px;
+  }
+  .idea-guide > .ui-disclosure {
+    margin-top: 28px;
+  }
+  .idea-guide .ui-disclosure-content {
+    padding: 8px 0;
+  }
+  .idea-inline-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .idea-open-question {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px 0;
+  }
+  .idea-open-question > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .idea-open-question p {
+    margin: 0 0 6px;
+    overflow-wrap: anywhere;
+    font-size: var(--text-small);
+  }
+  .idea-open-question label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    font-size: var(--text-caption);
+    color: var(--muted-foreground);
+    font-weight: var(--weight-regular);
+  }
+  .idea-question-form {
+    margin-top: 10px;
+  }
+  .idea-question-form label {
+    margin-bottom: 10px;
+  }
+  .idea-reference-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .idea-reference {
+    margin: 0;
+    min-width: 0;
+  }
+  .idea-reference-image {
+    position: relative;
+    height: 142px;
+    border-radius: 9px;
+    background: var(--muted);
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+  .idea-reference-image > .button--surface {
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+  }
+  .idea-reference-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    min-height: 0;
+  }
+  .idea-reference-image > .button--surface > svg {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    color: var(--muted-foreground);
+  }
+  .idea-reference-remove {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+  }
+  .idea-reference figcaption {
+    margin-top: 8px;
+  }
+  .idea-reference-name {
+    display: block;
+    font-size: var(--text-caption);
+    color: var(--muted-foreground);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-bottom: 5px;
+  }
+  .idea-reference figcaption input {
+    font-size: var(--text-label);
+    padding: 8px 10px;
+  }
+  .idea-reference figcaption p {
+    font-size: var(--text-small);
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .idea-references > .idea-field-hint {
+    margin: 8px 0 0;
+  }
+  .idea-references input[type="file"] {
+    display: none;
+  }
+  .idea-mobile-nav {
+    display: none;
+  }
+  .modal.wide.reference-viewer {
+    width: min(850px, calc(100vw - 32px));
+  }
+  .reference-viewer > .modal-body > img {
+    max-width: 100%;
+    width: 100%;
+    max-height: 60dvh;
+    object-fit: contain;
+  }
+  .reference-viewer > .modal-body > p {
+    margin-bottom: 0;
+    font-size: var(--text-small);
+  }
+  .idea-studio .idea-conflict {
+    border-top: 1px solid var(--border);
+    margin-top: 24px;
+  }
+  .idea-source-details {
+    display: grid;
+    gap: 18px;
+  }
+  .idea-source-details h3 {
+    font-size: var(--text-body);
+    margin: 0 0 5px;
+  }
+  .idea-source-details p {
+    margin: 0;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  .project-reference-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .project-reference-heading p {
+    color: var(--muted-foreground);
+    font-size: var(--text-small);
+    margin: 0;
+  }
+  .project-starting-brief {
+    margin: 16px 0;
+  }
+  .project-starting-brief > .ui-disclosure-content {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+  @keyframes idea-detail-arrive {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  html[data-motion="reduce"] .idea-page,
+  html[data-motion="reduce"] .idea-detail,
+  html[data-motion="reduce"] .idea-prompt {
+    animation: none;
+  }
+  html[data-motion="reduce"] .idea-readiness-dot {
+    transition: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .idea-page,
+    .idea-detail,
+    .idea-prompt {
+      animation: none;
+    }
+    .idea-readiness-dot {
+      transition: none;
+    }
+  }
+  @media (max-width: 1100px) {
+    .idea-paper {
+      padding: 20px 22px 24px;
+      scrollbar-gutter: auto;
+    }
+    .idea-studio .idea-title-input {
+      font-size: var(--text-title);
+    }
+    .idea-studio .idea-writing {
+      min-height: 115px;
+    }
+    .idea-foundation {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+    }
+    .idea-foundation-row {
+      align-items: center;
+    }
+    .idea-foundation > .idea-foundation-row {
+      flex-direction: column;
+      gap: 4px;
+      padding-left: 3px;
+      padding-right: 3px;
+      font-size: var(--text-caption);
+      text-align: center;
+    }
+    .idea-foundation-row small {
+      margin: 0;
+    }
+    .idea-examples {
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    .idea-reference-image {
+      height: 120px;
+    }
+  }
+  @media (max-width: 370px) {
+    .idea-paper {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    .idea-reference-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .idea-paper {
+      transition: none !important;
+    }
+  }
+  html[data-motion="reduce"] .idea-paper {
+    transition: none !important;
+  }
+
+  @media (max-width: 720px) {
+    .idea-page-toolbar {
+      padding: 12px 18px;
+      align-items: stretch;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .idea-page-navigation {
+      gap: 10px;
+    }
+    .idea-page-actions {
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .idea-page-actions .idea-save-state {
+      margin-right: auto;
+    }
+    .idea-page-heading {
+      font-size: var(--text-small);
+    }
+  }
+
+  .idea-adaptive-controls,
+  .idea-observations {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .idea-observation {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+  .idea-observation p {
+    margin: 0 0 8px;
+  }
+  .idea-observation blockquote {
+    margin: 8px 0;
+    padding-left: 12px;
+    border-left: 2px solid var(--border);
+    overflow-wrap: anywhere;
+  }
+}

@@ -1,0 +1,17 @@
+@layer theme, base, components, utilities;
+@layer components {
+  .project-entry-intro {
+    color: var(--muted-foreground);
+    margin: 0 0 24px;
+  }
+  .project-entry-form {
+    display: grid;
+    gap: 8px;
+  }
+  .modal .project-entry-form > label {
+    margin-bottom: 0;
+  }
+  .project-entry-form label:not(:first-child) {
+    margin-top: 12px;
+  }
+}

@@ -1,0 +1,93 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .mascot-art-page {
+    min-height: 100svh;
+  }
+  .mascot-art-paper {
+    background: #faf8f2;
+  }
+  .mascot-art-board {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    text-align: center;
+  }
+  .mascot-art-board h1 {
+    font-size: var(--text-heading);
+    margin: 0 0 10px;
+    letter-spacing: -0.7px;
+  }
+  .mascot-art-subtitle {
+    color: #516c7a;
+    font-size: var(--text-small);
+    margin: 0;
+  }
+  .mascot-art-expressions {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+    gap: 32px;
+  }
+  .mascot-art-board figure {
+    margin: 0;
+    min-width: 0;
+  }
+  .mascot-art-board img {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+  .mascot-art-hero img {
+    width: 350px;
+  }
+  .mascot-art-board figcaption {
+    font-size: var(--text-label);
+    color: #506876;
+  }
+  .mascot-art-variants {
+    display: flex;
+    gap: 12px;
+  }
+  .mascot-art-variants img {
+    width: 155px;
+  }
+  .mascot-art-sizes {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap: 40px;
+    margin: 24px 0 0;
+  }
+  .mascot-art-footer {
+    text-align: center;
+    padding: 18px;
+    color: #506876;
+    font-size: var(--text-caption);
+  }
+  @media (max-width: 600px) {
+    .mascot-art-page .entry-header {
+      padding: 20px;
+      gap: 12px;
+    }
+    .mascot-art-expressions {
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .mascot-art-hero img {
+      width: 240px;
+    }
+    .mascot-art-variants {
+      justify-content: center;
+    }
+    .mascot-art-variants img {
+      width: 125px;
+    }
+    .mascot-art-sizes {
+      gap: 8px;
+    }
+    .mascot-art-board {
+      padding: 12px 16px;
+    }
+  }
+}

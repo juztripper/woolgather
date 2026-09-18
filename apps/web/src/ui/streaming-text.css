@@ -1,0 +1,23 @@
+@layer components {
+  .streaming-word {
+    animation: streaming-word-reveal var(--motion-fast) var(--motion-ease) both;
+  }
+  @keyframes streaming-word-reveal {
+    from {
+      opacity: 0.2;
+      filter: blur(2px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .streaming-word {
+      animation: none;
+    }
+  }
+  html[data-motion="reduce"] .streaming-word {
+    animation: none;
+  }
+}

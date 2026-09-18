@@ -1,0 +1,79 @@
+@import "./shadcn.css";
+@import "./fonts.css";
+
+/* Shared production tokens. Change the system here, never in a screen override. */
+:root {
+  --motion-fast: 160ms;
+  --motion-layout: 360ms;
+  --motion-exit: 220ms;
+  --motion-dissolve: 420ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --sidebar-width: 256px;
+  --sidebar-width-mobile: 280px;
+  --sidebar-width-icon: 48px;
+  --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --serif: "Source Serif 4", Georgia, serif;
+  --text-micro: 0.6875rem;
+  --text-menu: 0.8125rem;
+  --text-caption: 0.75rem;
+  --text-label: 0.8125rem;
+  --text-small: 0.875rem;
+  --text-body: 0.875rem;
+  --text-body-large: 1rem;
+  --text-reading: 1.0625rem;
+  --text-subheading: 1rem;
+  --text-section: 1.25rem;
+  --text-title: 2rem;
+  --text-title-compact: 1.25rem;
+  --text-brand: 1.375rem;
+  --text-brand-sidebar: 1.25rem;
+  --text-brand-mobile: 1.25rem;
+  --text-brand-sidebar-mobile: 1.25rem;
+  --text-heading: 1.75rem;
+  --text-heading-large: 2rem;
+  --text-display: 2.5rem;
+  --text-display-large: 3.5rem;
+  --text-marketing-hero: 6rem;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --success-foreground: #42745e;
+  --success-background: #edf4ef;
+  --warning-foreground: #805d2a;
+  --warning-background: #fcf7ed;
+  --warning-border: #ddc9a5;
+  --leading-tight: 1.2;
+  --leading-body: 1.5;
+  --control-height: 40px;
+  --control-height-sm: 34px;
+  --control-height-xs: 28px;
+  --control-height-lg: 44px;
+  --control-icon-xs: 24px;
+  --control-font: var(--text-body);
+  --control-leading: 20px;
+  --control-gap: 8px;
+  --control-padding: 18px;
+  --control-padding-sm: 12px;
+  --control-padding-xs: 10px;
+  --control-padding-lg: 22px;
+  --field-padding: 12px;
+  --focus-ring: var(--ring);
+  --action-ink: var(--foreground);
+  /* Semantic danger actions keep the approved warm red palette. */
+  --action-danger-ink: #8c4035;
+  --action-danger-primary: linear-gradient(180deg, #ad4940 0%, #8c302a 100%);
+  --action-danger-primary-hover: linear-gradient(#b65046, #99372f);
+  --action-danger-primary-border: #8c302a;
+  --action-danger-primary-shadow: inset 0 1px 0 #ffffff40, 0 2px 3px #72251f26;
+}
+@media (pointer: coarse) {
+  :root {
+    --control-height: 44px;
+  }
+}
+
+@media (max-width: 1200px) {
+  :root {
+    --sidebar-width: 236px;
+  }
+}

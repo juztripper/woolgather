@@ -1,0 +1,350 @@
+@layer theme, base, components, utilities;
+@layer components {
+  .agent-avatar {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    flex: none;
+    border-radius: 50%;
+    vertical-align: middle;
+    overflow: hidden;
+    background: var(--agent-sky);
+  }
+  .agent-avatar > svg {
+    width: 100%;
+    height: 100%;
+  }
+  /* Layers keep breathing, pointer movement and greetings independent. The
+     measured circle and its button never move, even during quick reversals. */
+  .agent-avatar-reaction,
+  .agent-avatar-body,
+  .agent-avatar-tilt {
+    transform-origin: 40px 62px;
+  }
+  .agent-avatar-accessory {
+    transform-origin: 40px 29px;
+  }
+  .agent-avatar[data-character="orbit"] .agent-avatar-accessory {
+    transform-origin: 40px 51px;
+  }
+  .agent-avatar-eyes {
+    transform-origin: 40px 46px;
+  }
+  .agent-avatar-mouth {
+    transform-origin: 40px 53px;
+  }
+  .agent-avatar-shadow {
+    transform-origin: 40px 66px;
+  }
+  .agent-avatar-gaze,
+  .agent-avatar-tilt,
+  .agent-avatar-mouth {
+    transition: transform var(--motion-layout) var(--motion-ease);
+  }
+  .agent-avatar-eyes-rest,
+  .agent-avatar-eyes-smile,
+  .agent-avatar-cheeks {
+    transition: opacity var(--motion-fast) ease;
+  }
+  .agent-avatar-eyes-smile {
+    opacity: 0;
+  }
+  .agent-avatar-cheeks {
+    opacity: 0.65;
+  }
+  .agent-avatar:is([data-engaged="true"], [data-greeting="true"])
+    .agent-avatar-eyes-rest {
+    opacity: 0;
+  }
+  .agent-avatar:is([data-engaged="true"], [data-greeting="true"])
+    .agent-avatar-eyes-smile,
+  .agent-avatar:is([data-engaged="true"], [data-greeting="true"])
+    .agent-avatar-cheeks {
+    opacity: 1;
+  }
+  .agent-avatar[data-animate="true"] {
+    .agent-avatar-gaze {
+      transform: translate(var(--agent-look-x, 0px), var(--agent-look-y, 0px));
+    }
+    .agent-avatar-tilt {
+      transform: rotate(var(--agent-tilt, 0deg));
+    }
+    &:is([data-engaged="true"], [data-greeting="true"]) .agent-avatar-mouth {
+      transform: scale(1.15, 1.3);
+    }
+    &:is(
+      [data-quiet="false"],
+      [data-engaged="true"],
+      [data-activity="working"]
+    ) {
+      .agent-avatar-body {
+        animation: agent-breathe var(--agent-idle-period) ease-in-out infinite;
+      }
+      .agent-avatar-eyes {
+        animation: agent-blink 6.7s var(--agent-blink-delay) infinite;
+      }
+      .agent-avatar-accessory {
+        animation: agent-sway var(--agent-idle-period) ease-in-out infinite;
+      }
+      .agent-avatar-shadow {
+        animation: agent-shadow var(--agent-idle-period) ease-in-out infinite;
+      }
+      &[data-character="orbit"] .agent-avatar-accessory {
+        animation-name: agent-orbit;
+      }
+      &[data-character="moss"] .agent-avatar-accessory,
+      &[data-character="pebble"] .agent-avatar-accessory {
+        animation-name: agent-ears;
+      }
+      &[data-character="spark"] .agent-avatar-body {
+        animation-name: agent-spark;
+      }
+      .agent-avatar-flame {
+        animation: agent-flame 3.8s ease-in-out infinite;
+      }
+      .agent-avatar-flame-highlight {
+        animation: agent-flame-highlight 3.8s ease-in-out infinite;
+      }
+      &[data-character="ripple"] .agent-avatar-body {
+        animation-name: agent-cloud;
+      }
+    }
+    &[data-activity="working"] {
+      .agent-avatar-body {
+        animation: agent-working 1.4s ease-in-out infinite;
+      }
+      .agent-avatar-gaze {
+        animation: agent-search 2.8s ease-in-out infinite;
+      }
+      .agent-avatar-accessory {
+        animation-duration: 1.4s;
+      }
+      .agent-avatar-shadow {
+        animation-duration: 1.4s;
+      }
+    }
+  }
+  @keyframes agent-breathe {
+    0%,
+    100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-1.8px) scale(1.015, 1.025);
+    }
+  }
+  @keyframes agent-blink {
+    0%,
+    42%,
+    46%,
+    48%,
+    52%,
+    100% {
+      transform: scaleY(1);
+    }
+    44%,
+    50% {
+      transform: scaleY(0.1);
+    }
+  }
+  @keyframes agent-sway {
+    0%,
+    100% {
+      transform: rotate(-5deg);
+    }
+    50% {
+      transform: rotate(7deg);
+    }
+  }
+  @keyframes agent-orbit {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-8deg);
+    }
+    50% {
+      transform: translateY(-2px) rotate(12deg);
+    }
+  }
+  @keyframes agent-ears {
+    0%,
+    65%,
+    100% {
+      transform: scale(1);
+    }
+    75% {
+      transform: scale(0.94, 1.12);
+    }
+    85% {
+      transform: scale(1.04, 0.95);
+    }
+  }
+  /* Only the upper contour morphs; the lower body and face stay grounded.
+     Matching path commands let the browser interpolate each tip smoothly. */
+  @keyframes agent-flame {
+    0%,
+    100% {
+      d: path(
+        "M40 66C26 66 17 59 17 47C17 39 22 32 26 28C24 35 29 38 31 38C29 25 38 22 42 14Q44 10 44 15C43 25 57 29 54 40C59 38 60 34 59 31C65 37 67 44 64 53C61 62 51 66 40 66Z"
+      );
+    }
+    32% {
+      d: path(
+        "M40 66C26 66 17 59 17 47C17 39 20 31 23 25C23 34 28 38 31 38C30 26 36 21 38 12Q40 8 40 14C40 24 56 28 54 40C59 38 62 32 61 27C65 35 67 44 64 53C61 62 51 66 40 66Z"
+      );
+    }
+    71% {
+      d: path(
+        "M40 66C26 66 17 59 17 47C17 39 24 30 29 24C26 34 30 38 32 38C29 27 41 23 46 15Q48 11 48 16C46 26 58 31 54 40C58 39 59 37 58 35C64 39 67 44 64 53C61 62 51 66 40 66Z"
+      );
+    }
+  }
+  @keyframes agent-flame-highlight {
+    0%,
+    100% {
+      d: path("M24 46C24 42 26 39 28 37M37 30C38 26 40 24 42 21");
+    }
+    32% {
+      d: path("M24 46C24 42 25 37 26 34M36 29C36 25 37 22 39 20");
+    }
+    71% {
+      d: path("M24 46C24 42 27 37 29 34M39 31C41 26 44 24 46 22");
+    }
+  }
+  @keyframes agent-spark {
+    0%,
+    100% {
+      transform: rotate(-1.5deg) scale(0.99, 1.015);
+    }
+    40% {
+      transform: translateY(-1.5px) rotate(1.5deg) scale(1.02, 0.99);
+    }
+    70% {
+      transform: translateY(-0.5px) rotate(-0.75deg) scale(0.99, 1.02);
+    }
+  }
+  @keyframes agent-cloud {
+    0%,
+    100% {
+      transform: translate(-1.5px, 0) scale(1);
+    }
+    50% {
+      transform: translate(1.5px, -2px) scale(1.02, 0.99);
+    }
+  }
+  @keyframes agent-shadow {
+    0%,
+    100% {
+      transform: scaleX(1);
+      opacity: 0.09;
+    }
+    50% {
+      transform: scaleX(0.88);
+      opacity: 0.065;
+    }
+  }
+  @keyframes agent-working {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-3deg);
+    }
+    50% {
+      transform: translateY(-3px) rotate(3deg);
+    }
+  }
+  @keyframes agent-search {
+    0%,
+    100% {
+      transform: translate(-2px, -1px);
+    }
+    50% {
+      transform: translate(2px, 0);
+    }
+  }
+  :root[data-motion="reduce"] .agent-avatar *,
+  .agent-avatar[data-animate="false"] * {
+    animation: none !important;
+    transition: none !important;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .agent-avatar * {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+  .agent-identity-preview {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-block: 4px 12px;
+  }
+  .agent-identity-preview .agent-avatar {
+    width: 80px;
+    height: 80px;
+  }
+  .agent-identity-preview strong {
+    display: block;
+    font: var(--weight-medium) var(--text-heading)/1.3 var(--sans);
+    overflow-wrap: anywhere;
+  }
+  .agent-identity-preview p {
+    margin: 6px 0 0;
+    color: var(--muted-foreground);
+    font: var(--weight-regular) var(--text-menu)/1.5 var(--sans);
+  }
+  .agent-identity-preview > div {
+    min-width: 0;
+  }
+  .agent-avatar-options {
+    padding: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .agent-avatar-choice.button {
+    padding: 3px;
+    width: 44px;
+    height: 44px;
+  }
+  .agent-avatar-choice .agent-avatar {
+    width: 36px;
+    height: 36px;
+  }
+  .agent-avatar-choice[aria-pressed="true"] {
+    border-color: var(--ring);
+    box-shadow: inset 0 0 0 1px var(--ring);
+  }
+  .agent-role-starters {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+  .agent-creation-field {
+    display: grid;
+    gap: 8px;
+  }
+  .agent-creation-field > span {
+    font: var(--weight-medium) var(--text-menu)/1.5 var(--sans);
+  }
+  .conversation-agent-icon .agent-avatar {
+    width: 48px;
+    height: 48px;
+  }
+  .agent-avatar--inline {
+    width: 20px;
+    height: 20px;
+  }
+  .agent-speaker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .agent-avatar--message {
+    width: 40px;
+    height: 40px;
+    overflow: visible;
+    background: transparent;
+  }
+  .agent-avatar--message .agent-avatar-backdrop {
+    display: none;
+  }
+}

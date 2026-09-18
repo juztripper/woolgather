@@ -1,0 +1,477 @@
+@layer theme, base, components, utilities;
+
+@property --material-presence {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+@layer components {
+  /* One material vocabulary, shared by controls, floating chrome and portals. */
+  .wg-control[data-variant="default"] {
+    background-image:
+      radial-gradient(
+        120px circle at var(--light-x, 50%) var(--light-y, 0%),
+        #ffffff28,
+        transparent 80%
+      ),
+      linear-gradient(180deg, #ffffff12, #ffffff00);
+    box-shadow:
+      inset 0 1px 0 #ffffff35,
+      0 3px 6px #203d491c;
+  }
+  .wg-control[data-variant="outline"],
+  [data-slot="sidebar-trigger"],
+  .expanding-search {
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-shadow);
+  }
+  .wg-control[data-variant="outline"]:hover,
+  [data-slot="sidebar-trigger"]:hover {
+    background-color: #ffffffb3;
+    box-shadow:
+      inset 0 1px 0 white,
+      0 4px 14px #2d516b15;
+  }
+  [data-slot="input"],
+  [data-slot="input-group"],
+  [data-slot="select-trigger"] {
+    border-radius: 14px;
+  }
+  [data-slot="input"],
+  [data-slot="textarea"],
+  [data-slot="input-group"] {
+    background-color: #ffffff70;
+  }
+  [data-slot="select-trigger"] {
+    background: var(--glass-fill);
+    box-shadow: var(--glass-shadow);
+    border-color: var(--glass-edge);
+  }
+  [data-slot="button"],
+  [data-slot="tabs-trigger"],
+  [data-slot="select-trigger"] {
+    cursor: pointer;
+  }
+  [data-slot="button"]:disabled {
+    cursor: default;
+  }
+  /* One composited surface: text can never outrun its frame. Compact
+     anchored controls resolve in place; dialogs use a diffuse optical reveal. */
+  .material-popup {
+    --material-presence: 1;
+    --surface-softness: 2px;
+    --surface-duration: 280ms;
+    --surface-exit-duration: 180ms;
+    isolation: isolate;
+    overflow: clip;
+    background: transparent;
+    backdrop-filter: blur(calc(12px + 12px * var(--material-presence)))
+      saturate(1.15);
+    -webkit-backdrop-filter: blur(calc(12px + 12px * var(--material-presence)))
+      saturate(1.15);
+    border: 0;
+    --tw-ring-shadow: 0 0 #0000;
+    border-radius: 18px;
+    transform-origin: var(--transform-origin, center);
+    opacity: var(--material-presence);
+    scale: calc(0.985 + 0.015 * var(--material-presence));
+    filter: blur(
+      calc((1 - var(--material-presence)) * var(--surface-softness))
+    );
+    box-shadow:
+      0 12px 42px #23435c26,
+      0 2px 5px #23435c12;
+    transition: --material-presence var(--surface-duration) var(--motion-ease);
+  }
+  .material-popup::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    border: 1px solid var(--glass-edge);
+    background:
+      radial-gradient(
+        ellipse at 24% 0%,
+        rgb(255 255 255 / calc((1 - var(--material-presence)) * 0.8)),
+        transparent 72%
+      ),
+      linear-gradient(140deg, #fffffff2, #f1f7f6ed);
+    box-shadow:
+      inset 0 1px 0 white,
+      inset 0 -1px 0 #ffffffbd;
+  }
+  .material-popup:is(
+    [data-slot="dialog-content"],
+    [data-slot="alert-dialog-content"],
+    [data-material-kind="cloud"]
+  ) {
+    --surface-softness: 6px;
+    --surface-duration: 380ms;
+    --surface-exit-duration: 240ms;
+    transform-origin: center;
+    /* Two overlapping, feathered fields materialize the entire dialog. The
+       mask includes both the glass and its contents, never text alone. */
+    mask-image:
+      radial-gradient(
+        ellipse at 28% 22%,
+        #000 calc(var(--material-presence) * 140% - 22%),
+        transparent calc(var(--material-presence) * 155%)
+      ),
+      radial-gradient(
+        ellipse at 78% 76%,
+        #000 calc(var(--material-presence) * 120% - 18%),
+        transparent calc(var(--material-presence) * 145%)
+      );
+    mask-size: 140% 140%;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-clip: no-clip;
+  }
+  .material-popup[data-starting-style],
+  .material-popup[data-material-start],
+  .material-popup[data-ending-style] {
+    --material-presence: 0;
+  }
+  .material-popup[data-material-start] {
+    transition: none;
+  }
+  .material-popup[data-ending-style] {
+    pointer-events: none;
+    transition-duration: var(--surface-exit-duration);
+  }
+  [data-slot="dialog-overlay"][data-ending-style],
+  [data-slot="alert-dialog-overlay"][data-ending-style] {
+    pointer-events: none;
+    transition-duration: 240ms;
+  }
+  @starting-style {
+    .material-popup {
+      --material-presence: 0;
+    }
+  }
+  [data-slot="dialog-content"].material-popup {
+    --dialog-padding: 24px;
+    border-radius: 26px;
+    padding: var(--dialog-padding);
+  }
+  [data-slot="dialog-content"].material-popup > [data-slot="dialog-footer"] {
+    margin: 8px calc(-1 * var(--dialog-padding))
+      calc(-1 * var(--dialog-padding));
+    padding: 18px var(--dialog-padding);
+    background: #ffffff52;
+  }
+  @media (max-width: 639px) {
+    [data-slot="dialog-content"].material-popup {
+      --dialog-padding: 20px;
+    }
+  }
+  [data-slot="dialog-content"].material-popup > [data-slot="dialog-header"] {
+    padding-right: 32px;
+  }
+  [data-slot="dialog-title"] {
+    font-size: var(--text-section);
+    line-height: var(--leading-tight);
+    letter-spacing: -0.03em;
+  }
+  [data-slot="dialog-content"].material-popup > [data-slot="dialog-close"] {
+    top: 14px;
+    right: 14px;
+  }
+  .material-menu-body {
+    max-height: var(--available-height);
+    overflow-y: auto;
+    padding: 5px;
+    border-radius: inherit;
+  }
+  [data-slot="dropdown-menu-item"],
+  [data-slot="dropdown-menu-sub-trigger"],
+  [data-slot="context-menu-item"],
+  [data-slot="context-menu-sub-trigger"],
+  [data-slot="command-item"],
+  [data-slot="select-item"] {
+    border-radius: 10px;
+    transition: background-color var(--motion-fast) ease-out;
+  }
+  [data-slot="tabs-list"] {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    border-radius: 999px;
+    background: #dde8ed80;
+    padding: 4px;
+  }
+  [data-slot="tabs-trigger"] {
+    border-radius: 999px;
+    transition: color var(--motion-fast) ease;
+    z-index: 1;
+  }
+  [data-slot="tabs-trigger"][data-active] {
+    background: transparent;
+    box-shadow: none;
+  }
+  .tabs-lens {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(var(--active-tab-left), var(--active-tab-top));
+    width: var(--active-tab-width);
+    height: var(--active-tab-height);
+    border-radius: 999px;
+    background: #ffffffe6;
+    border: 1px solid white;
+    box-shadow: 0 2px 6px #25485a14;
+    transition:
+      transform var(--motion-layout) var(--motion-ease),
+      width var(--motion-layout) var(--motion-ease),
+      height var(--motion-layout) var(--motion-ease);
+  }
+  [data-slot="tabs-list"][data-resizing] .tabs-lens {
+    transition: none;
+  }
+  [data-slot="tabs-list"][data-variant="line"] .tabs-lens {
+    display: none;
+  }
+  .segmented-control {
+    position: relative;
+    display: flex;
+    isolation: isolate;
+    padding: 4px;
+    border-radius: 999px;
+    background: #dde8ed80;
+    border: 1px solid #ffffffa8;
+  }
+  .segmented-control > .button {
+    z-index: 1;
+    min-width: 38px;
+    padding-inline: 10px;
+    background: transparent;
+  }
+  .segmented-control > .button[aria-pressed="true"] {
+    color: var(--foreground);
+  }
+  .segmented-lens {
+    position: absolute;
+    left: 4px;
+    top: 4px;
+    bottom: 4px;
+    width: calc((100% - 8px) / var(--segments));
+    transform: translateX(calc(100% * var(--selected-segment)));
+    border-radius: 999px;
+    background: #fffffff2;
+    box-shadow: 0 2px 5px #2a485416;
+    transition: transform var(--motion-layout) var(--motion-ease);
+  }
+  .morph-text {
+    display: inline-grid;
+    position: relative;
+    vertical-align: bottom;
+  }
+  .morph-text > span {
+    grid-area: 1 / 1;
+  }
+  .morph-text-old {
+    position: absolute;
+    inset: 0 auto auto 0;
+    white-space: nowrap;
+    pointer-events: none;
+    animation: words-out 260ms var(--motion-ease) both;
+  }
+  .morph-text-new {
+    animation: words-in 320ms var(--motion-ease) both;
+  }
+  @keyframes words-in {
+    from {
+      opacity: 0;
+      filter: blur(4px);
+      transform: translateY(8px);
+    }
+  }
+  @keyframes words-out {
+    to {
+      opacity: 0;
+      filter: blur(4px);
+      transform: translateY(-6px);
+    }
+  }
+  .expanding-search {
+    display: flex;
+    border-radius: 999px;
+    width: calc(var(--control-height) + 2px);
+    height: calc(var(--control-height) + 2px);
+    flex: none;
+    overflow: clip;
+    align-items: center;
+    transition:
+      width 200ms var(--motion-ease),
+      box-shadow var(--motion-fast) ease;
+  }
+  .expanding-search[data-open="true"] {
+    width: min(300px, var(--search-available-width, 100%));
+  }
+  .expanding-search-field {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    flex: 1;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 160ms;
+  }
+  .expanding-search[data-open="true"] .expanding-search-field {
+    opacity: 1;
+  }
+  .expanding-search [data-slot="input"] {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    height: 38px;
+    min-width: 0;
+  }
+  .expanding-search:has(input:focus-visible) {
+    border-color: var(--ring);
+    box-shadow:
+      var(--glass-shadow),
+      0 0 0 1px color-mix(in oklch, var(--ring) 30%, transparent);
+  }
+  .expanding-search [data-slot="input"]:focus-visible {
+    outline: none;
+    box-shadow: none;
+  }
+  .expanding-search-field > .button {
+    flex: none;
+    margin-right: 3px;
+  }
+  html[data-motion="reduce"] .material-popup {
+    --material-presence: 1 !important;
+    filter: none;
+    mask-image: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .material-popup {
+      --material-presence: 1 !important;
+      filter: none;
+      mask-image: none;
+    }
+    .material-popup,
+    .material-popup::before,
+    .material-popup > *,
+    .tabs-lens,
+    .segmented-lens,
+    .expanding-search,
+    .expanding-search-field {
+      transition: none !important;
+    }
+    .morph-text-old {
+      display: none;
+    }
+    .morph-text-new {
+      animation: none;
+    }
+  }
+  html[data-motion="reduce"] .material-popup::before,
+  html[data-motion="reduce"]
+    :is(
+      .material-popup,
+      .material-popup > *,
+      .tabs-lens,
+      .segmented-lens,
+      .expanding-search,
+      .expanding-search-field
+    ) {
+    transition: none !important;
+  }
+  html[data-motion="reduce"] .morph-text-old {
+    display: none;
+  }
+  html[data-motion="reduce"] .morph-text-new {
+    animation: none;
+  }
+}
+
+/* The browser interpolates collection bounds when switching presentation or views. */
+:root {
+  view-transition-name: none;
+}
+::view-transition {
+  pointer-events: none;
+}
+.library-results,
+.project-studio,
+.project-workspace {
+  view-transition-name: collection;
+}
+::view-transition-group(collection) {
+  animation-duration: var(--motion-layout);
+  animation-timing-function: var(--motion-ease);
+}
+::view-transition-old(collection) {
+  animation: collection-out var(--motion-exit) ease-in-out both;
+}
+::view-transition-new(collection) {
+  animation: collection-in var(--motion-layout) ease-in-out both;
+}
+@keyframes collection-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes collection-in {
+  from {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}
+html[data-motion="reduce"]::view-transition-group(*),
+html[data-motion="reduce"]::view-transition-old(*),
+html[data-motion="reduce"]::view-transition-new(*) {
+  animation: none;
+}
+html[data-contrast="more"] {
+  --glass-fill: #f5f9fa;
+  --glass-edge: #71848d;
+  --glass-blur: none;
+}
+html[data-contrast="more"] .material-popup {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+html[data-contrast="more"] .material-popup::before,
+html[data-contrast="more"] .main-shell {
+  background: #fff;
+  border: 1px solid #71848d;
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-fill: #f5f9fa;
+    --glass-blur: none;
+  }
+  .main-shell,
+  .material-popup::before {
+    background: #fcfdfb;
+  }
+  .material-popup {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  :root {
+    --glass-fill: #f5f9fa;
+  }
+  .material-popup::before {
+    background: #fcfdfb;
+  }
+  .material-popup {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}

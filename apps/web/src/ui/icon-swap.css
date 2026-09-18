@@ -1,0 +1,30 @@
+@layer components {
+  .icon-swap {
+    display: inline-grid;
+    place-items: center;
+  }
+  .icon-swap > span {
+    grid-area: 1 / 1;
+    display: inline-flex;
+    transition:
+      opacity var(--motion-fast) var(--motion-ease),
+      transform var(--motion-fast) var(--motion-ease);
+  }
+  .icon-swap-alternate,
+  .icon-swap[data-active="true"] .icon-swap-default {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  .icon-swap[data-active="true"] .icon-swap-alternate {
+    opacity: 1;
+    transform: scale(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .icon-swap > span {
+      transition: none;
+    }
+  }
+  html[data-motion="reduce"] .icon-swap > span {
+    transition: none;
+  }
+}

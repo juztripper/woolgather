@@ -1,0 +1,399 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .account-avatar {
+    width: 28px;
+    height: 28px;
+    flex: 0 0 auto;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid #ccdadd;
+    border-radius: 50%;
+    background: #e2ecee;
+    color: #345365;
+    font-size: var(--text-label);
+    font-weight: var(--weight-semibold);
+  }
+  .account-avatar-large {
+    width: 56px;
+    height: 56px;
+    font-size: var(--text-section);
+  }
+  .account-menu-anchor {
+    position: relative;
+  }
+  .account-settings-content .settings-title {
+    font-size: var(--text-section);
+    font-weight: var(--weight-medium);
+    margin: 0 0 8px;
+    letter-spacing: -0.025em;
+  }
+  .account-settings-content > .button + .settings-title {
+    margin-top: 22px;
+  }
+  .settings-intro {
+    margin-bottom: 24px;
+    font-size: var(--text-body);
+    color: var(--muted-foreground);
+  }
+  .account-setting-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    justify-content: space-between;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .account-setting-copy {
+    min-width: 0;
+    flex: 1;
+  }
+  .account-setting-row h3 {
+    margin: 0 0 4px;
+    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+  }
+  .account-setting-row p {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-label);
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+  }
+  .account-setting-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+  .account-setting-control select {
+    max-width: 165px;
+  }
+  .settings-section-heading {
+    margin-top: 24px;
+  }
+  .settings-section-heading h3 {
+    margin: 0 0 5px;
+    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+  }
+  .settings-section-heading p,
+  .settings-hint {
+    color: var(--muted-foreground);
+    font-size: var(--text-label);
+    line-height: 1.5;
+    margin: 0;
+  }
+  .settings-hint {
+    margin-top: 16px;
+  }
+  .settings-heading-actions {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .passkey-section .settings-heading-actions > .button {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .linked-provider {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+  }
+  .linked-provider > div {
+    min-width: 0;
+  }
+  .linked-provider img {
+    height: 22px;
+    width: 22px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .pending-email {
+    display: block;
+    margin-top: 4px;
+  }
+  .settings-profile-heading {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    margin-bottom: 18px;
+    color: var(--muted-foreground);
+    font-size: var(--text-body);
+  }
+  .settings-profile-form label,
+  .security-form label {
+    display: grid;
+    gap: 8px;
+    margin-top: 17px;
+  }
+  .settings-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+  .security-form label > [data-slot],
+  .settings-profile-form label > [data-slot] {
+    margin-top: 0;
+  }
+  .security-form > p {
+    font-size: var(--text-body);
+    color: var(--muted-foreground);
+  }
+  .security-form > .button {
+    margin-top: 15px;
+  }
+  .mfa-qr {
+    display: block;
+    width: 180px;
+    height: 180px;
+    margin: 20px auto;
+    border-radius: 8px;
+    background: white;
+    padding: 8px;
+  }
+  .security-form details {
+    font-size: var(--text-label);
+    margin-top: 16px;
+  }
+  .security-form summary {
+    cursor: pointer;
+  }
+  .mfa-secret {
+    display: block;
+    overflow-wrap: anywhere;
+    padding: 10px;
+    background: #edf2f1;
+    user-select: all;
+  }
+  .session-icon {
+    flex-shrink: 0;
+    color: var(--muted-foreground);
+  }
+  .account-verification {
+    min-height: 100dvh;
+    display: grid;
+    place-items: center;
+    background: #edf1f2;
+    padding: 24px;
+  }
+  .verification-card {
+    width: min(400px, 100%);
+    display: grid;
+    gap: 18px;
+  }
+  .verification-card h1 {
+    font-size: var(--text-section);
+    margin: 0;
+  }
+  .verification-card p {
+    font-size: var(--text-body);
+    margin: 0;
+    color: var(--muted-foreground);
+  }
+  .verification-card label {
+    display: grid;
+    gap: 8px;
+    font-size: var(--text-label);
+  }
+  .verification-actions {
+    display: grid;
+    gap: 4px;
+  }
+  html[data-motion="reduce"] *,
+  html[data-motion="reduce"] *::before,
+  html[data-motion="reduce"] *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  html[data-motion="reduce"] .orb-render canvas {
+    display: none;
+  }
+  html[data-motion="reduce"] .orb-render .orb-fallback {
+    opacity: 1 !important;
+  }
+  html[data-contrast="more"] {
+    --muted-foreground: oklch(0.37 0 0);
+    --line: #8296a0;
+  }
+  html[data-contrast="more"] :is(input, select, textarea, .button, .ui-badge) {
+    outline-offset: 3px;
+    border-color: #708996;
+  }
+  html[data-contrast="more"] :focus-visible {
+    outline: 3px solid #244d68;
+  }
+  .settings-nav-short {
+    display: none;
+  }
+  @media (max-width: 680px) {
+    .settings-nav-full {
+      display: none;
+    }
+    .settings-nav-short {
+      display: inline;
+    }
+    .account-setting-row {
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .account-setting-copy {
+      flex-basis: 55%;
+    }
+    .account-setting-control {
+      flex-wrap: wrap;
+    }
+    .account-setting-control select {
+      max-width: 150px;
+    }
+  }
+  /* Supporting copy remains readable against the tinted account surfaces. */
+  html[data-contrast="more"] :is(.account-settings, .account-verification) {
+    --muted-foreground: oklch(0.37 0 0);
+  }
+
+  .settings-profile-account-actions {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 16px;
+  }
+
+  /* Account identity stays in navigation; the modal contains only settings. */
+  .artwork-avatar {
+    border: 0;
+    background: transparent;
+    overflow: hidden;
+  }
+  .artwork-avatar svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .account-menu-compact {
+    display: none;
+  }
+  .account-return {
+    padding: 12px 6px 0;
+    text-align: center;
+    font-size: var(--text-label);
+    color: var(--muted-foreground);
+  }
+  .account-return p {
+    margin: 4px 0 8px;
+  }
+  .account-return .button {
+    margin: 3px auto;
+  }
+  .auth-column {
+    min-width: 0;
+  }
+  .profile-editor .profile-name-row {
+    margin: 0;
+  }
+  .profile-name-row > input {
+    margin: 0;
+    max-width: 260px;
+  }
+  .account-settings-content [data-slot="select-trigger"] {
+    flex-shrink: 0;
+  }
+  @media (max-width: 720px) {
+    .account-menu-compact {
+      display: block;
+    }
+    .account-mobile-trigger {
+      padding: 2px;
+    }
+  }
+  @media (max-width: 680px) {
+    .profile-name-row > input {
+      max-width: 100%;
+    }
+    .account-settings-content [data-slot="select-trigger"] {
+      max-width: 100%;
+    }
+  }
+
+  .avatar-editor-control {
+    position: relative;
+    flex: none;
+  }
+  .avatar-shuffle-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: color-mix(in srgb, var(--foreground) 22%, transparent);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    color: var(--primary-foreground);
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .avatar-editor-control .avatar-clear {
+    position: absolute;
+    top: -6px;
+    left: -8px;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.9);
+    transition:
+      opacity 0.15s,
+      transform 0.15s;
+  }
+  .avatar-editor-control:hover .avatar-shuffle-overlay,
+  html[data-input-mode="keyboard"]
+    .avatar-editor-control:focus-within
+    .avatar-shuffle-overlay {
+    opacity: 1;
+  }
+  .avatar-editor-control:hover .avatar-clear,
+  html[data-input-mode="keyboard"]
+    .avatar-editor-control:focus-within
+    .avatar-clear {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+  }
+  .avatar-shuffle .initials-avatar {
+    transition: color 0.15s;
+  }
+  .avatar-editor-control:hover .initials-avatar,
+  html[data-input-mode="keyboard"]
+    .avatar-editor-control:focus-within
+    .initials-avatar {
+    color: transparent;
+  }
+  @media (pointer: coarse) {
+    .avatar-editor-control .avatar-clear {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+      top: -19px;
+      left: -29px;
+    }
+  }
+  .initials-avatar {
+    background: var(--secondary);
+    color: var(--secondary-foreground);
+    font-weight: var(--weight-medium);
+  }
+
+  .deletion-signin-hint {
+    margin: 0;
+    padding: 1rem;
+    text-align: center;
+    background: var(--surface);
+  }
+}

@@ -1,0 +1,121 @@
+@layer components {
+  .panel-page {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    flex: 1;
+    min-height: 0;
+    min-width: 0;
+    overflow: clip;
+  }
+  .panel-page-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    min-width: 0;
+  }
+  .panel-page-header h2:not(.sr-only) {
+    margin: 0;
+    font: var(--weight-semibold) var(--text-body-large)/1.4 var(--sans);
+    letter-spacing: -0.02em;
+  }
+  .panel-page-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+    flex: none;
+  }
+  .panel-page-body {
+    min-height: 0;
+    min-width: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-gutter: stable;
+    padding: 8px 22px 24px;
+    animation: panel-page-in var(--motion-exit) var(--motion-ease) both;
+  }
+  .panel-page-footer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    background: var(--glass-fill);
+  }
+  .panel-page-footer > .button:last-child {
+    margin-left: auto;
+  }
+  .panel-page-footer > .plan-caption {
+    flex: 1;
+    min-width: 0;
+    font-size: var(--text-caption);
+  }
+  .panel-page-footer .draft-state {
+    flex-basis: 100%;
+    font-size: var(--text-caption);
+    color: var(--muted-foreground);
+  }
+  @keyframes panel-page-in {
+    from {
+      opacity: 0.55;
+      filter: blur(1.5px);
+      transform: translateY(3px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+      transform: none;
+    }
+  }
+  @media (max-height: 520px) {
+    .panel-page-header {
+      padding-block: 8px;
+    }
+    .panel-page-footer {
+      padding-block: 8px;
+    }
+  }
+  @media (max-width: 480px) {
+    .panel-page-header {
+      padding-inline: 12px;
+    }
+    .panel-page-body {
+      padding-inline: 16px;
+    }
+    .panel-page-footer {
+      padding-inline: 12px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .panel-page-body {
+      animation: none;
+    }
+  }
+  html[data-motion="reduce"] .panel-page-body {
+    animation: none;
+  }
+}
+
+/* Reserve clearance for bottom actions. Project home's composer is at the top. */
+body:has([aria-hidden="false"] .panel-page-footer)
+  [data-sonner-toaster][data-y-position="bottom"],
+body:has(.project-studio[data-home="false"] [data-toast-action-shelf])
+  [data-sonner-toaster][data-y-position="bottom"] {
+  bottom: max(
+    var(--offset-bottom),
+    var(--mobile-offset-bottom),
+    calc(var(--control-height) * 2 + 40px)
+  );
+}
+
+/* Keep transient errors above voice controls, including expanded captions. */
+body:has(
+    .project-studio .project-voice[data-active="true"][data-toast-action-shelf]
+  )
+  [data-sonner-toaster][data-y-position="bottom"] {
+  bottom: calc(100dvh - 140px);
+}

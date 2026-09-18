@@ -1,0 +1,151 @@
+@layer theme, base, components, utilities;
+@import "@blocknote/shadcn/style.css" layer(components);
+
+@layer components {
+  /* BlockNote shares the app theme and generated utilities in ui/shadcn.css. */
+  /* The pinned adapter exposes ten colours per section. Keep their labels and
+ * keyboard order, with text and background choices in adjacent columns. */
+  .bn-shadcn .bn-color-picker-dropdown {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(11, auto);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 8px;
+    width: 272px;
+  }
+  .bn-shadcn .bn-color-picker-dropdown [role="menuitemcheckbox"] {
+    min-height: var(--control-height);
+    padding-right: 24px;
+  }
+  .bn-shadcn .idea-menu-color-swatch {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    font-size: var(--text-label);
+    pointer-events: none;
+  }
+  .bn-shadcn .idea-block-delete-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--control-gap);
+  }
+  .bn-shadcn .idea-block-delete-label,
+  .bn-shadcn .idea-block-delete-label svg {
+    color: var(--action-danger-ink);
+  }
+  .bn-shadcn .idea-attachment-delete {
+    display: contents;
+  }
+  .bn-shadcn .idea-attachment-delete svg {
+    color: var(--action-danger-ink);
+  }
+  .bn-shadcn .bn-suggestion-menu [role="option"] {
+    min-height: var(--control-height);
+    font-size: var(--text-label);
+  }
+  .bn-shadcn .bn-suggestion-menu [role="option"]:not([aria-selected="true"]) {
+    background: transparent;
+    color: var(--ink);
+  }
+  .bn-shadcn .bn-panel [data-slot="card"] {
+    padding: 0;
+    box-shadow: none;
+  }
+  .bn-shadcn .bn-panel {
+    max-width: calc(100vw - 24px);
+  }
+
+  /* BlockNote renders its drag-handle menu through its own shadcn adapter,
+   * outside our shared menu component. Give that translucent surface the
+   * same optical backdrop treatment so document text diffuses through the
+   * glass instead of remaining sharply legible behind it. */
+  .bn-shadcn
+    :is(
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"]
+    ) {
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+  }
+
+  /* Caption editing is one compact field. Reset the adapter's nested input
+ * decoration and baseline gap so the icon and text share the same centre. */
+  .bn-shadcn .bn-form-popover:has(input[name="file-caption"]) {
+    padding: 8px;
+    width: 280px;
+  }
+  .bn-shadcn .bn-form-popover:has(input[name="file-caption"]) > div {
+    height: var(--control-height);
+    padding: 0 10px;
+    gap: 8px;
+  }
+  .bn-shadcn .bn-form-popover:has(input[name="file-caption"]) > div > svg {
+    width: 16px;
+    height: 16px;
+    flex: none;
+  }
+  .bn-shadcn .bn-form-popover:has(input[name="file-caption"]) > div > div {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+  .bn-shadcn .bn-form-popover input[name="file-caption"] {
+    display: block;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    font: inherit;
+    line-height: 1.5;
+  }
+  .bn-shadcn
+    .bn-form-popover:has(input[name="file-caption"]:focus-visible)
+    > div {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  .bn-shadcn .bn-formatting-toolbar {
+    max-width: calc(100vw - 16px);
+  }
+
+  /* Keep selection tools attached to direct editing. Menus and popovers use
+   * the adapter's standard shadcn transitions. */
+  .bn-shadcn .bn-toolbar.bn-formatting-toolbar {
+    transition: none;
+  }
+  @media (pointer: coarse) {
+    .bn-shadcn .bn-button,
+    .bn-shadcn .bn-side-menu .bn-button {
+      min-width: var(--control-height);
+      min-height: var(--control-height);
+    }
+  }
+}
+
+html[data-contrast="more"]
+  .bn-shadcn
+  :is(
+    [data-slot="dropdown-menu-content"],
+    [data-slot="dropdown-menu-sub-content"]
+  ) {
+  background: #fcfdfb;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .bn-shadcn
+    :is(
+      [data-slot="dropdown-menu-content"],
+      [data-slot="dropdown-menu-sub-content"]
+    ) {
+    background: #fcfdfb;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}

@@ -1,0 +1,173 @@
+@layer theme, base, components, utilities;
+@layer components {
+  .app-shell {
+    display: flex;
+    min-height: 100dvh;
+    --workspace-inset: 16px;
+    background: var(--workspace-backdrop) fixed;
+  }
+  .main-shell {
+    flex: 1;
+    min-width: 0;
+    margin: var(--workspace-inset);
+    min-height: calc(100dvh - 2 * var(--workspace-inset));
+    border: 1px solid #ffffffc7;
+    border-radius: 28px;
+    background: #fcfdfbc9;
+    box-shadow:
+      0 1px 1px #ffffff,
+      0 12px 50px #2d485506;
+    overflow: clip;
+  }
+  .app-shell--project,
+  .app-shell--idea {
+    height: 100dvh;
+    overflow: hidden;
+  }
+  .app-shell--project .main-shell,
+  .app-shell--idea .main-shell {
+    background: #fcfdfbed;
+    height: calc(100dvh - 2 * var(--workspace-inset));
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .app-shell--project #main,
+  .app-shell--idea #main {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+  }
+  .app-shell--project .topbar,
+  .app-shell--idea:has(.idea-page) .topbar {
+    display: none;
+  }
+  .app-shell [data-slot="sidebar-gap"] {
+    transition: width var(--motion-layout) var(--motion-ease);
+  }
+  .app-shell .woolgather-sidebar[data-slot="sidebar-container"] {
+    padding: var(--workspace-inset) 0 var(--workspace-inset)
+      var(--workspace-inset);
+    border: 0;
+    transition: transform var(--motion-layout) var(--motion-ease);
+    left: 0;
+  }
+  .app-shell [data-state="collapsed"] .woolgather-sidebar {
+    transform: translateX(-100%);
+    pointer-events: none;
+  }
+  [data-sidebar="sidebar"] {
+    background: var(--glass-fill);
+    border: 1px solid var(--glass-edge);
+    border-radius: 24px;
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+  }
+  [data-sidebar="sidebar"] [data-slot="sidebar-header"] {
+    padding: 18px 14px 26px;
+  }
+  [data-sidebar="sidebar"] .brand-button {
+    padding: 6px;
+    margin: 0;
+  }
+  [data-sidebar="sidebar"] .brand {
+    gap: 8px;
+    color: var(--foreground);
+  }
+  [data-sidebar="sidebar"] .brand-symbol {
+    width: 29px;
+    height: 29px;
+  }
+  [data-sidebar="sidebar"] .brand-wordmark {
+    font: 500 var(--text-brand-sidebar) var(--sans);
+    letter-spacing: -0.6px;
+  }
+  [data-sidebar="sidebar"] [data-slot="sidebar-content"] {
+    padding-inline: 12px;
+  }
+  [data-sidebar="sidebar"] [data-slot="sidebar-footer"] {
+    padding: 12px;
+  }
+  [data-sidebar="sidebar"] .mobile-library-nav {
+    display: none;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    min-height: var(--control-height);
+    gap: 10px;
+    margin: 0;
+    text-align: left;
+    border-radius: 13px;
+  }
+  .workspace-label {
+    display: block;
+    padding: 0 12px 6px;
+    margin: 0;
+    font-size: var(--text-caption);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0;
+    color: var(--muted-foreground);
+  }
+  .topbar {
+    min-height: 64px;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex: none;
+  }
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-label);
+  }
+  .breadcrumb strong {
+    min-width: 0;
+    font-weight: var(--weight-medium);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .topbar .account-menu-compact {
+    display: none;
+  }
+  [data-slot="sidebar-wrapper"][data-sidebar-state="collapsed"]
+    .topbar
+    .account-menu-compact {
+    display: block;
+  }
+  @media (max-width: 767px) {
+    .app-shell {
+      --workspace-inset: 8px;
+    }
+    .main-shell {
+      border-radius: 22px;
+    }
+    .topbar {
+      padding: 10px 14px;
+      min-height: 56px;
+    }
+    .topbar .account-menu-compact {
+      display: block;
+    }
+    [data-sidebar="sidebar"][data-mobile] {
+      border-radius: 24px;
+    }
+  }
+  @media (max-height: 520px) and (min-width: 768px) {
+    .app-shell {
+      --workspace-inset: 8px;
+    }
+    [data-sidebar="sidebar"] [data-slot="sidebar-header"] {
+      padding-block: 8px;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .verification-code {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+  .verification-code-label {
+    font-size: var(--text-label);
+  }
+  .verification-code-digits {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: clamp(6px, 2vw, 10px);
+    max-width: 400px;
+  }
+  .verification-code-digits input {
+    width: 100%;
+    min-width: 0;
+    height: 54px;
+    padding: 8px 0;
+    text-align: center;
+    font-size: var(--text-section);
+    font-variant-numeric: tabular-nums;
+    caret-color: var(--ink);
+  }
+}

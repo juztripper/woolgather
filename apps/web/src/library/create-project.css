@@ -1,0 +1,62 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .create-project-source {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .create-project-source > svg {
+    flex: none;
+    margin-top: 2px;
+    color: var(--blue);
+  }
+  .create-project-source > div {
+    min-width: 0;
+  }
+  .create-project-source p {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--text-small);
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+  .create-project-source .create-project-source-name {
+    color: var(--ink);
+    font-weight: var(--weight-medium);
+    margin-bottom: 4px;
+  }
+  .create-project-form {
+    display: grid;
+    gap: 16px;
+  }
+  .create-project-dialog .create-project-form > label {
+    margin: 0;
+  }
+  .create-project-location {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-width: 0;
+    font-size: var(--text-label);
+    font-weight: var(--weight-medium);
+  }
+  .create-project-location [data-slot="select-trigger"] {
+    min-width: 0;
+  }
+  .create-project-error,
+  .create-project-recovery {
+    margin: 0;
+    font-size: var(--text-small);
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+  .create-project-error {
+    color: var(--action-danger-ink);
+  }
+  .create-project-recovery {
+    color: var(--muted-foreground);
+  }
+}

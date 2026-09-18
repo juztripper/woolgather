@@ -1,0 +1,372 @@
+@layer components {
+  .account-settings-reference > [data-slot="dialog-header"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .account-settings-reference > [data-slot="dialog-close"] {
+    left: 8px;
+    right: auto;
+    top: 8px;
+  }
+  .account-settings-reference .settings-layout {
+    grid-template-columns: 224px minmax(0, 1fr);
+  }
+  .account-settings-reference .settings-navigation {
+    padding: 76px 16px 24px;
+  }
+  .account-settings-reference .settings-content {
+    padding: 28px 32px 40px;
+  }
+  .account-settings-reference .settings-title {
+    margin: 0 0 24px;
+    padding-bottom: 26px;
+    border-bottom: 1px solid var(--border);
+    font-size: var(--text-section);
+    font-weight: var(--weight-medium);
+  }
+  .billing-page,
+  .usage-page {
+    width: 100%;
+  }
+  .billing-page h3,
+  .usage-page h3 {
+    margin: 0;
+    font-size: var(--text-subheading);
+    font-weight: var(--weight-medium);
+  }
+  .billing-current h3 {
+    font-size: var(--text-section);
+  }
+  .billing-page p,
+  .usage-page p {
+    margin: 0;
+    line-height: var(--leading-body);
+  }
+  .billing-muted,
+  .billing-row p,
+  .usage-meter p {
+    color: var(--muted-foreground);
+  }
+  .billing-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .billing-row > div {
+    min-width: 0;
+  }
+  .billing-row > .button,
+  .billing-section-heading > .button {
+    flex-shrink: 0;
+  }
+  .billing-row p {
+    margin-top: 8px;
+  }
+  .billing-current {
+    padding: 8px 0 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .billing-group {
+    padding: 30px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .billing-section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 16px;
+  }
+  .billing-section-heading h3 {
+    font-size: var(--text-section);
+  }
+  .billing-section-heading > span {
+    color: var(--muted-foreground);
+    text-align: right;
+  }
+  .billing-cancel {
+    padding: 28px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .billing-page .billing-footnote,
+  .usage-page .billing-footnote {
+    margin-top: 24px;
+  }
+  .billing-footnote,
+  .plan-picker-notes {
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+    line-height: var(--leading-body);
+  }
+  .billing-empty {
+    display: grid;
+    gap: 12px;
+    padding: 12px 0;
+    color: var(--muted-foreground);
+  }
+  .billing-empty h3 {
+    color: var(--foreground);
+    font-size: var(--text-subheading);
+    font-weight: var(--weight-medium);
+  }
+  .billing-empty .button {
+    justify-self: start;
+  }
+  .billing-error {
+    color: var(--destructive);
+    margin-top: 20px;
+  }
+  .usage-section {
+    display: grid;
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .usage-section:first-child {
+    margin-top: 0;
+  }
+  .usage-section > h3 {
+    font-size: var(--text-section);
+  }
+  .usage-section .billing-section-heading {
+    margin-bottom: 0;
+  }
+  .usage-meter {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--background);
+  }
+  .usage-meter-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+  .usage-meter-heading > span {
+    text-align: right;
+  }
+  .usage-meter p {
+    font-size: var(--text-caption);
+  }
+  .usage-track {
+    height: 6px;
+    margin-top: 16px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--muted);
+  }
+  .usage-track > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--primary);
+  }
+  .account-plan-picker .settings-layout {
+    display: block;
+  }
+  .account-plan-picker .settings-content {
+    width: 100%;
+    height: 100%;
+    padding: 64px 40px 48px;
+  }
+  .account-plan-picker > [data-slot="dialog-close"] {
+    left: auto;
+    right: 24px;
+    top: 20px;
+  }
+  .plan-picker-title {
+    margin: 0 0 42px;
+    text-align: center;
+    font-size: var(--text-heading);
+    font-weight: var(--weight-medium);
+    outline: none;
+  }
+  .plan-picker-content {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .plan-cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .plan-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+  }
+  .plan-card h3 {
+    margin: 0;
+    font-size: var(--text-heading);
+    font-weight: var(--weight-medium);
+  }
+  .plan-card-description {
+    color: var(--muted-foreground);
+    margin: 10px 0 34px;
+    min-height: 24px;
+  }
+  .plan-card-price {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin: 0 0 28px;
+    min-height: 80px;
+  }
+  .plan-card-price > span:first-child {
+    font-size: var(--text-display-large);
+    font-weight: var(--weight-medium);
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+  }
+  .plan-card-price > span:last-child {
+    color: var(--muted-foreground);
+  }
+  .plan-card-price small {
+    display: block;
+    font-size: var(--text-caption);
+    margin-top: 4px;
+  }
+  .plan-card > .button {
+    width: 100%;
+  }
+  .plan-features {
+    display: grid;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 28px 0 8px;
+  }
+  .plan-features li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    line-height: var(--leading-body);
+  }
+  .plan-features svg {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    color: var(--primary);
+  }
+  .plan-includes {
+    margin: 28px 0 0;
+    font-weight: var(--weight-medium);
+  }
+  .plan-includes + .plan-features {
+    margin-top: 20px;
+  }
+  .plan-picker-notes {
+    display: grid;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .plan-picker-notes p {
+    margin: 0;
+  }
+  .account-plan-picker .billing-error {
+    max-width: 1000px;
+    margin: 20px auto 0;
+  }
+  @media (max-width: 700px) {
+    .account-settings-reference .settings-layout {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+    .account-settings-reference .settings-navigation {
+      padding: 60px 12px 12px;
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .account-settings-reference .settings-navigation > nav {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .account-settings-reference .settings-content {
+      padding: 24px 20px;
+    }
+    .billing-row,
+    .billing-section-heading {
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .billing-current {
+      align-items: flex-start;
+    }
+    .billing-current h3 {
+      font-size: var(--text-section);
+    }
+    .billing-group {
+      padding: 24px 0;
+    }
+    .usage-meter {
+      padding: 16px;
+    }
+    .usage-meter-heading {
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .plan-cards {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+    }
+    .account-plan-picker .settings-layout {
+      display: block;
+    }
+    .account-plan-picker .settings-content {
+      padding: 68px 20px 32px;
+    }
+    .plan-picker-title {
+      margin-bottom: 28px;
+      font-size: var(--text-section);
+    }
+    .plan-card {
+      padding: 24px;
+    }
+    .plan-card-description {
+      margin-bottom: 24px;
+    }
+    .plan-card-price {
+      min-height: 64px;
+      margin-bottom: 24px;
+    }
+    .plan-card-price > span:first-child {
+      font-size: var(--text-display);
+    }
+  }
+}
+/* The plan chooser takes over the settings dialog, rather than stacking two
+   material windows. These layout rules override the shared dialog bounds. */
+@layer utilities {
+  .modal.account-settings-frame {
+    width: min(1000px, calc(100vw - 48px));
+    max-width: calc(100vw - 48px);
+    height: min(720px, calc(100dvh - 48px));
+  }
+  @media (max-width: 700px) {
+    .modal.account-settings-frame {
+      width: calc(100vw - 24px);
+      max-width: calc(100vw - 24px);
+      height: calc(100dvh - 24px);
+    }
+  }
+  .modal.account-plan-picker {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    border: 0;
+    border-radius: 0;
+    background: var(--background);
+    box-shadow: none;
+  }
+}

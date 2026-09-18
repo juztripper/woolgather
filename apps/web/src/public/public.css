@@ -1,0 +1,112 @@
+@layer components {
+  .public-main {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 42px;
+  }
+  .public-hero {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    align-items: center;
+    gap: 36px;
+    padding: 64px 0;
+  }
+  .public-hero-copy h1 {
+    font-size: var(--text-display-large);
+    line-height: var(--leading-tight);
+    letter-spacing: -0.04em;
+    max-width: 12ch;
+    margin: 0 0 24px;
+  }
+  .public-hero-copy p {
+    font: var(--text-section)/1.55 var(--serif);
+    max-width: 30ch;
+    margin: 0 0 28px;
+    color: var(--muted-foreground);
+  }
+  .public-hero-copy > a {
+    text-decoration: none;
+  }
+  .public-guide-link {
+    display: block;
+    width: fit-content;
+    margin-top: 18px;
+    color: var(--foreground);
+    font-size: var(--text-body);
+  }
+  .public-hero-art {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-xl);
+  }
+  .public-story {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 48px;
+    padding: 48px 0;
+    border-top: 1px solid var(--border);
+  }
+  .public-story h2,
+  .public-closing h2 {
+    font-size: var(--text-section);
+    font-weight: var(--weight-medium);
+    margin: 0 0 16px;
+  }
+  .public-story p,
+  .public-closing p,
+  .public-support p {
+    font: var(--text-reading)/1.65 var(--serif);
+    color: var(--muted-foreground);
+  }
+  .public-story a,
+  .public-support a {
+    color: var(--foreground);
+    text-underline-offset: 4px;
+  }
+  .public-story a {
+    font-size: var(--text-body);
+  }
+  .public-closing {
+    padding: 48px 0 72px;
+    max-width: 58ch;
+  }
+  .public-closing p {
+    margin-bottom: 24px;
+  }
+  .public-support {
+    max-width: 65ch;
+    padding: 64px 0 96px;
+  }
+  .public-support h1 {
+    font-size: var(--text-display);
+    margin-bottom: 24px;
+  }
+  .public-support p {
+    margin-bottom: 20px;
+  }
+  @media (max-width: 700px) {
+    .public-main {
+      padding: 0 24px;
+    }
+    .public-hero {
+      grid-template-columns: 1fr;
+      padding: 40px 0;
+      gap: 32px;
+    }
+    .public-hero-copy h1 {
+      font-size: var(--text-display);
+      max-width: 15ch;
+    }
+    .public-story {
+      grid-template-columns: 1fr;
+      gap: 32px;
+      padding: 36px 0;
+    }
+    .public-closing {
+      padding: 32px 0 48px;
+    }
+    .public-support {
+      padding: 40px 0 64px;
+    }
+  }
+}

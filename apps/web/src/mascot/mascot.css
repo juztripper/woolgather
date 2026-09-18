@@ -1,0 +1,81 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .mascot-page {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+  }
+  .mascot-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px 32px;
+    text-align: center;
+  }
+  .mascot-art {
+    display: block;
+    width: min(290px, 75vw);
+    height: auto;
+    overflow: visible;
+  }
+  .mascot-main h1 {
+    font-size: var(--text-heading);
+    margin: 8px 0 12px;
+    letter-spacing: -0.7px;
+  }
+  .mascot-main p {
+    font-size: var(--text-small);
+    color: #506876;
+    margin-bottom: 22px;
+  }
+  .mascot-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .mascot-controls > .button {
+    min-width: 110px;
+  }
+  .mascot-footer {
+    padding: 16px 24px;
+    color: #536c7a;
+    text-align: center;
+    font-size: var(--text-caption);
+  }
+  @media (max-width: 600px) {
+    .mascot-page .entry-header {
+      padding: 24px;
+    }
+    .mascot-page .entry-header > .muted {
+      display: none;
+    }
+  }
+  @media (max-height: 650px) {
+    .mascot-art {
+      width: 210px;
+    }
+    .mascot-page .entry-header {
+      padding-block: 18px;
+    }
+  }
+  .mascot-paper {
+    background: #faf8f2;
+  }
+  .mascot-art {
+    width: min(360px, 78vw);
+  }
+  .mascot-art > svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  @media (max-height: 650px) {
+    .mascot-art {
+      width: 240px;
+    }
+  }
+}

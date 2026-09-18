@@ -1,0 +1,57 @@
+name: Bug report
+description: Report a reproducible problem in woolgather
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for helping improve woolgather. Do not include credentials, private project content, customer data, or security vulnerabilities. Report security issues privately through SECURITY.md.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Describe the behavior and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Give the smallest safe sequence that reproduces the problem.
+      placeholder: |
+        1. Open...
+        2. Select...
+        3. Observe...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: Add the commit hash or hosted-app date if known.
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser, operating system, viewport, and reduced-motion setting when relevant.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add sanitized logs or screenshots only when they contain no private information.
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed secrets and private user or project data from this report.
+          required: true
+        - label: This is not a security vulnerability.
+          required: true

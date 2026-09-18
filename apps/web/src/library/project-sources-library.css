@@ -1,0 +1,238 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .project-sources-library {
+    display: grid;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .project-sources-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .project-sources-count {
+    flex: none;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+  }
+
+  .project-sources-actions {
+    display: flex;
+    flex: none;
+    align-items: center;
+    margin-left: auto;
+  }
+
+  .project-sources-file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .project-sources-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .project-sources-search > svg {
+    position: absolute;
+    left: 10px;
+    z-index: 1;
+    width: 14px;
+    height: 14px;
+    color: var(--muted-foreground);
+    pointer-events: none;
+  }
+
+  .project-sources-search input {
+    padding-left: 30px;
+  }
+
+  .project-sources-list {
+    display: grid;
+    gap: 2px;
+    max-height: min(40vh, 280px);
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    list-style: none;
+    scrollbar-gutter: stable;
+  }
+
+  .project-source-row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    padding: 7px 2px;
+    border-bottom: 1px solid color-mix(in oklch, var(--border) 65%, transparent);
+  }
+
+  .project-source-icon,
+  .project-source-thumbnail,
+  .project-source-preview {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    color: var(--muted-foreground);
+    background: color-mix(in oklch, var(--foreground) 5%, transparent);
+  }
+
+  .project-source-icon svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .project-source-preview {
+    object-fit: cover;
+  }
+
+  .project-source-thumbnail {
+    overflow: hidden;
+  }
+
+  .project-source-thumbnail :is(img, svg) {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .project-source-copy {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .project-source-library-name {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    overflow: hidden;
+    color: var(--foreground);
+    font-size: var(--text-menu);
+    font-weight: var(--weight-medium);
+    line-height: 1.35;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  button.project-source-library-name {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  button.project-source-library-name:hover,
+  button.project-source-library-name:focus-visible {
+    color: var(--primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .project-source-detail {
+    overflow: hidden;
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .project-source-error {
+    display: block;
+    max-width: 42ch;
+    overflow: hidden;
+    color: var(--destructive);
+    font-size: var(--text-micro);
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .project-source-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .project-source-actions .button svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .project-source-row[data-status="failed"] {
+    border-color: color-mix(in oklch, var(--destructive) 38%, var(--border));
+  }
+
+  .project-sources-empty {
+    display: grid;
+    justify-items: center;
+    gap: 9px;
+    padding: 28px 14px;
+    color: var(--muted-foreground);
+    text-align: center;
+  }
+
+  .project-sources-empty > svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .project-sources-empty p {
+    max-width: 42ch;
+    margin: 0;
+    font-size: var(--text-menu);
+    line-height: 1.5;
+  }
+
+  .project-sources-spinner {
+    animation: project-sources-spin 900ms linear infinite;
+  }
+
+  @keyframes project-sources-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .project-source-row {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .project-source-actions {
+      grid-column: 2;
+      justify-content: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .project-sources-spinner {
+      animation: none;
+    }
+  }
+
+  html[data-motion="reduce"] .project-sources-spinner {
+    animation: none;
+  }
+}

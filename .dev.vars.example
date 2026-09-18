@@ -1,0 +1,41 @@
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+
+# Account lifecycle email and signed account actions.
+RESEND_API_KEY=
+ACCOUNT_ACTION_SECRET=
+
+# AI features fail closed unless their flag and required secrets are configured.
+IDEA_GUIDANCE_ENABLED=false
+IDEA_GUIDANCE_MODEL=gpt-5.6-sol
+IDEA_GUIDANCE_EFFORT=low
+OPENAI_API_KEY=
+OPENAI_PROJECT_ID=
+PROJECT_PLANNING_ENABLED=false
+PROJECT_PLANNING_MODEL=gpt-5.6-sol
+PROJECT_VOICE_ENABLED=false
+PLAN_ALLOWANCES_ENABLED=false
+
+# Public authentication controls.
+VITE_GOOGLE_AUTH_ENABLED=false
+VITE_PASSKEYS_ENABLED=false
+
+# Stripe billing is disabled by default. Keep test and live credentials out of Git.
+STRIPE_BILLING_ENABLED=false
+STRIPE_BILLING_MODE=test
+STRIPE_TAX_MODE=automatic
+STRIPE_API_KEY=
+STRIPE_WEBHOOK_SECRET=
+STRIPE_ACTION_SECRET=
+STRIPE_ACCOUNT_ID=
+STRIPE_PRODUCT_ID=
+STRIPE_PRICE_ID=
+STRIPE_PORTAL_CONFIGURATION_ID=
+STRIPE_CHECKOUT_OWNER_IDS=
+BILLING_RETURN_ORIGIN=http://localhost:4200
+
+# Retained legacy webhook rehearsal. It does not enable customer billing.
+BILLING_TEST_ENABLED=false
+DODO_TEST_WEBHOOK_SECRET=
+DODO_TEST_BUSINESS_ID=
+BILLING_TEST_ACTION_SECRET=
