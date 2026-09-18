@@ -155,6 +155,27 @@
     width: 16px;
     height: 16px;
   }
+  .marketing-source-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: var(--control-height-lg);
+    color: var(--marketing-blue);
+    font-size: var(--text-label);
+    text-decoration: none;
+  }
+  .marketing-source-link:hover {
+    text-decoration: underline;
+  }
+  .marketing-source-link :is(svg, img) {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+  }
+  .marketing-hero-source {
+    margin-top: 8px;
+  }
   .marketing-hero-scene {
     position: relative;
     width: min(1080px, calc(100% - 96px));
@@ -663,6 +684,12 @@
     color: var(--marketing-muted);
     font-size: var(--text-label);
     margin-top: 10px;
+  }
+  .marketing-community-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 20px;
+    margin-top: 4px;
   }
   .marketing-footer nav {
     display: flex;
