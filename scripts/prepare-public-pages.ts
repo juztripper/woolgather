@@ -3,6 +3,9 @@ import { join } from "node:path";
 import { guides } from "../apps/web/src/learn/content";
 
 const origin = "https://woolgathering.app";
+const socialImage = `${origin}/social/woolgather-link-preview-v1.jpg`;
+const socialImageAlt =
+  "woolgather — Your ideas. Coming together. An idea about a small wandering game becomes a Plan with a decision and an open question.";
 const directory = "dist/web/client";
 const template = await readFile(join(directory, "index.html"), "utf8");
 const escape = (value: string) =>
@@ -100,8 +103,14 @@ for (const page of pages) {
 <meta property="og:title" content="${escape(page.title)}" />
 <meta property="og:description" content="${escape(page.description)}" />
 <meta property="og:url" content="${origin}${page.path}" />
-<meta property="og:image" content="${origin}/art/learn/start-here-v1.webp" />
-<meta name="twitter:card" content="summary_large_image" />`;
+<meta property="og:image" content="${socialImage}" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="${escape(socialImageAlt)}" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="${socialImage}" />
+<meta name="twitter:image:alt" content="${escape(socialImageAlt)}" />`;
   const html = template
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${escape(page.title)}</title>`)
     .replace(
