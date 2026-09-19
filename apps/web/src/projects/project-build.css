@@ -56,8 +56,9 @@
   .project-build-scope-heading p span {
     color: var(--muted-foreground);
   }
-  .project-build-heading > .button {
+  .project-build-heading > .project-build-actions {
     flex: none;
+    justify-content: flex-end;
   }
   .project-build-notice {
     display: grid;
@@ -93,43 +94,9 @@
     gap: 8px;
     min-width: 0;
   }
-  .project-build-thoughts {
-    display: grid;
-    gap: 0;
-  }
-  .project-build-thought {
-    border-bottom: 1px solid var(--border);
-    padding: 16px 0;
-  }
-  .project-build-thought:first-child {
-    padding-top: 0;
-  }
-  .project-build-thought:last-child {
-    border-bottom: 0;
-    padding-bottom: 0;
-  }
-  .project-build-choice {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-  }
-  .project-build-choice > [data-slot="checkbox"] {
-    margin-top: 3px;
-  }
-  .project-build-choice label {
-    display: grid;
-    gap: 2px;
-    cursor: pointer;
-    min-width: 0;
-    overflow-wrap: anywhere;
-  }
-  .project-build-choice label span {
-    color: var(--muted-foreground);
-    font-size: var(--text-caption);
-  }
   .project-build-criterion {
     margin-top: 12px;
-    margin-left: 28px;
+    margin-left: 0;
   }
   .project-build-criterion textarea {
     min-height: 88px;
@@ -172,27 +139,6 @@
   }
   .project-build-scope-heading p {
     margin-top: 4px;
-  }
-  .project-build-progress {
-    width: 100%;
-    height: 5px;
-    appearance: none;
-    border: 0;
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--muted);
-  }
-  .project-build-progress::-webkit-progress-bar {
-    background: var(--muted);
-  }
-  .project-build-progress::-webkit-progress-value {
-    background: var(--primary);
-  }
-  .project-build-progress::-moz-progress-bar {
-    background: var(--primary);
-  }
-  .project-build-counts {
-    font-size: var(--text-caption);
   }
   .project-build-requirement {
     border-bottom: 1px solid var(--border);
@@ -274,22 +220,6 @@
     align-items: center;
     color: var(--muted-foreground);
   }
-  .project-build-connect > .ui-disclosure {
-    margin-block: 0;
-  }
-  .project-build-setup-agent {
-    display: grid;
-    gap: 8px;
-  }
-  .project-build-connection-body {
-    display: grid;
-    gap: 24px;
-    padding-top: 16px;
-  }
-  .project-build-connection-body > p {
-    max-width: 72ch;
-    color: var(--muted-foreground);
-  }
   .project-build-token-form {
     display: flex;
     align-items: flex-end;
@@ -304,21 +234,6 @@
   .project-build-secret {
     display: grid;
     gap: 12px;
-  }
-  .project-build-setup {
-    display: grid;
-    justify-items: start;
-    gap: 12px;
-    padding-top: 12px;
-  }
-  .project-build-setup pre {
-    max-width: 100%;
-    margin: 0;
-    padding: 16px;
-    overflow-x: auto;
-    background: var(--muted);
-    border-radius: var(--radius);
-    font-size: var(--text-caption);
   }
   .project-build-token-list {
     display: grid;
@@ -376,6 +291,222 @@
     }
     .project-build-criterion {
       margin-left: 0;
+    }
+  }
+}
+
+@layer components {
+  .build-scope-picker {
+    min-width: 0;
+    gap: 16px;
+  }
+  .build-scope-picker [data-slot="tabs-content"] {
+    display: grid;
+    gap: 12px;
+  }
+  .build-scope-picker [data-slot="tabs-content"][hidden] {
+    display: none;
+  }
+  .build-picker-tools {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 12px;
+  }
+  .build-picker-search {
+    position: relative;
+    min-width: 0;
+  }
+  .build-picker-search > svg {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: var(--muted-foreground);
+    pointer-events: none;
+  }
+  .build-picker-search > input {
+    padding-left: 36px;
+  }
+  .build-picker-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+  }
+  .build-picker-list {
+    max-height: 340px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border-block: 1px solid var(--border);
+    scrollbar-gutter: stable;
+  }
+  .build-picker-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 8px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+  }
+  .build-picker-row:last-child {
+    border-bottom: 0;
+  }
+  .build-picker-row:hover,
+  .build-picker-row[data-selected="true"] {
+    background: var(--accent);
+  }
+  .build-picker-row > [data-slot="checkbox"] {
+    flex: none;
+    margin-top: 3px;
+  }
+  .build-picker-row > span {
+    display: grid;
+    gap: 4px;
+    min-width: 0;
+  }
+  .build-picker-row strong {
+    font-weight: var(--weight-medium);
+    overflow-wrap: anywhere;
+  }
+  .build-picker-preview {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+  }
+  .build-picker-empty {
+    padding: 24px 8px;
+    color: var(--muted-foreground);
+  }
+  .build-picker-review {
+    display: grid;
+    gap: 12px;
+  }
+  .build-picker-review .ui-disclosure-trigger > span {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .build-picker-review .project-build-criterion {
+    margin: 12px 0;
+  }
+  .build-progress-overview {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-block: 12px;
+  }
+  .build-progress-ring {
+    width: 120px;
+    height: 120px;
+    flex: none;
+    position: relative;
+  }
+  .build-progress-ring svg {
+    width: 100%;
+    height: 100%;
+  }
+  .build-progress-ring > div {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .build-progress-ring strong {
+    font-size: var(--text-heading);
+    font-weight: var(--weight-medium);
+    letter-spacing: -0.03em;
+  }
+  .build-progress-ring span {
+    font-size: var(--text-caption);
+    color: var(--muted-foreground);
+  }
+  .build-progress-segment {
+    stroke: var(--build-state-color);
+  }
+  .build-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex: none;
+    background: var(--build-state-color);
+  }
+  .build-progress-segment,
+  .build-status-dot {
+    --build-state-color: var(--border);
+  }
+  .build-progress-segment[data-state="in_progress"],
+  .build-status-dot[data-state="in_progress"] {
+    --build-state-color: var(--muted-foreground);
+  }
+  .build-progress-segment[data-state="implemented"],
+  .build-status-dot[data-state="implemented"] {
+    --build-state-color: var(--primary);
+  }
+  .build-progress-segment[data-state="verified"],
+  .build-status-dot[data-state="verified"] {
+    --build-state-color: var(--success-foreground);
+  }
+  .build-progress-segment[data-state="blocked"],
+  .build-status-dot[data-state="blocked"] {
+    --build-state-color: var(--destructive);
+  }
+  .build-progress-segment[data-state="needs_recheck"],
+  .build-status-dot[data-state="needs_recheck"] {
+    --build-state-color: var(--warning-foreground);
+  }
+  .build-progress-detail {
+    display: grid;
+    gap: 6px;
+    min-width: 0;
+  }
+  .build-progress-detail strong {
+    font-weight: var(--weight-medium);
+  }
+  .build-progress-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  @media (max-width: 600px) {
+    .project-build-heading > .project-build-actions {
+      flex: 0 1 auto;
+      max-width: 100%;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+    .build-picker-tools {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .build-picker-tools > [data-slot="select-trigger"] {
+      width: 100%;
+    }
+    .build-progress-overview {
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .build-progress-ring {
+      width: 88px;
+      height: 88px;
+    }
+    .build-progress-ring strong {
+      font-size: var(--text-section);
+    }
+    .build-progress-filters {
+      margin-left: -104px;
+      padding-top: 12px;
+    }
+    .build-progress-detail > .project-build-help {
+      min-height: 40px;
     }
   }
 }

@@ -88,6 +88,7 @@ import {
   ChevronDown,
   CornerDownLeft,
   FileText,
+  Hammer,
   LoaderCircle,
   MessageCircle,
   MoreHorizontal,
@@ -345,12 +346,7 @@ export function ProjectStudio(props: Props) {
     "build",
   ];
   const navigateView = (next: string) => {
-    if (next === "build" || props.view === "build") {
-      props.onView(next);
-    } else if (
-      secondaryViews.includes(next) ||
-      secondaryViews.includes(props.view)
-    ) {
+    if (secondaryViews.includes(next) || secondaryViews.includes(props.view)) {
       transitionView(() => props.onView(next));
     } else props.onView(next);
   };
@@ -2438,11 +2434,11 @@ function ThinkingWorkspace({
         <div className="thinking-toolbar-tools">
           {home && (
             <Button
-              variant="quiet"
+              variant="primary"
               disabled={busy || voiceActive || uploading}
               onClick={() => onView("build")}
             >
-              Build
+              <Hammer /> Build
             </Button>
           )}
           <Button

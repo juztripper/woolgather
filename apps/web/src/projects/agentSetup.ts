@@ -1,69 +1,95 @@
 export const codingAgents = [
-  { value: "codex", label: "Codex" },
-  { value: "claude", label: "Claude Code" },
-  { value: "cursor", label: "Cursor" },
-  { value: "opencode", label: "OpenCode" },
-  { value: "grok", label: "Grok Build" },
+  { value: "claude", label: "Claude Code", logo: "/brand/claude.png" },
+  { value: "codex", label: "Codex", logo: "/brand/openai.png" },
+  { value: "cursor", label: "Cursor", logo: "/brand/cursor.svg" },
+  { value: "other", label: "Other", logo: null },
 ] as const;
 export type CodingAgent = (typeof codingAgents)[number]["value"];
+export type SetupFormat = CodingAgent | "opencode" | "grok";
 
-const connector =
-  "/absolute/path/to/woolgather/packages/agent-connector/bin/woolgather-mcp.mjs";
+export function validConnectorFolder(folder: string) {
+  return (
+    /^(\/|[a-z]:[\\/])/i.test(folder.trim()) &&
+    !/[\u0000-\u001f\u007f]/.test(folder)
+  );
+}
 
-/** Mirrors the public connector guide. Never embeds a project credential. */
-export function agentSetup(agent: CodingAgent) {
-  if (agent === "codex")
-    return {
-      file: "~/.codex/config.toml",
-      configuration: `[mcp_servers.woolgather]\ncommand = "node"\nargs = ["${connector}"]\nenv_vars = ["WOOLGATHER_URL", "WOOLGATHER_TOKEN"]`,
-    };
-  if (agent === "grok")
-    return {
-      file: "~/.grok/config.toml",
-      configuration: `[mcp_servers.woolgather]\ncommand = "node"\nargs = ["${connector}"]\nenv = { WOOLGATHER_URL = "\${WOOLGATHER_URL}", WOOLGATHER_TOKEN = "\${WOOLGATHER_TOKEN}" }`,
-    };
-  if (agent === "opencode")
-    return {
-      file: "opencode.json",
-      configuration: JSON.stringify(
-        {
-          $schema: "https://opencode.ai/config.json",
-          mcp: {
-            woolgather: {
-              type: "local",
-              command: ["node", connector],
-              enabled: true,
-              environment: {
-                WOOLGATHER_URL: "{env:WOOLGATHER_URL}",
-                WOOLGATHER_TOKEN: "{env:WOOLGATHER_TOKEN}",
-              },
-            },
-          },
-        },
-        null,
-        2,
-      ),
-    };
-  const variable = (name: string) =>
-    agent === "cursor" ? `\${env:${name}}` : `\${${name}}`;
-  return {
-    file: agent === "cursor" ? "~/.cursor/mcp.json" : ".mcp.json",
-    configuration: JSON.stringify(
-      {
-        mcpServers: {
-          woolgather: {
-            type: "stdio",
-            command: "node",
-            args: [connector],
-            env: {
-              WOOLGATHER_URL: variable("WOOLGATHER_URL"),
-              WOOLGATHER_TOKEN: variable("WOOLGATHER_TOKEN"),
-            },
-          },
-        },
-      },
-      null,
-      2,
-    ),
+/** Configuration contains environment references only, never a project credential. */
+export function agentSetup(
+  agent: SetupFormat,
+  folder = "",
+  name = "woolgather",
+) {
+  const root = validConnectorFolder(folder)
+    ? folder.trim().replace(/[\\/]+$/, "")
+    : "/absolute/path/to/woolgather";
+  const connector = `${root}/packages/agent-connector/bin/woolgather-mcp.mjs`;
+  const variable = (key: string) =>
+    agent === "cursor" ? `\${env:${key}}` : `\${${key}}`;
+  const server = {
+    command: "node",
+    args: [connector],
+    env: {
+      WOOLGATHER_URL: variable("WOOLGATHER_URL"),
+      WOOLGATHER_TOKEN: variable("WOOLGATHER_TOKEN"),
+    },
   };
+  const configuration =
+    agent === "codex"
+      ? `[mcp_servers.${JSON.stringify(name)}]\ncommand = "node"\nargs = ${JSON.stringify([connector])}\nenv_vars = ["WOOLGATHER_URL", "WOOLGATHER_TOKEN"]`
+      : agent === "grok"
+        ? `[mcp_servers.${JSON.stringify(name)}]\ncommand = "node"\nargs = ${JSON.stringify([connector])}\nenv = { WOOLGATHER_URL = "\${WOOLGATHER_URL}", WOOLGATHER_TOKEN = "\${WOOLGATHER_TOKEN}" }`
+        : JSON.stringify(
+            agent === "opencode"
+              ? {
+                  $schema: "https://opencode.ai/config.json",
+                  mcp: {
+                    [name]: {
+                      type: "local",
+                      command: ["node", connector],
+                      enabled: true,
+                      environment: {
+                        WOOLGATHER_URL: "{env:WOOLGATHER_URL}",
+                        WOOLGATHER_TOKEN: "{env:WOOLGATHER_TOKEN}",
+                      },
+                    },
+                  },
+                }
+              : { mcpServers: { [name]: server } },
+            null,
+            2,
+          );
+  return {
+    file:
+      agent === "codex"
+        ? "~/.codex/config.toml"
+        : agent === "grok"
+          ? "~/.grok/config.toml"
+          : agent === "opencode"
+            ? "opencode.json"
+            : agent === "cursor"
+              ? "~/.cursor/mcp.json"
+              : agent === "claude"
+                ? ".mcp.json"
+                : "your agent’s MCP settings",
+    configuration,
+    server,
+  };
+}
+
+/** Cursor's official installer accepts one server definition, not the config file. */
+export function cursorInstallUrl(folder: string, name: string) {
+  if (!validConnectorFolder(folder)) return null;
+  const payload = JSON.stringify(agentSetup("cursor", folder, name).server);
+  const encoded = btoa(
+    Array.from(new TextEncoder().encode(payload), (byte) =>
+      String.fromCharCode(byte),
+    ).join(""),
+  );
+  return `cursor://anysphere.cursor-deeplink/mcp/install?name=${encodeURIComponent(name)}&config=${encodeURIComponent(encoded)}`;
+}
+
+export function claudeSetupCommand(folder: string, name: string) {
+  const quote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
+  return `claude mcp add-json --scope user ${quote(name)} ${quote(JSON.stringify(agentSetup("claude", folder, name).server))}`;
 }

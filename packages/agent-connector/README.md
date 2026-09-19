@@ -7,7 +7,7 @@ This is the first local integration release. It provides a real MCP stdio server
 ## Prepare the connection
 
 1. Run a woolgather instance containing this integration and its database migration. This source release does not imply the integration is deployed on the public service.
-2. In your project's **Build** view, select plan thoughts, write completion criteria and save a version. Create a project connection token. The token gives access to that project only.
+2. In your project's **Build** view, select plan thoughts, write completion criteria and save a version. Choose **Connect agent**, select your client, and create a project connection token. The token gives access to that project only.
 3. Install Node.js 24 and the connector dependencies from the repository root:
 
    ```sh
@@ -78,6 +78,8 @@ Add this server to `.cursor/mcp.json` or `~/.cursor/mcp.json`:
 }
 ```
 
+The Build connection dialog also provides **Add to Cursor** once you enter your local woolgather checkout path. It uses [Cursor’s official MCP install link](https://cursor.com/docs/mcp/install-links) to open Cursor’s installation review with one stdio server definition. It includes environment variable references, never the project token. Installing still requires the local connector dependencies and the agent environment from the preparation steps; it does not start a build or prove a successful connection.
+
 Cursor uses `${env:NAME}` interpolation. Check its MCP settings after restarting. See [Cursor's official MCP guide](https://cursor.com/docs/mcp).
 
 ## OpenCode
@@ -137,7 +139,7 @@ Each mutation requires a new UUID `commandId` and the current `delivery.revision
 
 Report checks as `passed`, `failed` or `not_run`, with an actual commit when available. The agent cannot verify work on the owner's behalf, alter versions, rewrite the plan or replace an existing repository binding. Read fresh context after a conflict. Source metadata does not include attachment bytes; an agent must not claim to have inspected missing files. The user reviews completion in woolgather. Reported implementation and owner-verified progress remain distinct.
 
-Revoke a connection token in the project's Build view to end its access. To connect another project, create a token for that project and use a separately named MCP entry or replace the environment value deliberately. This release does not search all projects by name.
+Revoke a connection token in the project's Build view to end its access. To connect another project, create a token for that project and replace the environment value deliberately and restart the agent. The dialog configures one `woolgather` entry at a time. Multiple project connections need separately named entries and separate credential environments; renaming an entry alone does not isolate the shared environment variables. This release does not search all projects by name.
 
 ## Optional native plugin
 

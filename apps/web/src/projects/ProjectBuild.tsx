@@ -1,8 +1,7 @@
 import { useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { ArrowLeft, Check, Copy, Link2, Plus, RefreshCw } from "lucide-react";
+import { ArrowLeft, Check, Link2, Plus, RefreshCw } from "lucide-react";
 import type { Project } from "../../../../packages/domain/src";
 import {
-  deliveryProgress,
   eligibleBuildThoughts,
   deliveryCommandSchema,
   requirementStatus,
@@ -11,8 +10,6 @@ import {
   type DeliveryState,
 } from "../../../../packages/domain/src/projectDelivery";
 import { Input } from "../components/ui/input";
-import { Textarea } from "../components/ui/textarea";
-import { Checkbox } from "../components/ui/checkbox";
 import { Disclosure } from "../ui/Disclosure";
 import { Button, IconButton } from "../ui/Button";
 import { Select } from "../ui/Select";
@@ -21,7 +18,9 @@ import { useToast } from "../ui/Toast";
 import { ApiError } from "../client";
 import { ProjectTransport } from "./ProjectTransport";
 import { clearDraft, readDraft, storeDraft } from "./model";
-import { agentSetup, codingAgents, type CodingAgent } from "./agentSetup";
+import { BuildScopePicker } from "./BuildScopePicker";
+import { BuildProgress, type BuildStatus } from "./BuildProgress";
+import { AgentConnection } from "./ProjectAgentConnection";
 import "./project-build.css";
 
 type Lane = BuildScope["lane"];
@@ -31,13 +30,6 @@ type ScopeDraft = {
   criteria: Record<string, string>;
 };
 type Pending = { command: DeliveryCommand; conflict?: boolean };
-type TokenMetadata = {
-  id: string;
-  name: string;
-  createdAt: string;
-  expiresAt: string;
-  revokedAt: string | null;
-};
 const lanes = [
   { value: "now", label: "Now" },
   { value: "next", label: "Next" },
@@ -108,9 +100,9 @@ export function ProjectBuild({
   );
   const [confirmDiscard, setConfirmDiscard] = useState(false);
   const [attempt, setAttempt] = useState(0);
-  const [query, setQuery] = useState("");
   const [comparedRevision, setComparedRevision] = useState<number | null>(null);
   const [syncInterrupted, setSyncInterrupted] = useState(false);
+  const restoreCreateFocus = useRef(false);
   const createTrigger = useRef<HTMLButtonElement>(null);
   const nameInput = useRef<HTMLInputElement>(null);
   const onSavedRef = useRef(onSaved);
@@ -191,6 +183,13 @@ export function ProjectBuild({
     if (creating) nameInput.current?.focus();
   }, [creating]);
 
+  useEffect(() => {
+    if (!creating && editable && restoreCreateFocus.current) {
+      createTrigger.current?.focus();
+      restoreCreateFocus.current = false;
+    }
+  }, [creating, editable]);
+
   function keepPending(value: Pending | null) {
     setPending(value);
     if (value) {
@@ -216,7 +215,7 @@ export function ProjectBuild({
         setDraft(blankDraft());
         setCreating(false);
         clearDraft(draftKey);
-        createTrigger.current?.focus();
+        restoreCreateFocus.current = true;
       }
       // The idempotent receipt may be older than other agent reports. Read the
       // current version without turning a successful save into an uncertain one.
@@ -275,7 +274,7 @@ export function ProjectBuild({
     setCreating(false);
     setConfirmDiscard(false);
     clearDraft(draftKey);
-    createTrigger.current?.focus();
+    restoreCreateFocus.current = true;
   }
   const selectedCount = thoughts.filter((item) =>
     Object.hasOwn(draft.criteria, item.id),
@@ -301,13 +300,15 @@ export function ProjectBuild({
           </IconButton>
           <span className="project-build-project-name">{project.name}</span>
         </div>
-        <Button
-          variant="quiet"
-          disabled={loading || busy}
-          onClick={() => setAttempt((value) => value + 1)}
-        >
-          <RefreshCw /> Refresh
-        </Button>
+        <div className="thinking-toolbar-tools">
+          <Button
+            variant="quiet"
+            disabled={loading || busy}
+            onClick={() => setAttempt((value) => value + 1)}
+          >
+            <RefreshCw /> Refresh
+          </Button>
+        </div>
       </header>
       <div className="project-build-scroll">
         <div className="project-build-content">
@@ -319,14 +320,20 @@ export function ProjectBuild({
                 comes back.
               </p>
             </div>
-            <Button
-              ref={createTrigger}
-              variant="primary"
-              disabled={!editable || creating}
-              onClick={() => setCreating(true)}
-            >
-              <Plus /> New version
-            </Button>
+            <div className="project-build-actions">
+              <AgentConnection
+                projectId={project.id}
+                disabled={readOnly || !delivery}
+              />
+              <Button
+                ref={createTrigger}
+                variant="primary"
+                disabled={!editable || creating}
+                onClick={() => setCreating(true)}
+              >
+                <Plus /> New version
+              </Button>
+            </div>
           </div>
           {readOnly && (
             <p className="project-build-notice">
@@ -456,88 +463,32 @@ export function ProjectBuild({
                   available for this version and will not be included.
                 </p>
               )}
-              {thoughts.length > 5 && (
-                <Input
-                  aria-label="Find a thought for this version"
-                  placeholder="Find a thought…"
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                />
-              )}
-              <div className="project-build-thoughts">
-                {thoughts
-                  .filter((item) =>
-                    `${item.title} ${item.body}`
-                      .toLowerCase()
-                      .includes(query.toLowerCase()),
-                  )
-                  .map((item) => {
-                    const selected = Object.hasOwn(draft.criteria, item.id);
-                    const inputId = `build-thought-${item.id}`;
-                    return (
-                      <div className="project-build-thought" key={item.id}>
-                        <div className="project-build-choice">
-                          <Checkbox
-                            id={inputId}
-                            checked={selected}
-                            disabled={
-                              !editable || (!selected && selectedCount >= 50)
-                            }
-                            onCheckedChange={(checked) =>
-                              setDraft((value) => {
-                                const criteria = { ...value.criteria };
-                                if (checked)
-                                  criteria[item.id] = (
-                                    item.body || item.title
-                                  ).slice(0, 2000);
-                                else delete criteria[item.id];
-                                return { ...value, criteria };
-                              })
-                            }
-                          />
-                          <label htmlFor={inputId}>
-                            {item.title}
-                            <span>
-                              {item.category} · {item.certainty}
-                            </span>
-                          </label>
-                        </div>
-                        {selected && (
-                          <label className="project-build-criterion">
-                            Done when
-                            <Textarea
-                              value={draft.criteria[item.id]}
-                              maxLength={2000}
-                              disabled={!editable}
-                              onChange={(event) =>
-                                setDraft((value) => ({
-                                  ...value,
-                                  criteria: {
-                                    ...value.criteria,
-                                    [item.id]: event.target.value,
-                                  },
-                                }))
-                              }
-                              required
-                            />
-                          </label>
-                        )}
-                      </div>
-                    );
-                  })}
-                {!thoughts.length && (
-                  <p>
-                    Add features, decisions or notes in your project Plan, then
-                    select them here. Constraints accompany each version as
-                    context.
-                  </p>
+              <BuildScopePicker
+                thoughts={thoughts}
+                criteria={Object.fromEntries(
+                  Object.entries(draft.criteria).filter(([id]) =>
+                    thoughts.some((item) => item.id === id),
+                  ),
                 )}
-              </div>
+                disabled={!editable}
+                onChange={(criteria) =>
+                  setDraft((value) => ({ ...value, criteria }))
+                }
+              />
               <div className="project-build-actions">
                 <Button
                   type="submit"
                   variant="primary"
-                  disabled={!editable || !selectedCount || !draft.name.trim()}
+                  disabled={
+                    !editable ||
+                    !selectedCount ||
+                    !draft.name.trim() ||
+                    thoughts.some(
+                      (item) =>
+                        Object.hasOwn(draft.criteria, item.id) &&
+                        !draft.criteria[item.id].trim(),
+                    )
+                  }
                 >
                   Save version{selectedCount ? ` (${selectedCount})` : ""}
                 </Button>
@@ -570,8 +521,8 @@ export function ProjectBuild({
                 <div className="project-build-empty">
                   <h2>Your first version starts with the Plan</h2>
                   <p>
-                    Select a few thoughts to test, or bring the whole project
-                    into one version. Your agent will receive that exact scope.
+                    Choose a first feature, a visual test or a focused release.
+                    Your agent will receive that exact scope.
                   </p>
                   <Button
                     disabled={!editable}
@@ -614,7 +565,6 @@ export function ProjectBuild({
                     : ""}
                 </p>
               )}
-              <AgentConnection projectId={project.id} disabled={readOnly} />
             </>
           )}
         </div>
@@ -657,21 +607,12 @@ function Scope({
   disabled: boolean;
   onAction: (action: DeliveryCommand["action"]) => void;
 }) {
-  const progress = deliveryProgress(scope, delivery, project);
+  const [filter, setFilter] = useState<BuildStatus | "all">("all");
   return (
     <article className="project-build-scope">
       <div className="project-build-scope-heading">
         <div>
           <h3>{scope.name}</h3>
-          <p>
-            {progress.percent === null
-              ? "No criteria yet"
-              : `${progress.percent}% verified`}{" "}
-            <span>
-              · {progress.verified} of {progress.total}{" "}
-              {progress.total === 1 ? "criterion" : "criteria"}
-            </span>
-          </p>
         </div>
         <Select
           label={`Roadmap for ${scope.name}`}
@@ -687,21 +628,24 @@ function Scope({
           }
         />
       </div>
-      <progress
-        className="project-build-progress"
-        aria-label={`${scope.name} verified progress`}
-        max={progress.total || 1}
-        value={progress.verified}
+      <BuildProgress
+        scope={scope}
+        delivery={delivery}
+        project={project}
+        filter={filter}
+        onFilter={setFilter}
       />
-      <p className="project-build-counts">
-        {Math.floor((progress.implemented / progress.total) * 100)}% reported as
-        implemented ({progress.implemented} of {progress.total}) ·{" "}
-        {progress.inProgress} in progress · {progress.blocked} blocked
-        {progress.needsRecheck
-          ? ` · ${progress.needsRecheck} need recheck`
-          : ""}
-      </p>
       <div className="project-build-requirements">
+        {filter !== "all" &&
+          !scope.requirements.some(
+            (requirement) =>
+              requirementStatus(requirement, scope, delivery, project).state ===
+              filter,
+          ) && (
+            <p className="project-build-help">
+              Nothing left in this group. Choose All to see the full version.
+            </p>
+          )}
         {scope.requirements.map((requirement) => {
           const status = requirementStatus(
             requirement,
@@ -709,6 +653,7 @@ function Scope({
             delivery,
             project,
           );
+          if (filter !== "all" && status.state !== filter) return null;
           return (
             <Disclosure
               className="project-build-requirement"
@@ -821,308 +766,5 @@ function Scope({
         })}
       </div>
     </article>
-  );
-}
-
-function AgentConnection({
-  projectId,
-  disabled,
-}: {
-  projectId: string;
-  disabled: boolean;
-}) {
-  const transport = useContext(ProjectTransport);
-  const { notify } = useToast();
-  const [open, setOpen] = useState(false);
-  const [tokens, setTokens] = useState<TokenMetadata[]>([]);
-  const [name, setName] = useState("");
-  const [secret, setSecret] = useState("");
-  const [secretTokenId, setSecretTokenId] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
-  const [unknownCreation, setUnknownCreation] = useState(false);
-  const [codingAgent, setCodingAgent] = useState<CodingAgent>("codex");
-  const [accessListReady, setAccessListReady] = useState(false);
-  const [revoke, setRevoke] = useState<TokenMetadata | null>(null);
-  const [attempt, setAttempt] = useState(0);
-  useEffect(() => {
-    if (!open) return;
-    let alive = true;
-    setAccessListReady(false);
-    void transport
-      .request<TokenMetadata[]>(`/projects/${projectId}/integration-tokens`)
-      .then((value) => {
-        if (alive) {
-          setTokens(value);
-          setError("");
-          setAccessListReady(true);
-        }
-      })
-      .catch((error) => {
-        if (alive) setError(message(error));
-      });
-    return () => {
-      alive = false;
-    };
-  }, [open, projectId, attempt, transport]);
-  async function create() {
-    if (busy || disabled || unknownCreation) return;
-    setBusy(true);
-    setError("");
-    try {
-      const result = await transport.request<TokenMetadata & { token: string }>(
-        `/projects/${projectId}/integration-tokens`,
-        { action: "create", name: name.trim() || "My coding agent" },
-      );
-      setSecret(result.token);
-      setSecretTokenId(result.id);
-      setName("");
-      setAttempt((value) => value + 1);
-    } catch (failure) {
-      setError(message(failure));
-      if (
-        !(failure instanceof ApiError) ||
-        ![400, 403, 404, 422].includes(failure.status)
-      ) {
-        setAccessListReady(false);
-        setUnknownCreation(true);
-      }
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function revokeToken(token: TokenMetadata) {
-    setBusy(true);
-    setError("");
-    try {
-      await transport.request(`/projects/${projectId}/integration-tokens`, {
-        action: "revoke",
-        tokenId: token.id,
-      });
-      setRevoke(null);
-      if (secretTokenId === token.id) {
-        setSecret("");
-        setSecretTokenId("");
-      }
-      setAttempt((value) => value + 1);
-      notify("Agent access revoked");
-    } catch (failure) {
-      setError(message(failure));
-    } finally {
-      setBusy(false);
-    }
-  }
-  async function copy(value: string) {
-    try {
-      await navigator.clipboard.writeText(value);
-      notify("Copied");
-    } catch {
-      setError(
-        "Select and copy the text below. Clipboard access is unavailable.",
-      );
-    }
-  }
-  const setup = agentSetup(codingAgent);
-  return (
-    <div className="project-build-connect">
-      <Disclosure
-        title={
-          <>
-            <Link2 /> Connect your coding agent
-          </>
-        }
-        open={open}
-        onOpenChange={setOpen}
-      >
-        <div className="project-build-connection-body">
-          <p>
-            Use your own Codex, Claude Code, Cursor or another MCP client.
-            Building runs in your agent, on your account. This connection only
-            shares the project and saves build reports.
-          </p>
-          {error && (
-            <p className="project-build-notice" role="alert">
-              {error}
-            </p>
-          )}
-          {unknownCreation && (
-            <div className="project-build-notice">
-              <p>
-                The connection interrupted while creating access. Refresh the
-                list and revoke any new token you did not receive before
-                creating another.
-              </p>
-              <Button
-                size="sm"
-                onClick={() => setAttempt((value) => value + 1)}
-              >
-                Refresh access list
-              </Button>
-              <Button
-                size="sm"
-                variant="quiet"
-                disabled={!accessListReady}
-                onClick={() => setUnknownCreation(false)}
-              >
-                I have checked the list
-              </Button>
-            </div>
-          )}
-          {secret ? (
-            <div className="project-build-secret">
-              <p>
-                Copy this token now. It is shown once and only grants access to
-                this project.
-              </p>
-              <Input
-                aria-label="New project token"
-                value={secret}
-                readOnly
-                autoComplete="off"
-                spellCheck={false}
-              />
-              <div className="project-build-actions">
-                <Button onClick={() => void copy(secret)}>
-                  <Copy /> Copy token
-                </Button>
-                <Button variant="quiet" onClick={() => setSecret("")}>
-                  Done
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <form
-              className="project-build-token-form"
-              onSubmit={(event) => {
-                event.preventDefault();
-                void create();
-              }}
-            >
-              <label>
-                Connection name
-                <Input
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  placeholder="For example, Codex on my Mac"
-                  maxLength={80}
-                  disabled={busy || disabled || unknownCreation}
-                />
-              </label>
-              <Button
-                type="submit"
-                disabled={busy || disabled || unknownCreation}
-              >
-                Create project token
-              </Button>
-            </form>
-          )}
-          <Disclosure title="Set up connection" variant="plain">
-            <div className="project-build-setup">
-              <label className="project-build-setup-agent">
-                Coding agent
-                <Select
-                  label="Coding agent"
-                  value={codingAgent}
-                  options={codingAgents}
-                  onValueChange={(value) =>
-                    setCodingAgent(value as CodingAgent)
-                  }
-                />
-              </label>
-              <p>
-                With Node 24 installed, run this once from your woolgather
-                checkout:
-              </p>
-              <pre tabIndex={0} aria-label="Connector installation command">
-                <code>
-                  npm ci --prefix packages/agent-connector --ignore-scripts
-                </code>
-              </pre>
-              <p>
-                Set <code>WOOLGATHER_URL</code> to{" "}
-                <code>{location.origin}</code> and
-                <code> WOOLGATHER_TOKEN</code> to your project token in your
-                agent’s environment. Restart the agent after changing its
-                environment.
-              </p>
-              <p>
-                Add this entry to <code>{setup.file}</code>, keeping any
-                existing settings. Replace the example connector path with your
-                checkout path.
-              </p>
-              <pre
-                tabIndex={0}
-                aria-label={`${codingAgents.find((agent) => agent.value === codingAgent)?.label} configuration`}
-              >
-                <code>{setup.configuration}</code>
-              </pre>
-              <Button size="sm" onClick={() => void copy(setup.configuration)}>
-                <Copy /> Copy configuration
-              </Button>
-              <p className="project-build-help">
-                Full setup instructions are included in your checkout at
-                <code> packages/agent-connector/README.md</code>. Keep your
-                token out of prompts and repository files.
-              </p>
-            </div>
-          </Disclosure>
-          {!!tokens.length && (
-            <div className="project-build-token-list">
-              <h3>Project access</h3>
-              {tokens.map((token) => (
-                <div className="project-build-token" key={token.id}>
-                  <div>
-                    <strong>{token.name}</strong>
-                    <span>
-                      {token.revokedAt
-                        ? "Revoked"
-                        : `Expires ${new Date(token.expiresAt).toLocaleDateString()}`}
-                    </span>
-                  </div>
-                  {!token.revokedAt && (
-                    <Button
-                      size="sm"
-                      variant="quiet"
-                      disabled={busy || disabled}
-                      onClick={() => setRevoke(token)}
-                    >
-                      Revoke
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </Disclosure>
-      <ModalPresence>
-        {revoke && (
-          <Modal
-            title={`Revoke ${revoke.name}?`}
-            confirmation
-            onClose={() => !busy && setRevoke(null)}
-            footer={
-              <>
-                <Button disabled={busy} onClick={() => setRevoke(null)}>
-                  Keep access
-                </Button>
-                <Button
-                  variant="danger"
-                  disabled={busy}
-                  onClick={() => void revokeToken(revoke)}
-                >
-                  Revoke access
-                </Button>
-              </>
-            }
-          >
-            <p>
-              This agent will lose access to this project. Saved plans and build
-              reports stay available.
-            </p>
-          </Modal>
-        )}
-      </ModalPresence>
-    </div>
   );
 }
