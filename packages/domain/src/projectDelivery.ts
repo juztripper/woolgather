@@ -66,7 +66,8 @@ const sourceSnapshotSchema = z
   .strict();
 const relationSnapshotSchema = z
   .object({
-    id: identifier,
+    // Planning uses stable from:kind:to keys, not UUIDs, for relationships.
+    id: z.string().min(1).max(240),
     from: identifier,
     to: identifier,
     kind: z.string().max(30),

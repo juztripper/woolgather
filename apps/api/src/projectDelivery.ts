@@ -230,7 +230,11 @@ export function writeDelivery(
       return json(
         {
           error:
-            error instanceof Error ? error.message : "Invalid delivery change.",
+            error instanceof z.ZodError
+              ? "This version could not be saved because some plan details are incompatible. Your plan is unchanged."
+              : error instanceof Error
+                ? error.message
+                : "Invalid delivery change.",
         },
         422,
       );

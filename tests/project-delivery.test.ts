@@ -255,7 +255,7 @@ test("direct linked and dependency target edits or removal invalidate verified e
           ...emptyThinking(),
           relations: [
             {
-              id: crypto.randomUUID(),
+              id: `${connection === "requires" ? selected.id : targetId}:requires:${connection === "requires" ? targetId : selected.id}`,
               from: connection === "requires" ? selected.id : targetId,
               to: connection === "requires" ? targetId : selected.id,
               kind: "requires",
