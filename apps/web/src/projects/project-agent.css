@@ -161,6 +161,14 @@
     margin: 0;
   }
   @media (max-width: 600px) {
+    .project-agent-command {
+      flex-direction: column;
+    }
+    .project-agent-command > pre {
+      width: 100%;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
     .project-agent-choices {
       grid-template-columns: minmax(0, 1fr);
     }

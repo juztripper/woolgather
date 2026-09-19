@@ -8,22 +8,12 @@ import {
   Plug,
   RefreshCw,
 } from "lucide-react";
-import { Input } from "../components/ui/input";
 import { Disclosure } from "../ui/Disclosure";
 import { Button } from "../ui/Button";
-import { Select } from "../ui/Select";
 import { Modal, ModalPresence } from "../ui/Modal";
 import { useToast } from "../ui/Toast";
-import { ApiError } from "../client";
 import { ProjectTransport } from "./ProjectTransport";
-import {
-  agentSetup,
-  codingAgents,
-  cursorInstallUrl,
-  claudeSetupCommand,
-  validConnectorFolder,
-  type CodingAgent,
-} from "./agentSetup";
+import { codingAgents, type CodingAgent, remoteAgentSetup } from "./agentSetup";
 import "./project-agent.css";
 
 type TokenMetadata = {
@@ -32,11 +22,9 @@ type TokenMetadata = {
   expiresAt: string;
   revokedAt?: string | null;
 };
-function message(error: unknown) {
-  return error instanceof Error
-    ? error.message
-    : "Unable to connect. Try again.";
-}
+type Setup = { enabled: boolean; url: string | null };
+const message = (error: unknown) =>
+  error instanceof Error ? error.message : "Unable to connect. Try again.";
 
 export function AgentConnection({
   projectId,
@@ -49,17 +37,10 @@ export function AgentConnection({
   const { notify } = useToast();
   const [open, setOpen] = useState(false);
   const [tokens, setTokens] = useState<TokenMetadata[]>([]);
-  const [name, setName] = useState("");
-  const [secret, setSecret] = useState("");
-  const [secretTokenId, setSecretTokenId] = useState("");
+  const [setup, setSetup] = useState<Setup | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [unknownCreation, setUnknownCreation] = useState(false);
   const [codingAgent, setCodingAgent] = useState<CodingAgent | null>(null);
-  const [folder, setFolder] = useState("");
-  const [otherFormat, setOtherFormat] = useState<"other" | "opencode" | "grok">(
-    "other",
-  );
   const [accessListReady, setAccessListReady] = useState(false);
   const [revoke, setRevoke] = useState<TokenMetadata | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -67,54 +48,33 @@ export function AgentConnection({
     if (!open) return;
     let alive = true;
     setAccessListReady(false);
-    void transport
-      .request<TokenMetadata[]>(`/projects/${projectId}/integration-tokens`)
-      .then((value) => {
+    setError("");
+    void Promise.all([
+      transport.request<TokenMetadata[]>(
+        `/projects/${projectId}/integration-tokens`,
+      ),
+      transport.request<Setup>("/mcp/setup"),
+    ])
+      .then(([access, connection]) => {
         if (alive) {
-          setTokens(value);
-          setError("");
+          setTokens(access);
+          setSetup(connection);
           setAccessListReady(true);
         }
       })
       .catch((error) => {
         if (alive) setError(message(error));
       });
+    const refresh = () => {
+      if (document.visibilityState === "visible")
+        setAttempt((value) => value + 1);
+    };
+    document.addEventListener("visibilitychange", refresh);
     return () => {
       alive = false;
+      document.removeEventListener("visibilitychange", refresh);
     };
   }, [open, projectId, attempt, transport]);
-  async function create() {
-    if (busy || disabled || unknownCreation || !accessListReady) return;
-    setBusy(true);
-    setError("");
-    try {
-      const result = await transport.request<TokenMetadata & { token: string }>(
-        `/projects/${projectId}/integration-tokens`,
-        {
-          action: "create",
-          name:
-            name.trim() ||
-            codingAgents.find((agent) => agent.value === codingAgent)?.label ||
-            "My coding agent",
-        },
-      );
-      setSecret(result.token);
-      setSecretTokenId(result.id);
-      setName("");
-      setAttempt((value) => value + 1);
-    } catch (failure) {
-      setError(message(failure));
-      if (
-        !(failure instanceof ApiError) ||
-        ![400, 403, 404, 422].includes(failure.status)
-      ) {
-        setAccessListReady(false);
-        setUnknownCreation(true);
-      }
-    } finally {
-      setBusy(false);
-    }
-  }
   async function revokeToken(token: TokenMetadata) {
     setBusy(true);
     setError("");
@@ -124,10 +84,6 @@ export function AgentConnection({
         tokenId: token.id,
       });
       setRevoke(null);
-      if (secretTokenId === token.id) {
-        setSecret("");
-        setSecretTokenId("");
-      }
       setAttempt((value) => value + 1);
       notify("Agent access revoked");
     } catch (failure) {
@@ -147,13 +103,11 @@ export function AgentConnection({
     }
   }
   const agent = codingAgents.find((entry) => entry.value === codingAgent);
-  const format = codingAgent === "other" ? otherFormat : codingAgent || "codex";
-  const serverName = "woolgather";
-  const setup = agentSetup(format, folder, serverName);
-  const installUrl = cursorInstallUrl(folder, serverName);
-  const folderReady = validConnectorFolder(folder);
-  const installation =
-    "npm ci --prefix packages/agent-connector --ignore-scripts";
+  const remote =
+    setup?.url && codingAgent ? remoteAgentSetup(codingAgent, setup.url) : null;
+  const active = tokens.filter(
+    (token) => !token.revokedAt && Date.parse(token.expiresAt) > Date.now(),
+  );
   return (
     <>
       <Button disabled={disabled} onClick={() => setOpen(true)}>
@@ -173,46 +127,27 @@ export function AgentConnection({
           >
             <div className="project-agent-content">
               <p className="project-agent-intro">
-                Build in your coding agent, with your own account. woolgather
-                shares your plan and receives progress reports.
+                Connect with your woolgather account. Build with your agent’s
+                existing subscription.
               </p>
               {error && (
                 <p className="project-build-notice" role="alert">
-                  {error}
+                  {error}{" "}
+                  <Button
+                    size="sm"
+                    variant="quiet"
+                    onClick={() => setAttempt((value) => value + 1)}
+                  >
+                    Try again
+                  </Button>
                 </p>
-              )}
-              {unknownCreation && (
-                <div className="project-build-notice">
-                  <p>
-                    The connection interrupted while creating access. Refresh
-                    the list and revoke any new token you did not receive before
-                    creating another.
-                  </p>
-                  <div className="project-build-actions">
-                    <Button
-                      size="sm"
-                      onClick={() => setAttempt((value) => value + 1)}
-                    >
-                      Refresh access list
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="quiet"
-                      disabled={!accessListReady}
-                      onClick={() => setUnknownCreation(false)}
-                    >
-                      I have checked the list
-                    </Button>
-                  </div>
-                </div>
               )}
               {!agent ? (
                 <div className="project-agent-choices">
                   {codingAgents.map((entry) => (
                     <Button
                       key={entry.value}
-                      className="project-agent-choice h-auto justify-start rounded-xl whitespace-normal px-4 py-3 text-left"
-                      disabled={busy}
+                      className="project-agent-choice rounded-xl"
                       onClick={() => setCodingAgent(entry.value)}
                     >
                       {entry.logo ? (
@@ -226,10 +161,10 @@ export function AgentConnection({
                         <Plug className="size-7 p-1" />
                       )}
                       <span>
-                        {entry.label}
+                        <strong>{entry.label}</strong>
                         <small>
                           {entry.value === "other"
-                            ? "Any agent with MCP support"
+                            ? "MCP with account sign-in"
                             : "Use your existing account"}
                         </small>
                       </span>
@@ -243,7 +178,6 @@ export function AgentConnection({
                     <Button
                       size="sm"
                       variant="quiet"
-                      disabled={busy}
                       onClick={() => setCodingAgent(null)}
                     >
                       <ArrowLeft /> All agents
@@ -257,255 +191,107 @@ export function AgentConnection({
                       />
                     )}
                   </div>
-                  <section
-                    className="project-agent-step"
-                    aria-labelledby="agent-connector-title"
-                  >
-                    <h3 id="agent-connector-title">
-                      <span>1</span> Prepare the connector
-                    </h3>
-                    <p>
-                      With Node 24 installed, run this once from your woolgather
-                      checkout.
+                  {!setup ? (
+                    <p role="status">Loading connection…</p>
+                  ) : !setup.enabled || !remote ? (
+                    <p className="project-build-notice">
+                      Account connections aren’t enabled on this installation
+                      yet.
                     </p>
-                    <div className="project-agent-command">
-                      <pre
-                        tabIndex={0}
-                        aria-label="Connector installation command"
+                  ) : (
+                    <>
+                      <section
+                        className="project-agent-step"
+                        aria-labelledby="agent-add-title"
                       >
-                        <code>{installation}</code>
-                      </pre>
-                      <Button size="sm" onClick={() => void copy(installation)}>
-                        <Copy /> Copy
-                      </Button>
-                    </div>
-                    <label>
-                      woolgather folder
-                      <Input
-                        value={folder}
-                        onChange={(event) => setFolder(event.target.value)}
-                        placeholder="/absolute/path/to/woolgather"
-                        autoComplete="off"
-                        spellCheck={false}
-                        aria-describedby="agent-folder-help"
-                      />
-                    </label>
-                    <p id="agent-folder-help" className="project-build-help">
-                      The full path to the woolgather checkout on the computer
-                      running your agent.
-                    </p>
-                  </section>
-                  <section
-                    className="project-agent-step"
-                    aria-labelledby="agent-access-title"
-                  >
-                    <h3 id="agent-access-title">
-                      <span>2</span> Give access to this project
-                    </h3>
-                    {secret ? (
-                      <div className="project-build-secret">
+                        <h3 id="agent-add-title">
+                          <span>1</span> Add woolgather
+                        </h3>
                         <p>
-                          Copy this token before leaving Build. It cannot be
-                          shown again. It only grants access to this project.
+                          {codingAgent === "cursor"
+                            ? "Open Cursor to add the connection."
+                            : "Add this server address in your agent’s MCP settings."}
                         </p>
-                        <Input
-                          aria-label="New project token"
-                          value={secret}
-                          readOnly
-                          autoComplete="off"
-                          spellCheck={false}
-                        />
-                        <div className="project-build-actions">
-                          <Button onClick={() => void copy(secret)}>
-                            <Copy /> Copy token
-                          </Button>
-                          <Button variant="quiet" onClick={() => setSecret("")}>
-                            I have saved it
+                        <div className="project-agent-command">
+                          <pre tabIndex={0} aria-label="MCP server address">
+                            <code>{setup.url}</code>
+                          </pre>
+                          <Button onClick={() => void copy(setup.url!)}>
+                            <Copy /> Copy address
                           </Button>
                         </div>
-                      </div>
-                    ) : (
-                      <form
-                        className="project-build-token-form"
-                        onSubmit={(event) => {
-                          event.preventDefault();
-                          void create();
-                        }}
-                      >
-                        <label>
-                          Connection name
-                          <Input
-                            value={name}
-                            onChange={(event) => setName(event.target.value)}
-                            placeholder={`${agent.label === "Other" ? "My agent" : agent.label} on my computer`}
-                            maxLength={80}
-                            disabled={busy || disabled || unknownCreation}
-                          />
-                        </label>
-                        <Button
-                          type="submit"
-                          disabled={
-                            busy ||
-                            disabled ||
-                            unknownCreation ||
-                            !accessListReady
-                          }
-                        >
-                          Create project token
-                        </Button>
-                      </form>
-                    )}
-                    <p>
-                      Set these environment variables for your agent, then
-                      restart it. To switch projects, replace the token and
-                      restart again. Keep the token out of prompts and
-                      repository files.
-                    </p>
-                    <dl className="project-agent-environment">
-                      <div>
-                        <dt>WOOLGATHER_URL</dt>
-                        <dd>{location.origin}</dd>
-                      </div>
-                      <div>
-                        <dt>WOOLGATHER_TOKEN</dt>
-                        <dd>Your project token</dd>
-                      </div>
-                    </dl>
-                  </section>
-                  <section
-                    className="project-agent-step"
-                    aria-labelledby="agent-install-title"
-                  >
-                    <h3 id="agent-install-title">
-                      <span>3</span> Add to{" "}
-                      {agent.label === "Other" ? "your agent" : agent.label}
-                    </h3>
-                    {codingAgent === "other" && (
-                      <>
-                        <Select
-                          label="MCP configuration format"
-                          value={otherFormat}
-                          onValueChange={(value) =>
-                            setOtherFormat(value as typeof otherFormat)
-                          }
-                          options={[
-                            { value: "other", label: "Standard MCP" },
-                            { value: "opencode", label: "OpenCode" },
-                            { value: "grok", label: "Grok Build" },
-                          ]}
-                        />
-                        <p>
-                          Choose a local stdio MCP server. For other clients,
-                          adapt the example below to their configuration format
-                          and environment variable syntax.
-                        </p>
-                      </>
-                    )}
-                    {codingAgent === "cursor" ? (
-                      <>
-                        <Button
-                          variant="primary"
-                          disabled={!installUrl}
-                          onClick={() => {
-                            if (installUrl) window.location.href = installUrl;
-                          }}
-                        >
-                          <ArrowUpRight /> Add to Cursor
-                        </Button>
-                        <p className="project-build-help">
-                          Opens Cursor to review and install the connector.{" "}
-                          {folderReady
-                            ? "Set the environment variables before using the connector."
-                            : "Enter your woolgather folder above to enable this."}
-                        </p>
-                      </>
-                    ) : codingAgent === "claude" ? (
-                      <>
-                        <p>
-                          Run the setup command in your terminal. It adds this
-                          project’s connector to Claude Code.
-                        </p>
-                        <Button
-                          disabled={!folderReady}
-                          onClick={() =>
-                            void copy(claudeSetupCommand(folder, serverName))
-                          }
-                        >
-                          <Copy /> Copy setup command
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <p>
-                          Add the configuration to <code>{setup.file}</code>,
-                          keeping your existing settings.
-                        </p>
-                        <Button
-                          disabled={!folderReady}
-                          onClick={() => void copy(setup.configuration)}
-                        >
-                          <Copy /> Copy configuration
-                        </Button>
-                      </>
-                    )}
-                    {!folderReady && codingAgent !== "cursor" && (
-                      <p className="project-build-help">
-                        Enter your woolgather folder above to prepare the
-                        configuration.
-                      </p>
-                    )}
-                    <Disclosure
-                      title={
-                        codingAgent === "cursor"
-                          ? "Manual setup"
-                          : "View configuration"
-                      }
-                      variant="plain"
-                    >
-                      <div className="project-agent-manual">
-                        <p>
-                          Add this entry to <code>{setup.file}</code>.
-                        </p>
-                        <pre
-                          tabIndex={0}
-                          aria-label={`${agent.label} configuration`}
-                        >
-                          <code>{setup.configuration}</code>
-                        </pre>
-                        {codingAgent === "claude" && (
-                          <pre
-                            tabIndex={0}
-                            aria-label="Claude Code setup command"
-                          >
-                            <code>
-                              {claudeSetupCommand(folder, serverName)}
-                            </code>
-                          </pre>
-                        )}
-                        {(codingAgent === "claude" ||
-                          codingAgent === "cursor") && (
+                        {remote.installUrl && (
                           <Button
-                            size="sm"
-                            disabled={!folderReady}
-                            onClick={() => void copy(setup.configuration)}
+                            variant="primary"
+                            onClick={() => {
+                              window.location.href = remote.installUrl!;
+                            }}
                           >
-                            <Copy /> Copy configuration
+                            <ArrowUpRight /> Add to Cursor
                           </Button>
                         )}
-                      </div>
-                    </Disclosure>
-                    <p className="project-build-help">
-                      Then ask your agent to connect this woolgather project to
-                      your repository. Full instructions are in{" "}
-                      <code>packages/agent-connector/README.md</code>.
-                    </p>
-                  </section>
+                        <Disclosure
+                          title="Setup command and configuration"
+                          variant="plain"
+                        >
+                          <div className="project-agent-manual">
+                            {remote.command && (
+                              <>
+                                <p>
+                                  Run in your terminal, then sign in when your
+                                  agent prompts you.
+                                </p>
+                                <pre
+                                  tabIndex={0}
+                                  aria-label="Agent setup command"
+                                >
+                                  <code>{remote.command}</code>
+                                </pre>
+                                <Button
+                                  size="sm"
+                                  onClick={() => void copy(remote.command!)}
+                                >
+                                  <Copy /> Copy command
+                                </Button>
+                              </>
+                            )}
+                            <pre tabIndex={0} aria-label="Agent configuration">
+                              <code>{remote.configuration}</code>
+                            </pre>
+                            <Button
+                              size="sm"
+                              onClick={() => void copy(remote.configuration)}
+                            >
+                              <Copy /> Copy configuration
+                            </Button>
+                          </div>
+                        </Disclosure>
+                      </section>
+                      <section
+                        className="project-agent-step"
+                        aria-labelledby="agent-sign-in-title"
+                      >
+                        <h3 id="agent-sign-in-title">
+                          <span>2</span> Sign in and choose your project
+                        </h3>
+                        <p>
+                          Choose Sign in or Authenticate in your agent.
+                          woolgather opens in your browser so you can approve
+                          access to a project.
+                        </p>
+                        <p className="project-build-help">
+                          Already signed in to woolgather? Just choose the
+                          project and allow access. Then return to your agent to
+                          build.
+                        </p>
+                      </section>
+                    </>
+                  )}
                 </>
               )}
               <Disclosure
-                title={`Project access${tokens.length ? ` (${tokens.filter((token) => !token.revokedAt).length} active)` : ""}`}
+                title={`Project access${active.length ? ` (${active.length} active)` : ""}`}
                 variant="plain"
-                defaultOpen={unknownCreation}
               >
                 <div className="project-build-token-list">
                   <div>
@@ -532,7 +318,9 @@ export function AgentConnection({
                         <span>
                           {token.revokedAt
                             ? "Revoked"
-                            : `Expires ${new Date(token.expiresAt).toLocaleDateString()}`}
+                            : Date.parse(token.expiresAt) <= Date.now()
+                              ? "Expired"
+                              : `Access until ${new Date(token.expiresAt).toLocaleDateString()}`}
                         </span>
                       </div>
                       {!token.revokedAt && (

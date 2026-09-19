@@ -7,6 +7,7 @@ import { MorphText } from "./ui/MorphText";
 import { transitionView } from "./ui/viewTransition";
 import { Brand as Mark } from "./ui/Brand";
 import { AuthEntry } from "./account/AuthEntry";
+import { McpAuthorization } from "./account/McpAuthorization";
 import {
   SidebarProvider,
   Sidebar,
@@ -243,9 +244,13 @@ export function App() {
     );
   const content =
     session && !recovering ? (
-      <PlanProvider key={session.user.id}>
-        <Workspace auth={auth} session={session} />
-      </PlanProvider>
+      location.pathname === "/connect/authorize" ? (
+        <McpAuthorization key={session.user.id} session={session} />
+      ) : (
+        <PlanProvider key={session.user.id}>
+          <Workspace auth={auth} session={session} />
+        </PlanProvider>
+      )
     ) : (
       <SignIn
         auth={auth}

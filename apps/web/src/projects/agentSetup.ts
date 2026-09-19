@@ -7,6 +7,45 @@ export const codingAgents = [
 export type CodingAgent = (typeof codingAgents)[number]["value"];
 export type SetupFormat = CodingAgent | "opencode" | "grok";
 
+/** Remote setup never contains account credentials or local filesystem paths. */
+export function remoteAgentSetup(agent: CodingAgent, address: string) {
+  const url = new URL(address);
+  if (
+    url.username ||
+    url.password ||
+    url.search ||
+    url.hash ||
+    url.pathname !== "/mcp" ||
+    (url.protocol !== "https:" &&
+      !(
+        url.protocol === "http:" &&
+        ["127.0.0.1", "localhost", "[::1]"].includes(url.hostname)
+      ))
+  )
+    throw new Error("Invalid MCP server address");
+  const server = {
+    ...(agent === "claude" ? { type: "http" } : {}),
+    url: url.href,
+  };
+  const quote = (value: string) => `'${value.replaceAll("'", "'\\''")}'`;
+  return {
+    configuration:
+      agent === "codex"
+        ? `[mcp_servers.woolgather]\nurl = ${JSON.stringify(url.href)}`
+        : JSON.stringify({ mcpServers: { woolgather: server } }, null, 2),
+    command:
+      agent === "claude"
+        ? `claude mcp add --transport http --scope user woolgather ${quote(url.href)}`
+        : agent === "codex"
+          ? `codex mcp add woolgather --url ${quote(url.href)}\ncodex mcp login woolgather`
+          : null,
+    installUrl:
+      agent === "cursor"
+        ? `cursor://anysphere.cursor-deeplink/mcp/install?name=woolgather&config=${encodeURIComponent(btoa(JSON.stringify(server)))}`
+        : null,
+  };
+}
+
 export function validConnectorFolder(folder: string) {
   return (
     /^(\/|[a-z]:[\\/])/i.test(folder.trim()) &&

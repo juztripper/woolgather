@@ -1,162 +1,82 @@
-# woolgather agent connector
+# Connect your coding agent to woolgather
 
-Build the work you selected in woolgather from your own Codex, Claude Code, Cursor, OpenCode or Grok Build session. Your agent reads the plan and sends implementation reports back. Your existing agent account pays for all building inference. The connector does not request a model key, proxy inference, execute shell commands or read repository files.
+Build from your woolgather plan in your own Codex, Claude Code, Cursor or another compatible MCP client. Coding and inference use your existing agent account. woolgather shares the selected project and receives implementation reports; it does not run or pay for building inference.
 
-This is the first local integration release. It provides a real MCP stdio server and project-scoped API access. It does not launch agents from the woolgather browser, import repositories, continuously watch code or publish changes. Agent reports update progress when the agent calls the reporting tool; this is not an unattended background watcher.
+## Connect with your account
 
-## Prepare the connection
+1. Open **Build → Connect agent** and choose your agent.
+2. Add the displayed MCP server address. Cursor also offers **Add to Cursor**, which opens its installation review.
+3. Choose **Sign in** or **Authenticate** in your agent. In the browser, sign in with your existing woolgather account, select a project and choose **Allow access**. Existing sessions and MFA are respected.
+4. Return to your agent and ask it to read the project, connect the repository and build the version or requirement you choose.
 
-1. Run a woolgather instance containing this integration and its database migration. This source release does not imply the integration is deployed on the public service.
-2. In your project's **Build** view, select plan thoughts, write completion criteria and save a version. Choose **Connect agent**, select your client, and create a project connection token. The token gives access to that project only.
-3. Install Node.js 24 and the connector dependencies from the repository root:
+There is no connector installation, local woolgather folder or manual token in this flow. Access is limited to one approved project for 30 days, with access tokens refreshed automatically within that period. Reconnect to renew or choose a different project. **Build → Connect agent → Project access** lists and revokes access, including older local connections. Revocation blocks subsequent MCP requests even if the client still has a cached OAuth token.
 
-   ```sh
-   npm ci --prefix packages/agent-connector --ignore-scripts
-   ```
+This source implementation is disabled by default until the instance operator configures it. It does not imply public-service activation, marketplace publication or native-client qualification. The dialog reports when account connections are unavailable.
 
-4. Set `WOOLGATHER_URL` to your instance origin, such as `https://your-woolgather.example` or `http://127.0.0.1:4200` for local development. Set `WOOLGATHER_TOKEN` to the generated project connection token in the environment of the agent process. Keep it out of repository files, prompts, screenshots and shell history. This is a woolgather connection credential, not a coding-agent subscription credential.
-5. Add the connector to your client below. Replace `/absolute/path/to/woolgather` with your checkout path; keep existing servers and configuration intact. Restart the agent after changing its environment. GUI apps may need environment configuration through their launcher rather than a separate terminal.
+## Client setup
 
-The connector command is `node /absolute/path/to/woolgather/packages/agent-connector/bin/woolgather-mcp.mjs`. No npm publication or automatic download from an unversioned package is required.
+Use the address shown by your own woolgather instance; `https://your-woolgather.example/mcp` below is an example.
 
-## Codex
-
-Add to your user or project Codex `config.toml`:
-
-```toml
-[mcp_servers.woolgather]
-command = "node"
-args = ["/absolute/path/to/woolgather/packages/agent-connector/bin/woolgather-mcp.mjs"]
-env_vars = ["WOOLGATHER_URL", "WOOLGATHER_TOKEN"]
-```
-
-Use `/mcp` to check the server. Codex forwards the named variables from its environment; the token is not written into this configuration. See the [official Codex MCP guide](https://developers.openai.com/codex/mcp).
-
-## Claude Code
-
-Add this server to the project's `.mcp.json`. Approve the server in Claude Code when prompted:
-
-```json
-{
-  "mcpServers": {
-    "woolgather": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "/absolute/path/to/woolgather/packages/agent-connector/bin/woolgather-mcp.mjs"
-      ],
-      "env": {
-        "WOOLGATHER_URL": "${WOOLGATHER_URL}",
-        "WOOLGATHER_TOKEN": "${WOOLGATHER_TOKEN}"
-      }
-    }
-  }
-}
-```
-
-Check `/mcp` or `claude mcp list`. See [Claude Code's MCP configuration and variable expansion](https://code.claude.com/docs/en/mcp).
-
-## Cursor
-
-Add this server to `.cursor/mcp.json` or `~/.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "woolgather": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "/absolute/path/to/woolgather/packages/agent-connector/bin/woolgather-mcp.mjs"
-      ],
-      "env": {
-        "WOOLGATHER_URL": "${env:WOOLGATHER_URL}",
-        "WOOLGATHER_TOKEN": "${env:WOOLGATHER_TOKEN}"
-      }
-    }
-  }
-}
-```
-
-The Build connection dialog also provides **Add to Cursor** once you enter your local woolgather checkout path. It uses [Cursor’s official MCP install link](https://cursor.com/docs/mcp/install-links) to open Cursor’s installation review with one stdio server definition. It includes environment variable references, never the project token. Installing still requires the local connector dependencies and the agent environment from the preparation steps; it does not start a build or prove a successful connection.
-
-Cursor uses `${env:NAME}` interpolation. Check its MCP settings after restarting. See [Cursor's official MCP guide](https://cursor.com/docs/mcp).
-
-## OpenCode
-
-Add to `opencode.json`:
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "woolgather": {
-      "type": "local",
-      "command": [
-        "node",
-        "/absolute/path/to/woolgather/packages/agent-connector/bin/woolgather-mcp.mjs"
-      ],
-      "enabled": true,
-      "environment": {
-        "WOOLGATHER_URL": "{env:WOOLGATHER_URL}",
-        "WOOLGATHER_TOKEN": "{env:WOOLGATHER_TOKEN}"
-      }
-    }
-  }
-}
-```
-
-See [OpenCode's MCP guide](https://opencode.ai/docs/mcp-servers/) and [configuration variables](https://opencode.ai/docs/config/#env-vars).
-
-## Grok Build
-
-Add to `~/.grok/config.toml` or your project's `.grok/config.toml`:
-
-```toml
-[mcp_servers.woolgather]
-command = "node"
-args = ["/absolute/path/to/woolgather/packages/agent-connector/bin/woolgather-mcp.mjs"]
-env = { WOOLGATHER_URL = "${WOOLGATHER_URL}", WOOLGATHER_TOKEN = "${WOOLGATHER_TOKEN}" }
-```
-
-Run `grok mcp doctor woolgather` to diagnose the connection. See [Grok Build's MCP documentation](https://docs.x.ai/build/features/mcp-servers).
-
-## Build and report
-
-Ask your agent:
-
-> Read my connected woolgather project, connect this repository, and build the first requirement in the version I selected. Report actual implementation progress and test results back to woolgather.
-
-The tools are:
-
-| Tool                            | Purpose                                                                                                                 |
-| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `get_project_context`           | Read the authorized project, scope snapshots, constraints, source metadata, progress and delivery revision.             |
-| `connect_repository`            | Bind a portable label, optional credential-free HTTPS remote and branch. Local repositories may leave the remote empty. |
-| `report_implementation_outcome` | Report `in_progress`, `implemented`, `blocked` or `needs_recheck` against one selected requirement.                     |
-
-Each mutation requires a new UUID `commandId` and the current `delivery.revision` as `expectedRevision`. After an uncertain response, retry with exactly the same ID and payload. A new operation needs a new ID. The server deduplicates matching retries; the connector never automatically retries a write.
-
-Report checks as `passed`, `failed` or `not_run`, with an actual commit when available. The agent cannot verify work on the owner's behalf, alter versions, rewrite the plan or replace an existing repository binding. Read fresh context after a conflict. Source metadata does not include attachment bytes; an agent must not claim to have inspected missing files. The user reviews completion in woolgather. Reported implementation and owner-verified progress remain distinct.
-
-Revoke a connection token in the project's Build view to end its access. To connect another project, create a token for that project and replace the environment value deliberately and restart the agent. The dialog configures one `woolgather` entry at a time. Multiple project connections need separately named entries and separate credential environments; renaming an entry alone does not isolate the shared environment variables. This release does not search all projects by name.
-
-## Optional native plugin
-
-The [woolgather plugin](../../plugins/woolgather/README.md) supplies native Codex and Claude Code metadata, an agent workflow skill and a launcher for this same connector. Direct MCP configuration above also works without the plugin.
-
-## Verification and limits
-
-The pinned official `@modelcontextprotocol/sdk` 1.30.0 handles MCP initialization, tool schemas, cancellation and stdio framing. It negotiates the SDK's supported protocol versions, up to `2025-11-25`; this release does not claim the newer stateless protocol. The tests use both the official SDK client/in-memory transport and a spawned stdio process against an isolated local HTTP fixture. They check exact retry payloads, restricted tool authority, credential redaction, timeouts, response limits and redirect refusal. They perform no inference.
-
-Client configuration examples above follow vendor documentation checked on 18 September 2026. Local native checks also passed for Claude Code's plugin connection health and Grok Build's startup, `2025-11-25` handshake and discovery of all three tools. Those checks used isolated synthetic configuration, a synthetic token and no inference. Configuration documentation and connection health are not end-to-end qualification of each client: a full user-operated build and production-origin authentication remain separate checks. Codex, Cursor and OpenCode have installation examples but have not been qualified as native clients in this release.
-
-The network client uses an HTTPS origin (loopback HTTP only for development), refuses redirects, has a 15-second timeout, bounds request bodies to 32 KiB and successful responses to 2 MiB, and hides remote error bodies and credentials. It reads no provider credentials. Project text is context, not permission to override the agent's own safety or repository rules.
-
-From the repository root, after installing root and connector dependencies:
+**Codex:** add the remote server in MCP settings, or run:
 
 ```sh
-node --import tsx --test tests/agent-connector.test.ts
+codex mcp add woolgather --url https://your-woolgather.example/mcp
+codex mcp login woolgather
 ```
 
-The connector is AGPL-3.0-only under the repository's [LICENSE](../../LICENSE). Its dependencies retain their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Equivalent configuration:
+
+```toml
+[mcp_servers.woolgather]
+url = "https://your-woolgather.example/mcp"
+```
+
+**Claude Code:** add the HTTP server, then use `/mcp` to authenticate:
+
+```sh
+claude mcp add --transport http --scope user woolgather https://your-woolgather.example/mcp
+```
+
+**Cursor:** use the dialog's installer or add this server to your MCP configuration, preserving existing entries:
+
+```json
+{
+  "mcpServers": {
+    "woolgather": { "url": "https://your-woolgather.example/mcp" }
+  }
+}
+```
+
+**Other agents:** add a remote Streamable HTTP MCP server with OAuth, S256 PKCE and dynamic client registration support. Client-specific configuration formats differ. Protocol support alone does not establish compatibility with every version or execution surface. This release uses the MCP SDK's 2025-11-25 protocol in stateless HTTP mode; it does not implement the newer stateless protocol.
+
+Official references: [Codex](https://developers.openai.com/codex/mcp), [Claude Code](https://code.claude.com/docs/en/mcp), [Cursor install links](https://cursor.com/docs/mcp/install-links), [MCP authorization](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization).
+
+## What the agent can do
+
+The local and remote transports use the same tools:
+
+- `get_project_context`: read the approved project, selected versions, requirements, revisions and evidence.
+- `connect_repository`: save a portable repository label, credential-free HTTPS remote and branch.
+- `report_implementation_outcome`: report work and checks against a frozen requirement.
+
+Agents cannot change the selected scope or mark their own work owner-verified. Saved text is project data, not privileged instructions. Use the exact same command ID and payload when retrying an uncertain result. Progress updates when the agent reports evidence; this is not a background code watcher. Direct browser-to-agent dispatch, imports and attachment-byte retrieval remain separate work.
+
+## Operator configuration
+
+The existing Worker now serves `/mcp`, OAuth discovery, `/oauth/authorize`, `/oauth/register` and `/oauth/token`. It reuses woolgather's account sign-in to approve access and issues separate opaque OAuth credentials. Supabase session credentials never reach the coding agent.
+
+1. Keep the existing database migrations, publishable Supabase configuration and `ACCOUNT_ACTION_SECRET` configured. No additional Supabase OAuth-server feature or schema migration is required.
+2. Bind a dedicated `OAUTH_KV` namespace and the `MCP_CONSENTS` SQLite Durable Object, with the `mcp-consent-v1` migration in `wrangler.jsonc`. The OAuth rate limiter binding is also required. Wrangler can provision the KV binding at an authorized deployment; bind an explicit existing namespace ID when managing infrastructure separately.
+3. Set `MCP_ORIGIN` to the exact canonical woolgather origin, without a path. Set `MCP_ENABLED=true` only after qualifying that origin. HTTPS is required except for loopback local development.
+4. Retain the configured Worker-first routes and authorization-page security headers. Keep the regular Supabase sign-in callback on the same origin; the application resumes the pending approval after sign-in.
+5. Qualify account sign-in/MFA, consent, cancel, token refresh, revocation and an actual native-client read/report on the hosted origin before release. The isolated review on port 4300 is a UI fixture, not a running OAuth endpoint.
+
+Pending approvals expire after 15 minutes and require the initiating browser. A Durable Object atomically claims each approval. Access tokens last one hour; OAuth grants and backing project access are bounded to 30 days. OAuth endpoints are limited to 60 requests per minute per connecting IP per Cloudflare location. This is a basic admission limit, not a substitute for deployment-specific abuse monitoring.
+
+Backing project tokens remain hash-only in PostgreSQL; their server-side secret is held in encrypted OAuth grant properties. Project access is checked on every MCP request, including tool discovery. Account deletion, project lifecycle and revocation retain the existing database enforcement. No service-role key or agent-provider credential is required. These requests incur ordinary hosting/auth/storage usage, not model inference.
+
+## Local verification and advanced transport
+
+`npm test` runs real workerd OAuth/PKCE/consent/refresh and MCP requests against disposable PostgreSQL, using synthetic account-auth responses. It checks browser binding, duplicate consent, wrong-project denial, MFA gating, session isolation, shared tools and revocation. No provider call or real account is used. Browser fixture review and native-client/hosted qualification are separate evidence.
+
+The optional [native plugin](../../plugins/woolgather/README.md) adds the building workflow. The retained [advanced local stdio setup](LOCAL_SETUP.md) is for developer installations that intentionally use project tokens. It is no longer the ordinary connection flow.

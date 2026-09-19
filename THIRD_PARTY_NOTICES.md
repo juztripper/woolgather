@@ -17,6 +17,7 @@ The font files and their complete notices remain together in `apps/web/public/fo
 
 - **PDF.js** is licensed under Apache-2.0. Its bundled notice is at `apps/web/public/notices/pdfjs-dist-Apache-2.0.txt`.
 - **Lucide** icons are provided by `lucide-react` under the ISC License.
+- **Cloudflare Workers OAuth Provider** and the **Model Context Protocol TypeScript SDK** are MIT licensed. Their notices remain with the pinned packages and lockfiles.
 - **Sharp** is Apache-2.0 licensed and distributes libvips components under LGPL-3.0-or-later and related notices for supported platforms.
 - JavaScript dependencies retain the licenses declared by their packages and recorded through `package-lock.json`.
 

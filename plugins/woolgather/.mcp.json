@@ -1,12 +1,8 @@
 {
   "mcpServers": {
     "woolgather": {
-      "command": "./scripts/start.mjs",
-      "env_vars": [
-        "WOOLGATHER_URL",
-        "WOOLGATHER_TOKEN",
-        "WOOLGATHER_CONNECTOR_PATH"
-      ]
+      "type": "http",
+      "url": "https://woolgathering.app/mcp"
     }
   }
 }

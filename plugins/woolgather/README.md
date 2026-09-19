@@ -1,24 +1,24 @@
 # woolgather native plugin
 
-This development plugin gives coding agents a workflow for building selected woolgather requirements and reporting evidence. It supplies Codex and Claude Code manifests, a shared skill and a launcher for the [agent connector](../../packages/agent-connector/README.md). Building and inference use the user's existing agent and account.
+The Codex and Claude Code packages now use the remote woolgather MCP server and account authorization. Users sign in with their existing woolgather account, choose a project and approve access. Building and inference run on the user's own agent account.
 
-Install the connector dependencies and configure `WOOLGATHER_URL` and `WOOLGATHER_TOKEN` using the connector guide. Also set `WOOLGATHER_CONNECTOR_PATH` in the agent environment to the absolute path of `packages/agent-connector/bin/woolgather-mcp.mjs`. The launcher uses that installed file, so a copied plugin does not depend on its cache directory being next to the repository.
+The manifests target `https://woolgathering.app/mcp`. This source update does not activate that public endpoint or publish a marketplace package. For a self-hosted or development instance, change the URL in `.mcp.json` and `.claude-plugin/plugin.json` to the instance's configured MCP address, or use the [direct connection instructions](../../packages/agent-connector/README.md). There is no local connector path or token environment variable in the default plugin setup.
 
 The source contains:
 
-- `.codex-plugin/plugin.json` and `.mcp.json`: Codex manifest and stdio configuration. Its launcher is executable on macOS/Linux; use the direct `node` configuration in the connector guide on other platforms.
-- `.claude-plugin/plugin.json`: Claude Code manifest with its own plugin-root-aware stdio configuration.
-- `skills/connected-building/SKILL.md`: context, scope selection, evidence and reliable retry workflow.
-- `scripts/start.mjs`: credential-safe launcher. No model client or provider keys are involved.
+- `.codex-plugin/plugin.json` and `.mcp.json`: Codex metadata and remote HTTP connection.
+- `.claude-plugin/plugin.json`: Claude Code metadata and remote HTTP connection.
+- `skills/connected-building/SKILL.md`: scope selection, evidence and reliable retry workflow.
+- `scripts/start.mjs`: retained advanced local launcher, unused by the default manifests.
 
-For local Claude Code plugin development, start it with:
+For local Claude Code package testing:
 
 ```sh
 claude --plugin-dir /absolute/path/to/woolgather/plugins/woolgather
 ```
 
-For Codex, use the direct MCP configuration in the connector guide until installing this source through a configured plugin marketplace. No marketplace or user configuration is changed by this repository. No package or plugin has been published. Native plugin metadata does not mean every vendor's installation flow has been qualified.
+Use direct MCP configuration in Codex until installing through a configured marketplace. No marketplace, agent configuration or user account is changed by this repository. Native metadata validation is separate from actual client qualification. Avoid enabling both a direct MCP entry and a plugin entry for the same connection unless you intend duplicate namespaces.
 
-Do not enable both the direct MCP entry and plugin entry for the same connection unless you intentionally want duplicate tool namespaces. Restart your client after configuration changes. Agent reports occur when the agent invokes the tool; the plugin does not monitor code or run builds in the background.
+Agents report progress when they invoke the tool. The plugin does not monitor code or run builds in the background. Project selection, owner verification, revocation and expiry follow the shared connector contract.
 
-License: AGPL-3.0-only; see the repository [LICENSE](../../LICENSE). Connector dependencies and notices live in the connector package.
+License: AGPL-3.0-only; see the repository [LICENSE](../../LICENSE).

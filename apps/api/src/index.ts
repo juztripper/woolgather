@@ -7,6 +7,7 @@ import {
   type StripeBillingEnv,
 } from "./stripeBilling";
 import { accountPlan } from "./plans";
+import { mcpConsent, mcpSetup } from "./mcpAuthorization";
 import { planningEventChannel } from "./planningStream";
 import { projectDeletionError } from "./projectDeletionError";
 import { projectVoice, type ProjectVoiceEnv } from "./projectVoice";
@@ -93,7 +94,7 @@ export default {
       )
         break;
   },
-  async fetch(request, env, ctx) {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext) {
     const url = new URL(request.url);
     const guidanceRoute = [
       "/api/project-planning",
@@ -102,6 +103,8 @@ export default {
     const guidanceDeadline =
       Date.now() + (url.pathname === "/api/project-planning" ? 180000 : 45000);
     if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
+    if (url.pathname === "/api/mcp/setup" && request.method === "GET")
+      return json(mcpSetup(env));
     if (url.pathname === "/api/config" && request.method === "GET")
       return json({
         url: env.SUPABASE_URL,
@@ -259,6 +262,22 @@ export default {
           },
           access.data === "mfa_required" ? 403 : 401,
         );
+      if (url.pathname === "/api/mcp/authorization") {
+        if (
+          request.method === "POST" &&
+          !request.headers.get("Content-Type")?.startsWith("application/json")
+        )
+          return json({ error: "JSON required" }, 415);
+        return await mcpConsent(
+          request,
+          env,
+          async (name, args) => client.rpc(name, args),
+          user.id,
+          request.method === "POST"
+            ? await boundedBody(request, 4000)
+            : undefined,
+        );
+      }
       const deliveryRoute = url.pathname.match(
         /^\/api\/projects\/([0-9a-f-]{36})\/(delivery|integration-tokens)$/i,
       );
