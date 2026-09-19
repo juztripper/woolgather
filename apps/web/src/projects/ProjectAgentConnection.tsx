@@ -22,7 +22,7 @@ type TokenMetadata = {
   expiresAt: string;
   revokedAt?: string | null;
 };
-type Setup = { enabled: boolean; url: string | null };
+type Setup = { enabled: boolean; url: string | null; preview?: boolean };
 const message = (error: unknown) =>
   error instanceof Error ? error.message : "Unable to connect. Try again.";
 
@@ -195,8 +195,9 @@ export function AgentConnection({
                     <p role="status">Loading connection…</p>
                   ) : !setup.enabled || !remote ? (
                     <p className="project-build-notice">
-                      Account connections aren’t enabled on this installation
-                      yet.
+                      {setup.preview
+                        ? "This is a UI preview. Open your woolgather installation to connect an agent."
+                        : "Account connections aren’t enabled on this installation yet."}
                     </p>
                   ) : (
                     <>
