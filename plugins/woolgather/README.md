@@ -17,7 +17,7 @@ For local Claude Code package testing:
 claude --plugin-dir /absolute/path/to/woolgather/plugins/woolgather
 ```
 
-Use direct MCP configuration in Codex until installing through a configured marketplace. No marketplace, agent configuration or user account is changed by this repository. Native metadata validation is separate from actual client qualification. Avoid enabling both a direct MCP entry and a plugin entry for the same connection unless you intend duplicate namespaces.
+Use direct MCP configuration in Codex until installing through a configured marketplace. No marketplace, agent configuration or user account is changed by this repository. Native metadata validation is separate from actual client qualification; see the [qualification matrix](../../packages/agent-connector/RELEASE.md). Avoid enabling both a direct MCP entry and a plugin entry for the same connection unless you intend duplicate namespaces.
 
 Agents report progress when they invoke the tool. The plugin does not monitor code or run builds in the background. Project selection, owner verification, revocation and expiry follow the shared connector contract.
 

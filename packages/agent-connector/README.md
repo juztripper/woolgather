@@ -65,13 +65,13 @@ Agents cannot change the selected scope or mark their own work owner-verified. S
 
 The existing Worker now serves `/mcp`, OAuth discovery, `/oauth/authorize`, `/oauth/register` and `/oauth/token`. It reuses woolgather's account sign-in to approve access and issues separate opaque OAuth credentials. Supabase session credentials never reach the coding agent.
 
-1. Keep the existing database migrations, publishable Supabase configuration and `ACCOUNT_ACTION_SECRET` configured. No additional Supabase OAuth-server feature or schema migration is required.
-2. Bind a dedicated `OAUTH_KV` namespace and the `MCP_CONSENTS` SQLite Durable Object, with the `mcp-consent-v1` migration in `wrangler.jsonc`. The OAuth rate limiter binding is also required. Wrangler can provision the KV binding at an authorized deployment; bind an explicit existing namespace ID when managing infrastructure separately.
+1. Keep the existing database migrations, publishable Supabase configuration and `ACCOUNT_ACTION_SECRET` configured. The `20260918145244_connected_building.sql` migration is required; OAuth itself does not require a separate Supabase OAuth-server feature.
+2. Bind a dedicated `OAUTH_KV` namespace and the `MCP_CONSENTS` SQLite Durable Object, with the `mcp-consent-v1` migration in `wrangler.jsonc`. Both `MCP_AUTH_LIMITER` and `MCP_API_LIMITER` bindings are required. Wrangler can provision the KV binding at an authorized deployment; bind an explicit existing namespace ID when managing infrastructure separately.
 3. Set `MCP_ORIGIN` to the exact canonical woolgather origin, without a path. Set `MCP_ENABLED=true` only after qualifying that origin. HTTPS is required except for loopback local development.
 4. Retain the configured Worker-first routes and authorization-page security headers. Keep the regular Supabase sign-in callback on the same origin; the application resumes the pending approval after sign-in.
 5. Qualify account sign-in/MFA, consent, cancel, token refresh, revocation and an actual native-client read/report on the hosted origin before release. The isolated review on port 4300 is a UI fixture, not a running OAuth endpoint.
 
-Pending approvals expire after 15 minutes and require the initiating browser. A Durable Object atomically claims each approval. Access tokens last one hour; OAuth grants and backing project access are bounded to 30 days. OAuth endpoints are limited to 60 requests per minute per connecting IP per Cloudflare location. This is a basic admission limit, not a substitute for deployment-specific abuse monitoring.
+Pending approvals expire after 15 minutes and require the initiating browser. A Durable Object atomically claims each approval. Access tokens last one hour; OAuth grants and backing project access are bounded to 30 days. OAuth endpoints are limited to 60 requests per minute, and MCP/legacy integration requests to 120 per minute, per connecting IP per Cloudflare location. A limited request returns `429` with `Retry-After: 60`. This is a basic admission limit, not a substitute for deployment-specific abuse monitoring.
 
 Backing project tokens remain hash-only in PostgreSQL; their server-side secret is held in encrypted OAuth grant properties. Project access is checked on every MCP request, including tool discovery. Account deletion, project lifecycle and revocation retain the existing database enforcement. No service-role key or agent-provider credential is required. These requests incur ordinary hosting/auth/storage usage, not model inference.
 
@@ -80,3 +80,7 @@ Backing project tokens remain hash-only in PostgreSQL; their server-side secret 
 `npm test` runs real workerd OAuth/PKCE/consent/refresh and MCP requests against disposable PostgreSQL, using synthetic account-auth responses. It checks browser binding, duplicate consent, wrong-project denial, MFA gating, session isolation, shared tools and revocation. No provider call or real account is used. Browser fixture review and native-client/hosted qualification are separate evidence.
 
 The optional [native plugin](../../plugins/woolgather/README.md) adds the building workflow. The retained [advanced local stdio setup](LOCAL_SETUP.md) is for developer installations that intentionally use project tokens. It is no longer the ordinary connection flow.
+
+## Release qualification
+
+See [the release runbook](RELEASE.md) for native-client evidence, deployment checks, rollout and rollback. `npm run check:mcp -- https://your-woolgather.example` checks the actual origin without signing in or changing data.

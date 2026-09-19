@@ -27,7 +27,10 @@
     "preview": "vite preview --host 127.0.0.1 --port 4200",
     "check:format": "prettier --check apps packages plugins scripts tests .github README.md CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md THIRD_PARTY_NOTICES.md *.json *.jsonc *.ts",
     "deploy:check": "wrangler deploy --dry-run --config dist/web/woolgather/wrangler.json",
-    "check:ui": "node scripts/check-ui.mjs"
+    "check:ui": "node scripts/check-ui.mjs",
+    "check:mcp": "node scripts/check-mcp.mjs",
+    "check:mcp:codex": "node --import tsx scripts/check-mcp-codex.ts",
+    "check:mcp:claude": "node --import tsx scripts/check-mcp-codex.ts --claude"
   },
   "dependencies": {
     "@base-ui/react": "1.8.0",

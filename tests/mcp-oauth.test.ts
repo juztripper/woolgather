@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { Miniflare, convertV4MiniflareOptions } from "miniflare";
-import { build } from "esbuild";
+import type { Miniflare } from "miniflare";
+import { mcpTestRuntime } from "../scripts/mcp-test-runtime";
 import { planningTestDatabase } from "../scripts/planning-test-database";
 import { remoteAgentSetup } from "../apps/web/src/projects/agentSetup";
 import {
@@ -11,6 +11,7 @@ import {
   mcpReturnPath,
 } from "../apps/web/src/account/mcpReturn";
 import { mcpOrigin } from "../apps/api/src/mcpAuthorization";
+import { checkMcp } from "../scripts/check-mcp.mjs";
 
 const origin = "https://woolgather.example";
 test("remote configuration contains only a canonical address and OAuth return paths stay local", () => {
@@ -105,108 +106,28 @@ test(
     const anotherOwner = crypto.randomUUID();
     await db.sql`insert into auth.users(id) values(${anotherOwner})`;
     await db.sql`insert into auth.sessions(id,user_id) values(${anotherOwner},${anotherOwner})`;
-    const bundled = await build({
-      entryPoints: ["apps/api/src/worker.ts"],
-      bundle: true,
-      format: "esm",
-      platform: "browser",
-      conditions: ["workerd", "browser"],
-      external: ["cloudflare:*", "node:*"],
-      write: false,
-    });
     let accountAccess = "ok";
-    const runtime = new Miniflare(
-      convertV4MiniflareOptions({
-        modules: true,
-        script: bundled.outputFiles[0].text,
-        compatibilityDate: "2026-09-06",
-        compatibilityFlags: ["nodejs_compat"],
-        kvNamespaces: ["OAUTH_KV"],
-        durableObjects: {
-          MCP_CONSENTS: { className: "McpConsentState", useSQLite: true },
-          PROJECT_VOICE_SESSIONS: {
-            className: "ProjectVoiceSession",
-            useSQLite: true,
-          },
-        },
-        ratelimits: {
-          MCP_AUTH_LIMITER: {
-            namespace_id: "1001",
-            simple: { limit: 60, period: 60 },
-          },
-        },
-        bindings: {
-          MCP_ENABLED: "true",
-          MCP_ORIGIN: origin,
-          SUPABASE_URL: "https://auth.fixture.invalid",
-          SUPABASE_PUBLISHABLE_KEY: "fixture-public-key",
-          ACCOUNT_ACTION_SECRET: db.secret,
-        },
-        serviceBindings: {
-          ASSETS: () =>
-            new Response("<html>fixture</html>", {
-              headers: { "Content-Type": "text/html" },
-            }),
-        },
-        outboundService: async (request) => {
-          const url = new URL(request.url);
-          assert.equal(
-            url.origin,
-            "https://auth.fixture.invalid",
-            "Unexpected outbound request (no inference permitted)",
-          );
-          const auth = request.headers.get("Authorization");
-          const who =
-            auth === "Bearer owner-session"
-              ? db.owner
-              : auth === "Bearer other-session"
-                ? anotherOwner
-                : null;
-          if (url.pathname === "/auth/v1/user")
-            return who
-              ? Response.json({
-                  id: who,
-                  email: "synthetic@example.com",
-                  is_anonymous: false,
-                  aud: "authenticated",
-                })
-              : Response.json({ error: "invalid JWT" }, { status: 401 });
-          if (url.pathname === "/rest/v1/rpc/account_access")
-            return Response.json(accountAccess);
-          assert.equal(url.pathname, "/rest/v1/rpc/project_delivery_exchange");
-          const args = (await request.json()) as {
-            payload: string;
-            signature: string;
-          };
-          try {
-            const data = await db.sql.begin(async (tx) => {
-              if (who) {
-                await tx`set local role authenticated`;
-                await tx`select set_config('request.jwt.claim.sub',${who},true)`;
-                await tx`select set_config('request.jwt.claims',${JSON.stringify({ session_id: who, aal: "aal1" })},true)`;
-              } else await tx`set local role anon`;
-              return (
-                await tx`select public.project_delivery_exchange(${args.payload},${args.signature}) d`
-              )[0].d;
-            });
-            return Response.json(data);
-          } catch (error) {
-            return Response.json(
-              {
-                code: (error as { code: string }).code,
-                message: (error as Error).message,
-              },
-              { status: 400 },
-            );
-          }
-        },
-      }),
+    const runtime = await mcpTestRuntime(
+      db,
+      origin,
+      anotherOwner,
+      () => accountAccess,
     );
     t.after(() => runtime.dispose());
     const call = (
       path: string,
       init?: Parameters<Miniflare["dispatchFetch"]>[1],
     ) => runtime.dispatchFetch(`${origin}${path}`, init);
+    const deploymentCheck = await checkMcp(origin, async (input) => {
+      const response = await runtime.dispatchFetch(String(input), {
+        redirect: "manual",
+      });
+      return new Response(await response.arrayBuffer(), {
+        status: response.status,
+        headers: Object.fromEntries(response.headers),
+      });
+    });
+    assert.equal(deploymentCheck.discovery, "passed");
     const payload = (body: unknown, extra: Record<string, string> = {}) => ({
       method: "POST",
       headers: { "Content-Type": "application/json", ...extra },
@@ -368,6 +289,32 @@ test(
       .json()) as { redirectTo: string };
     assert.equal(JSON.stringify(approved).includes("wg_"), false);
     const callback = new URL(approved.redirectTo);
+    const recovered = await call(
+      ticket.path,
+      payload({ decision: "allow", projectId: project.id }, owner),
+    );
+    assert.equal(recovered.status, 200);
+    assert.deepEqual(
+      await recovered.json(),
+      approved,
+      "A lost approval response reuses the same grant",
+    );
+    assert.equal(
+      (
+        await call(
+          ticket.path,
+          payload(
+            { decision: "allow", projectId: project.id },
+            { ...owner, Authorization: "Bearer other-session" },
+          ),
+        )
+      ).status,
+      410,
+    );
+    assert.equal(
+      (await call(ticket.path, payload({ decision: "deny" }, owner))).status,
+      410,
+    );
     assert.equal(callback.searchParams.get("state"), "synthetic-state");
     const exchange = new URLSearchParams({
       grant_type: "authorization_code",
@@ -442,6 +389,21 @@ test(
     });
     assert.equal(context.result.isError, undefined, JSON.stringify(context));
     assert.equal(context.result.structuredContent.project.id, project.id);
+    await db.sql`update planning.projects set lifecycle='trashed' where id=${project.id}`;
+    assert.equal(
+      (
+        await call(
+          "/mcp",
+          payload(
+            { jsonrpc: "2.0", id: 1, method: "tools/list" },
+            agentHeaders,
+          ),
+        )
+      ).status,
+      503,
+    );
+    await db.sql`update planning.projects set lifecycle='active' where id=${project.id}`;
+    await rpc("tools/list");
     assert.equal(JSON.stringify(context).includes("wg_"), false);
     const connected = await rpc("tools/call", {
       name: "connect_repository",
@@ -560,6 +522,26 @@ test(
       )[0].n,
       1,
       "Cancel must not create access",
+    );
+    const limitedHeaders = { "CF-Connecting-IP": "203.0.113.25" };
+    let limited: Awaited<ReturnType<typeof call>> | undefined;
+    for (let i = 0; i < 125; i++) {
+      const response = await call("/mcp", { headers: limitedHeaders });
+      await response.body?.cancel();
+      if (response.status === 429) {
+        limited = response;
+        break;
+      }
+    }
+    assert.ok(
+      limited,
+      "Unauthenticated requests are bounded before OAuth storage",
+    );
+    assert.equal(limited.headers.get("retry-after"), "60");
+    assert.equal(
+      (await call("/api/integrations/context", { headers: limitedHeaders }))
+        .status,
+      429,
     );
   },
 );

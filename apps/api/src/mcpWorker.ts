@@ -57,6 +57,27 @@ export async function fetchMcp(
   ctx: ExecutionContext,
 ) {
   const url = new URL(request.url);
+  // Bound remote and legacy capability traffic before OAuth/KV or database work.
+  if (
+    (url.pathname.startsWith("/mcp") ||
+      url.pathname.startsWith("/api/integrations/")) &&
+    env.MCP_API_LIMITER &&
+    !(
+      await env.MCP_API_LIMITER.limit({
+        key: request.headers.get("CF-Connecting-IP") || "local",
+      })
+    ).success
+  ) {
+    const response = mcpJson(
+      {
+        error:
+          "Too many connection requests. Wait a minute and retry with the same command ID and payload.",
+      },
+      429,
+    );
+    response.headers.set("Retry-After", "60");
+    return response;
+  }
   if (url.pathname === "/connect/authorize") {
     const asset = await env.ASSETS.fetch(request);
     const response = new Response(asset.body, asset);
@@ -217,6 +238,17 @@ export async function fetchMcp(
   try {
     return await provider.fetch(request, env, ctx);
   } catch {
+    console.error(
+      JSON.stringify({
+        event: "mcp_request_failed",
+        endpoint:
+          url.pathname === "/mcp"
+            ? "resource"
+            : url.pathname === "/api/mcp/authorization"
+              ? "consent"
+              : "oauth",
+      }),
+    );
     return mcpJson(
       {
         error: "Connection could not be completed. Try again from your agent.",

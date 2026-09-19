@@ -59,6 +59,7 @@ export function mcpSetup(env: McpEnv) {
     origin &&
     env.OAUTH_KV &&
     env.MCP_AUTH_LIMITER &&
+    env.MCP_API_LIMITER &&
     env.MCP_CONSENTS &&
     env.SUPABASE_URL &&
     env.SUPABASE_PUBLISHABLE_KEY &&
@@ -179,6 +180,11 @@ export async function mcpConsent(
     );
   const browserHash = await hashIntegrationToken(browser);
   const ticket = env.MCP_CONSENTS.getByName(id.data);
+  const choice = approval.safeParse(body);
+  if (request.method === "POST" && choice.success) {
+    const completed = await ticket.result(browserHash, ownerId, choice.data);
+    if (completed) return mcpJson(completed);
+  }
   const pending = await ticket.read(browserHash);
   if (!pending)
     return mcpJson(
@@ -205,7 +211,6 @@ export async function mcpConsent(
       redirectHost: new URL(pending.request.redirectUri).host,
       expiresAt: pending.expiresAt,
     });
-  const choice = approval.safeParse(body);
   if (
     !choice.success ||
     (choice.data.decision === "allow" && !choice.data.projectId)
@@ -233,7 +238,9 @@ export async function mcpConsent(
     redirect.searchParams.set("state", pending.request.state);
     if (pending.request.issuer)
       redirect.searchParams.set("iss", pending.request.issuer);
-    return mcpJson({ redirectTo: redirect.href });
+    const result = { redirectTo: redirect.href };
+    await ticket.complete(browserHash, ownerId, choice.data, result);
+    return mcpJson(result);
   }
   const result = await integrationTokens(rpc, env, actor, {
     action: "create",
@@ -263,6 +270,7 @@ export async function mcpConsent(
         expiresAt: token.expiresAt,
       },
     });
+    await ticket.complete(browserHash, ownerId, choice.data, complete);
     return mcpJson(complete);
   } catch {
     // Any issued backing access remains visible/revocable if cleanup cannot be confirmed.

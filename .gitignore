@@ -47,6 +47,10 @@ coverage/
 !/scripts/test-local.mjs
 !/scripts/test-database-bootstrap.mjs
 !/scripts/planning-test-database.ts
+!/scripts/mcp-test-runtime.ts
+!/scripts/check-mcp.mjs
+!/scripts/check-mcp-codex.ts
+!/scripts/check-mcp-claude.ts
 !/scripts/planningMeaningCases.ts
 !/scripts/guidanceCanaryLedger.ts
 !/scripts/guidanceContinuationEvaluation.ts

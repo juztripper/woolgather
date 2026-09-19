@@ -24,6 +24,11 @@
       "namespace_id": "1001",
       "simple": { "limit": 60, "period": 60 },
     },
+    {
+      "name": "MCP_API_LIMITER",
+      "namespace_id": "1002",
+      "simple": { "limit": 120, "period": 60 },
+    },
   ],
   "assets": {
     "directory": "dist/web/client",
@@ -57,5 +62,6 @@
   "observability": {
     "enabled": true,
     "head_sampling_rate": 0.1,
+    "redact_query_string": true,
   },
 }
