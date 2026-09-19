@@ -173,6 +173,12 @@ export const deliveryCommandSchema = z
         .strict(),
       z
         .object({
+          type: z.literal("delete_scope"),
+          scopeId: identifier,
+        })
+        .strict(),
+      z
+        .object({
           type: z.literal("move_scope"),
           scopeId: identifier,
           lane: z.enum(deliveryLanes),
@@ -442,7 +448,11 @@ export function applyDeliveryCommand(
   } else {
     const scope = next.scopes.find((s) => s.id === action.scopeId);
     if (!scope) throw new Error("This version no longer exists.");
-    if (action.type === "move_scope") scope.lane = action.lane;
+    if (action.type === "delete_scope") {
+      next.scopes = next.scopes.filter((s) => s.id !== scope.id);
+      next.reports = next.reports.filter((r) => r.scopeId !== scope.id);
+      next.reviews = next.reviews.filter((r) => r.scopeId !== scope.id);
+    } else if (action.type === "move_scope") scope.lane = action.lane;
     else {
       const requirement = scope.requirements.find(
         (r) => r.id === action.requirementId,

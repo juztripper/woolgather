@@ -133,7 +133,13 @@
   .project-build-scope-heading > div {
     min-width: 0;
   }
-  .project-build-scope-heading > [data-slot="select-trigger"] {
+  .project-build-scope-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+  }
+  .project-build-scope-actions > [data-slot="select-trigger"] {
     width: 112px;
     flex: none;
   }

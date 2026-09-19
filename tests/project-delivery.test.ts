@@ -135,6 +135,62 @@ test("creating a build scope snapshots meaning without editing the plan or its s
     percent: 0,
   });
 });
+test("deleting a version removes only its build records and preserves the plan and other versions", () => {
+  const f = fixture();
+  const originalPlan = structuredClone(f.project);
+  f.connect();
+  f.report();
+  f.review();
+  const otherScopeId = crypto.randomUUID();
+  const otherRequirementId = crypto.randomUUID();
+  f.apply({
+    type: "create_scope",
+    scopeId: otherScopeId,
+    name: "Next release",
+    lane: "next",
+    requirements: [
+      {
+        id: otherRequirementId,
+        thoughtId: f.project.items[0].id,
+        criterion: "Another check",
+      },
+    ],
+  });
+  f.report({ scopeId: otherScopeId, requirementId: otherRequirementId });
+  f.apply({
+    type: "review_requirement",
+    scopeId: otherScopeId,
+    requirementId: otherRequirementId,
+    verified: true,
+    note: "Checked",
+  });
+  const before = structuredClone(f.state());
+  const action = { type: "delete_scope" as const, scopeId: f.scopeId };
+  assert.throws(() => f.apply(action, "agent"), /only link/);
+  const after = f.apply(action);
+  assert.equal(after.revision, before.revision + 1);
+  assert.deepEqual(
+    after.scopes,
+    before.scopes.filter((s) => s.id === otherScopeId),
+  );
+  assert.deepEqual(
+    after.reports,
+    before.reports.filter((r) => r.scopeId === otherScopeId),
+  );
+  assert.deepEqual(
+    after.reviews,
+    before.reviews.filter((r) => r.scopeId === otherScopeId),
+  );
+  assert.deepEqual(after.repository, before.repository);
+  assert.deepEqual(f.project, originalPlan);
+  assert.throws(() => f.report(), /no longer exists/);
+  assert.throws(() => f.review(), /no longer exists/);
+  assert.throws(() => f.apply(action), /no longer exists/);
+  f.apply({ type: "delete_scope", scopeId: otherScopeId });
+  assert.deepEqual(f.state().scopes, []);
+  assert.deepEqual(f.state().reports, []);
+  assert.deepEqual(f.state().reviews, []);
+});
 test("agent claims and passing claimed checks never self-verify a requirement", () => {
   const f = fixture();
   f.connect();

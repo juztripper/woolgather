@@ -1,5 +1,13 @@
 import { useContext, useEffect, useRef, useState, type ReactNode } from "react";
-import { ArrowLeft, Check, Link2, Plus, RefreshCw } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  Link2,
+  MoreHorizontal,
+  Plus,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 import type { Project } from "../../../../packages/domain/src";
 import {
   eligibleBuildThoughts,
@@ -10,6 +18,12 @@ import {
   type DeliveryState,
 } from "../../../../packages/domain/src/projectDelivery";
 import { Input } from "../components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
 import { Disclosure } from "../ui/Disclosure";
 import { Button, IconButton } from "../ui/Button";
 import { Select } from "../ui/Select";
@@ -99,6 +113,10 @@ export function ProjectBuild({
       Object.keys(restoredDraft(draftKey).criteria).length > 0,
   );
   const [confirmDiscard, setConfirmDiscard] = useState(false);
+  const [deleting, setDeleting] = useState<{
+    scope: BuildScope;
+    revision: number;
+  } | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [comparedRevision, setComparedRevision] = useState<number | null>(null);
   const [syncInterrupted, setSyncInterrupted] = useState(false);
@@ -217,13 +235,17 @@ export function ProjectBuild({
         clearDraft(draftKey);
         restoreCreateFocus.current = true;
       }
+      if (command.action.type === "delete_scope")
+        restoreCreateFocus.current = true;
       // The idempotent receipt may be older than other agent reports. Read the
       // current version without turning a successful save into an uncertain one.
       setAttempt((value) => value + 1);
       notify(
         command.action.type === "create_scope"
           ? "Version saved"
-          : "Build progress saved",
+          : command.action.type === "delete_scope"
+            ? "Version deleted"
+            : "Build progress saved",
       );
     } catch (failure) {
       setError(message(failure));
@@ -368,7 +390,9 @@ export function ProjectBuild({
               <p>
                 {pending.conflict
                   ? "Build progress changed in another window or agent. Refresh and review the saved version below before applying your change."
-                  : "A save has not been confirmed. Retry the same change to check its result without duplicating it."}
+                  : pending.command.action.type === "delete_scope"
+                    ? "Deletion has not been confirmed. Retry to check whether the version was deleted."
+                    : "A save has not been confirmed. Retry the same change to check its result without duplicating it."}
               </p>
               <div className="project-build-actions">
                 <Button
@@ -379,10 +403,19 @@ export function ProjectBuild({
                       : void send(pending.command)
                   }
                 >
-                  {pending.conflict ? "Reload saved progress" : "Retry save"}
+                  {pending.conflict
+                    ? "Reload saved progress"
+                    : pending.command.action.type === "delete_scope"
+                      ? "Retry deletion"
+                      : "Retry save"}
                 </Button>
                 {pending.conflict && delivery && (
                   <Button
+                    variant={
+                      pending.command.action.type === "delete_scope"
+                        ? "danger"
+                        : "secondary"
+                    }
                     disabled={
                       busy || loading || comparedRevision !== delivery.revision
                     }
@@ -394,7 +427,9 @@ export function ProjectBuild({
                       })
                     }
                   >
-                    Apply to revision {delivery.revision}
+                    {pending.command.action.type === "delete_scope"
+                      ? "Delete updated version"
+                      : `Apply to revision ${delivery.revision}`}
                   </Button>
                 )}
                 {pending.conflict && (
@@ -552,6 +587,9 @@ export function ProjectBuild({
                         project={project}
                         disabled={!editable}
                         onAction={act}
+                        onDelete={() =>
+                          setDeleting({ scope, revision: delivery.revision })
+                        }
                       />
                     ))}
                   </section>
@@ -569,6 +607,44 @@ export function ProjectBuild({
           )}
         </div>
       </div>
+      <ModalPresence>
+        {deleting && (
+          <Modal
+            title="Delete version?"
+            confirmation
+            onClose={() => setDeleting(null)}
+            footer={
+              <>
+                <Button onClick={() => setDeleting(null)}>Cancel</Button>
+                <Button
+                  variant="danger"
+                  disabled={!editable}
+                  onClick={() => {
+                    void send({
+                      id: crypto.randomUUID(),
+                      projectId: project.id,
+                      expectedRevision: deleting.revision,
+                      action: {
+                        type: "delete_scope",
+                        scopeId: deleting.scope.id,
+                      },
+                    });
+                    setDeleting(null);
+                  }}
+                >
+                  Delete version
+                </Button>
+              </>
+            }
+          >
+            <p>
+              Delete “{deleting.scope.name}” and its build progress, reports and
+              reviews? This cannot be undone. Your Plan and repository code stay
+              unchanged.
+            </p>
+          </Modal>
+        )}
+      </ModalPresence>
       <ModalPresence>
         {confirmDiscard && (
           <Modal
@@ -600,12 +676,14 @@ function Scope({
   project,
   disabled,
   onAction,
+  onDelete,
 }: {
   scope: BuildScope;
   delivery: DeliveryState;
   project: Project;
   disabled: boolean;
   onAction: (action: DeliveryCommand["action"]) => void;
+  onDelete: () => void;
 }) {
   const [filter, setFilter] = useState<BuildStatus | "all">("all");
   return (
@@ -614,19 +692,42 @@ function Scope({
         <div>
           <h3>{scope.name}</h3>
         </div>
-        <Select
-          label={`Roadmap for ${scope.name}`}
-          value={scope.lane}
-          options={lanes}
-          disabled={disabled}
-          onValueChange={(lane) =>
-            onAction({
-              type: "move_scope",
-              scopeId: scope.id,
-              lane: lane as Lane,
-            })
-          }
-        />
+        <div className="project-build-scope-actions">
+          <Select
+            label={`Roadmap for ${scope.name}`}
+            value={scope.lane}
+            options={lanes}
+            disabled={disabled}
+            onValueChange={(lane) =>
+              onAction({
+                type: "move_scope",
+                scopeId: scope.id,
+                lane: lane as Lane,
+              })
+            }
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <IconButton
+                  aria-label={`Version options for ${scope.name}`}
+                  disabled={disabled}
+                />
+              }
+            >
+              <MoreHorizontal />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                variant="destructive"
+                disabled={disabled}
+                onClick={onDelete}
+              >
+                <Trash2 /> Delete version
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <BuildProgress
         scope={scope}

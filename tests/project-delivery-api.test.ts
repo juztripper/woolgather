@@ -469,6 +469,95 @@ test("connected building persists independently and enforces its database capabi
       },
     );
     await t.test(
+      "version deletion persists, deduplicates retries and rejects stale agent reports",
+      async () => {
+        const before = structuredClone(state);
+        const command = {
+          id: id(),
+          projectId: project.id,
+          expectedRevision: state.revision,
+          action: { type: "delete_scope", scopeId },
+        };
+        assert.equal(
+          (await writeDelivery(anonymous, env, agent, command)).status,
+          403,
+        );
+        const forbidden = JSON.stringify({
+          ...agent,
+          operation: "read",
+          command,
+          expiresAt: Math.floor(Date.now() / 1000) + 60,
+        });
+        assert.equal(
+          (
+            await anonymous("project_delivery_exchange", {
+              payload: forbidden,
+              signature: await signDelivery(db.secret, forbidden),
+            })
+          ).error?.code,
+          "42501",
+        );
+        assert.equal(
+          (
+            await writeDelivery(rpc, env, actor, {
+              ...command,
+              expectedRevision: state.revision - 1,
+            })
+          ).status,
+          409,
+        );
+        assert.deepEqual(
+          await (await readDelivery(rpc, env, actor)).json(),
+          before,
+        );
+        const response = await writeDelivery(rpc, env, actor, command);
+        assert.equal(response.status, 200);
+        state = (await response.json()) as DeliveryState;
+        assert.equal(state.revision, before.revision + 1);
+        assert.deepEqual(state.scopes, []);
+        assert.deepEqual(state.reports, []);
+        assert.deepEqual(state.reviews, []);
+        assert.deepEqual(state.repository, before.repository);
+        assert.deepEqual(
+          await (await readDelivery(rpc, env, actor)).json(),
+          state,
+        );
+        assert.deepEqual(
+          await (await writeDelivery(rpc, env, actor, command)).json(),
+          state,
+        );
+        // Retrying the original creation must never resurrect a deleted version.
+        assert.deepEqual(
+          await (await writeDelivery(rpc, env, actor, create)).json(),
+          state,
+        );
+        const context = (await (
+          await readDelivery(anonymous, env, agent)
+        ).json()) as { delivery: DeliveryState; project: { revision: number } };
+        assert.deepEqual(context.delivery.scopes, []);
+        assert.equal(context.project.revision, project.revision);
+        assert.equal(
+          (
+            await writeDelivery(anonymous, env, agent, {
+              id: id(),
+              projectId: project.id,
+              expectedRevision: state.revision,
+              action: {
+                type: "report_outcome",
+                scopeId,
+                requirementId,
+                state: "implemented",
+                summary: "Late report",
+                commit: "",
+                checks: [],
+              },
+            })
+          ).status,
+          422,
+        );
+      },
+    );
+    await t.test(
       "direct DB mutation and forged signed requests are denied",
       async () => {
         await assert.rejects(
