@@ -15,6 +15,7 @@ Use Node.js 24, npm 11 or newer, and local PostgreSQL tools.
 
 ```bash
 npm ci
+npm ci --prefix packages/agent-connector --ignore-scripts
 cp .dev.vars.example .dev.vars
 npm run dev
 ```

@@ -137,10 +137,7 @@ export function Modal({
         </div>
         {footer && (
           <DialogFooter
-            className={cn(
-              "shrink-0",
-              layout === "settings" && "m-0 border-t px-5 py-3",
-            )}
+            className={cn("shrink-0", layout === "settings" && "m-0 px-5 py-3")}
           >
             {footer}
           </DialogFooter>

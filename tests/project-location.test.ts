@@ -26,6 +26,27 @@ test("project entry is independent of the previously opened chat; explicit chat 
   assert.equal(readProjectLocation("?view=unknown").view, "home");
 });
 
+test("Build opens independently of a conversation and returns to the project without starting a chat", () => {
+  const build = projectViewPath(
+    "project",
+    "build",
+    "?chat=specialist&view=flow&review=isolated",
+  );
+  assert.equal(build, "/projects/project?view=build&review=isolated");
+  assert.deepEqual(readProjectLocation(build.split("?")[1]), {
+    view: "build",
+    conversationId: "main",
+  });
+  assert.equal(
+    projectViewPath("project", "home", "?view=build"),
+    "/projects/project",
+  );
+  assert.equal(
+    projectChatPath("project", "specialist", "?view=build"),
+    "/projects/project?chat=specialist",
+  );
+});
+
 test("project and chat destinations survive reopen and keep secondary views separate", () => {
   const chat = projectChatPath("project", "main", "?view=home&review=isolated");
   assert.equal(chat, "/projects/project?review=isolated&chat=main");

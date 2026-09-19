@@ -11,6 +11,7 @@ const projectViews = new Set([
   "removed",
   "source",
   "references",
+  "build",
 ]);
 
 /** Bare project links open its collections; explicit conversation/Plan links keep their destination. */
@@ -41,6 +42,9 @@ export function projectViewPath(projectId: string, view: string, search = "") {
   if (view === "home") {
     params.delete("chat");
     params.delete("view");
+  } else if (view === "build") {
+    params.delete("chat");
+    params.set("view", "build");
   } else if (view === "overview") {
     params.delete("view");
     if (!params.has("chat")) params.set("chat", "main");

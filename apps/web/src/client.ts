@@ -1,4 +1,5 @@
 import { readPlanningStream } from "./projects/readPlanningStream";
+import { rememberMcpReturn, consumeMcpReturn } from "./account/mcpReturn";
 import type { PlanningLiveEvent } from "../../../packages/domain/src/planningStream";
 import { captureDeletionLink } from "./account/deletion";
 import { finishSignInHistory } from "./signInHistory";
@@ -41,6 +42,7 @@ export function connect() {
   return (connection ||= initialize());
 }
 async function initialize() {
+  rememberMcpReturn(new URL(window.location.href));
   const response = await fetch("/api/config");
   const config = (await response.json()) as { url: string; key: string };
   if (!config.url || !config.key)
@@ -59,7 +61,7 @@ async function initialize() {
   signInNotice = callback.notice;
   if (callback.handled) {
     if (!callback.notice) clearAccountRedirect();
-    window.history.replaceState(null, "", "/recent");
+    window.history.replaceState(null, "", consumeMcpReturn() || "/recent");
   }
   return auth;
 }

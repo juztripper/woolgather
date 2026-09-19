@@ -88,6 +88,7 @@ import {
   ChevronDown,
   CornerDownLeft,
   FileText,
+  Hammer,
   LoaderCircle,
   MessageCircle,
   MoreHorizontal,
@@ -129,6 +130,7 @@ import { makeCommand } from "../client";
 import { ProjectTransport } from "./ProjectTransport";
 import { ProjectVoice } from "./ProjectVoice";
 import { ProjectWorkspace } from "./ProjectWorkspace";
+import { ProjectBuild } from "./ProjectBuild";
 import { ProjectItemEditor } from "./ProjectItemEditor";
 import { ProjectText } from "./ProjectText";
 import { PlanningMap, visualConcepts } from "./PlanningMap";
@@ -149,7 +151,7 @@ type Props = {
   onStartHandled?: () => void;
   onView: (view: string) => void;
   onBack: () => void;
-  onSaved: (project: Project) => void;
+  onSaved: (project: Project, quiet?: boolean) => void;
   onSettings: () => void;
 };
 type PlanningReply = {
@@ -336,12 +338,29 @@ export function ProjectStudio(props: Props) {
       props.onView("home");
     });
   };
-  const secondaryViews = ["source", "references", "history", "removed"];
+  const secondaryViews = [
+    "source",
+    "references",
+    "history",
+    "removed",
+    "build",
+  ];
   const navigateView = (next: string) => {
     if (secondaryViews.includes(next) || secondaryViews.includes(props.view)) {
       transitionView(() => props.onView(next));
     } else props.onView(next);
   };
+  if (props.view === "build")
+    return (
+      <ProjectBuild
+        key={`${props.owner}:${props.project.id}`}
+        project={props.project}
+        owner={props.owner}
+        onSaved={props.onSaved}
+        navigation={props.navigation}
+        onBack={() => navigateView("home")}
+      />
+    );
   if (secondaryViews.includes(props.view))
     return <ProjectWorkspace {...props} onView={navigateView} secondary />;
   return (
@@ -2413,6 +2432,15 @@ function ThinkingWorkspace({
           </div>
         </div>
         <div className="thinking-toolbar-tools">
+          {home && (
+            <Button
+              variant="primary"
+              disabled={busy || voiceActive || uploading}
+              onClick={() => onView("build")}
+            >
+              <Hammer /> Build
+            </Button>
+          )}
           <Button
             ref={planTrigger}
             variant="quiet"

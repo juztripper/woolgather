@@ -34,6 +34,34 @@ export type VisualConcept = {
   proposal?: PlanningProposal;
   item?: Item;
 };
+
+export function bodyStartsWithTitleAtWordBoundary(
+  title: string,
+  body: string,
+): boolean {
+  const normalizedTitle = title.trim();
+  const normalizedBody = body.trim();
+  if (!normalizedTitle || !normalizedBody.startsWith(normalizedTitle)) {
+    return false;
+  }
+  const nextCharacter = Array.from(
+    normalizedBody.slice(normalizedTitle.length),
+  )[0];
+  return (
+    nextCharacter === undefined || !/[\p{L}\p{M}\p{N}_]/u.test(nextCharacter)
+  );
+}
+
+export function planRowTitle(title: string, body: string): string {
+  const normalizedTitle = title.trim();
+  const normalizedBody = body.trim();
+  if (!bodyStartsWithTitleAtWordBoundary(normalizedTitle, normalizedBody))
+    return title;
+  return normalizedBody === normalizedTitle
+    ? title
+    : `${normalizedTitle.replace(/\s+\S*$/, "")}…`;
+}
+
 export function visualConcepts(project: Project): VisualConcept[] {
   const active: VisualConcept[] = project.items
     .filter((i) => !i.removed)
@@ -64,6 +92,10 @@ function ThoughtCard({
   onOpen: (id: string) => void;
   count?: number;
 }) {
+  const bodyStartsWithTitle = bodyStartsWithTitleAtWordBoundary(
+    concept.title,
+    concept.body,
+  );
   return (
     <Button
       variant="quiet"
@@ -95,13 +127,9 @@ function ThoughtCard({
                 : ""}
         </span>
         <span className="plan-row-title">
-          {concept.body.trim().startsWith(concept.title.trim())
-            ? concept.body.trim() === concept.title.trim()
-              ? concept.title
-              : `${concept.title.trim().replace(/\s+\S*$/, "")}…`
-            : concept.title}
+          {planRowTitle(concept.title, concept.body)}
         </span>
-        {!concept.body.trim().startsWith(concept.title.trim()) && (
+        {!bodyStartsWithTitle && (
           <span className="plan-row-summary">{concept.body}</span>
         )}
         {count > 0 && (

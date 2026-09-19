@@ -1,0 +1,183 @@
+@layer theme, base, components, utilities;
+
+@layer components {
+  .modal.wide.project-agent-dialog {
+    height: auto;
+  }
+  .project-agent-content {
+    display: grid;
+    gap: 20px;
+    min-width: 0;
+  }
+  .project-agent-content p {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+  .project-agent-intro {
+    color: var(--muted-foreground);
+    max-width: 60ch;
+  }
+  .project-agent-choices {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding-block: 4px;
+  }
+  .project-agent-choice {
+    height: auto;
+    min-height: 72px;
+    justify-content: flex-start;
+    text-align: left;
+    white-space: normal;
+    gap: 12px;
+  }
+  .project-agent-choice > img,
+  .project-agent-choice > svg:first-child {
+    width: 28px;
+    height: 28px;
+    flex: none;
+    object-fit: contain;
+  }
+  .project-agent-choice > span {
+    display: grid;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+  }
+  /* Match the mark inside Codex's circle while retaining the same logo column. */
+  .project-agent-logo[data-agent="claude"],
+  .project-agent-logo[data-agent="cursor"] {
+    box-sizing: border-box;
+    padding: 5px;
+  }
+  .project-agent-choice small {
+    font-size: var(--text-caption);
+    font-weight: var(--weight-regular);
+    color: var(--muted-foreground);
+  }
+  .project-agent-selected {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .project-agent-selected > img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+  }
+  .project-agent-step {
+    display: grid;
+    justify-items: start;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    min-width: 0;
+  }
+  .project-agent-step h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--text-body);
+    font-weight: var(--weight-medium);
+  }
+  .project-agent-step h3 > span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: var(--text-caption);
+  }
+  .project-agent-step > label {
+    width: 100%;
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+  }
+  .project-agent-step .project-build-token-form,
+  .project-agent-step .project-build-secret {
+    width: 100%;
+  }
+  .project-agent-command {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    min-width: 0;
+  }
+  .project-agent-command > pre {
+    flex: 1;
+  }
+  .project-agent-content pre {
+    margin: 0;
+    max-width: 100%;
+    min-width: 0;
+    padding: 12px;
+    background: var(--muted);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    font-size: var(--text-caption);
+  }
+  .project-agent-content code {
+    overflow-wrap: anywhere;
+  }
+  .project-agent-environment {
+    margin: 0;
+    display: grid;
+    gap: 8px;
+    font-size: var(--text-caption);
+    width: 100%;
+  }
+  .project-agent-environment > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .project-agent-environment dt {
+    font-family: var(--font-mono);
+  }
+  .project-agent-environment dd {
+    margin: 0;
+    color: var(--muted-foreground);
+    overflow-wrap: anywhere;
+    text-align: right;
+  }
+  .project-agent-manual {
+    display: grid;
+    gap: 12px;
+    padding-top: 12px;
+  }
+  .project-agent-step > .ui-disclosure {
+    width: 100%;
+    min-width: 0;
+  }
+  .project-agent-content > .ui-disclosure {
+    margin: 0;
+  }
+  @media (max-width: 600px) {
+    .project-agent-command {
+      flex-direction: column;
+    }
+    .project-agent-command > pre {
+      width: 100%;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .project-agent-choices {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .project-agent-environment > div {
+      flex-direction: column;
+      gap: 4px;
+    }
+    .project-agent-environment dd {
+      text-align: left;
+    }
+  }
+}

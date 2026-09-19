@@ -319,6 +319,10 @@
       stroke-dashoffset: 0;
     }
   }
+  html[data-motion="reduce"] .loading-symbol-ink {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
   .sidebar {
     /* Fixed elements establish a stacking context; lift the entire navigation
      above dashboard cards so its account menu also receives pointer events. */
@@ -2015,4 +2019,16 @@
   .reasoning-slider * {
     transition: none !important;
   }
+}
+html[data-motion="reduce"] .reasoning-slider,
+html[data-motion="reduce"] .reasoning-slider * {
+  transition: none !important;
+}
+html[data-motion="reduce"] [data-sonner-toaster],
+html[data-motion="reduce"] [data-sonner-toast],
+html[data-motion="reduce"] [data-sonner-toast] > *,
+html[data-motion="reduce"] .sonner-loading-bar,
+html[data-motion="reduce"] .sonner-loader {
+  transition: none !important;
+  animation: none !important;
 }

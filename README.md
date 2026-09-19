@@ -37,6 +37,7 @@ The public application is available at **[woolgathering.app](https://woolgatheri
 - **Conversation-first Projects** — persistent chats with independent drafts and deliberate project context.
 - **Inspectable planning** — keep, revise, connect, or reject proposed changes instead of silently rewriting intent.
 - **Agents and Sources** — bring focused perspectives and private reference material into a project when useful.
+- **Connected building** — select a version from your plan, organize Now/Next/Later, and track agent-reported implementation alongside owner-verified completion.
 - **Recovery by design** — optimistic concurrency, idempotent commands, retry receipts, and explicit conflict handling.
 - **Local-first development** — the complete automated suite runs without paid model calls.
 - **Accessible interaction** — keyboard navigation, reduced-motion support, responsive layouts, and restrained focus treatment.
@@ -76,6 +77,9 @@ apps/
   api/                 Cloudflare Worker and Durable Objects
 packages/
   domain/              Shared domain contracts and exports
+  agent-connector/     Local MCP bridge for your existing coding agent
+plugins/
+  woolgather/          Codex and Claude Code plugin metadata and guidance
 supabase/
   migrations/          Canonical schema and security policies
   functions/           Private attachment transport
@@ -100,6 +104,7 @@ Internal product documents, research, provider traces, launch material, recordin
 git clone https://github.com/juztripper/woolgather.git
 cd woolgather
 npm ci
+npm ci --prefix packages/agent-connector --ignore-scripts
 cp .dev.vars.example .dev.vars
 npm run dev
 ```
@@ -107,6 +112,14 @@ npm run dev
 Open [http://localhost:4200](http://localhost:4200). Configure the Supabase URL and publishable key in `.dev.vars`; never place service-role keys or provider secrets in browser-visible configuration.
 
 AI assistance, voice, allowances, and billing all fail closed. Their example flags are `false`, and ordinary local development requires no paid provider call.
+
+## Connect your coding agent
+
+Open a project’s **Build** view, select the thoughts and completion criteria for a version, and create a project connection. The [agent connector guide](packages/agent-connector/README.md) covers installation, client setup, permissions, and the evidence workflow.
+
+Coding runs in your existing agent using your own account or provider configuration. woolgather supplies project context and records progress; the connector does not call a model, run shell commands, or charge build inference. Agent reports and checks remain inspectable evidence. You decide when a requirement is verified, and changed requirements need rechecking.
+
+This first increment supports a local MCP connector and project-scoped tokens. Starting an agent directly from the web app, importing repositories, and hosted OAuth connections are future work. Apply the included migration and deploy the matching API/web changes before using these features on a hosted instance.
 
 ## Checks
 

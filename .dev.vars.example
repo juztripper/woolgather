@@ -5,6 +5,10 @@ SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 RESEND_API_KEY=
 ACCOUNT_ACTION_SECRET=
 
+# Account-based coding-agent connections. Use the same canonical origin as the app.
+MCP_ENABLED=false
+MCP_ORIGIN=http://127.0.0.1:4200
+
 # AI features fail closed unless their flag and required secrets are configured.
 IDEA_GUIDANCE_ENABLED=false
 IDEA_GUIDANCE_MODEL=gpt-5.6-sol

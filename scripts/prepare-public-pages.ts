@@ -85,6 +85,7 @@ await writeFile(
   [
     "/auth/*",
     "/account/*",
+    "/connect/*",
     "/projects/*",
     "/ideas/*",
     "/folders/*",

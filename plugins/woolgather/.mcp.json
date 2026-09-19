@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "woolgather": {
+      "type": "http",
+      "url": "https://woolgathering.app/mcp"
+    }
+  }
+}

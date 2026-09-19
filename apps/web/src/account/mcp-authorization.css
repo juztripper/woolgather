@@ -1,0 +1,28 @@
+@layer components {
+  .mcp-authorization {
+    overflow-wrap: anywhere;
+  }
+  .mcp-project-choice {
+    display: grid;
+    gap: 8px;
+    margin-block: 20px;
+  }
+  .mcp-authorization ul {
+    padding-left: 20px;
+    margin-block: 20px;
+  }
+  .mcp-authorization li + li {
+    margin-top: 8px;
+  }
+  .mcp-authorization-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .mcp-authorization .mcp-account,
+  .mcp-authorization .mcp-return-host {
+    font-size: var(--text-caption);
+    color: var(--muted-foreground);
+  }
+}
