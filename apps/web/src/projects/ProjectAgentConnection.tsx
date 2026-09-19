@@ -211,11 +211,20 @@ export function AgentConnection({
                   {codingAgents.map((entry) => (
                     <Button
                       key={entry.value}
-                      className="project-agent-choice h-auto justify-start whitespace-normal p-4 text-left"
+                      className="project-agent-choice h-auto justify-start rounded-xl whitespace-normal px-4 py-3 text-left"
                       disabled={busy}
                       onClick={() => setCodingAgent(entry.value)}
                     >
-                      {entry.logo ? <img src={entry.logo} alt="" /> : <Plug />}
+                      {entry.logo ? (
+                        <img
+                          className="project-agent-logo"
+                          data-agent={entry.value}
+                          src={entry.logo}
+                          alt=""
+                        />
+                      ) : (
+                        <Plug className="size-7" />
+                      )}
                       <span>
                         {entry.label}
                         <small>
@@ -239,7 +248,14 @@ export function AgentConnection({
                     >
                       <ArrowLeft /> All agents
                     </Button>
-                    {agent.logo && <img src={agent.logo} alt="" />}
+                    {agent.logo && (
+                      <img
+                        className="project-agent-logo"
+                        data-agent={agent.value}
+                        src={agent.logo}
+                        alt=""
+                      />
+                    )}
                   </div>
                   <section
                     className="project-agent-step"

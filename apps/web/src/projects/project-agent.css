@@ -25,8 +25,7 @@
   }
   .project-agent-choice {
     height: auto;
-    min-height: 88px;
-    padding: 16px;
+    min-height: 72px;
     justify-content: flex-start;
     text-align: left;
     white-space: normal;
@@ -44,6 +43,12 @@
     gap: 4px;
     flex: 1;
     min-width: 0;
+  }
+  /* Match the mark inside Codex's circle while retaining the same logo column. */
+  .project-agent-logo[data-agent="claude"],
+  .project-agent-logo[data-agent="cursor"] {
+    box-sizing: border-box;
+    padding: 5px;
   }
   .project-agent-choice small {
     font-size: var(--text-caption);
@@ -158,9 +163,6 @@
   @media (max-width: 600px) {
     .project-agent-choices {
       grid-template-columns: minmax(0, 1fr);
-    }
-    .project-agent-choice {
-      min-height: 72px;
     }
     .project-agent-environment > div {
       flex-direction: column;

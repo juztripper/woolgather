@@ -1,5 +1,5 @@
 export const codingAgents = [
-  { value: "claude", label: "Claude Code", logo: "/brand/claude.png" },
+  { value: "claude", label: "Claude Code", logo: "/brand/claude.svg" },
   { value: "codex", label: "Codex", logo: "/brand/openai.png" },
   { value: "cursor", label: "Cursor", logo: "/brand/cursor.svg" },
   { value: "other", label: "Other", logo: null },

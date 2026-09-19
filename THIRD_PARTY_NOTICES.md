@@ -24,7 +24,7 @@ The font files and their complete notices remain together in `apps/web/public/fo
 
 Google and GitHub marks in `apps/web/public/brand/` are used only to identify their respective sign-in actions. They remain trademarks of their owners and are subject to the applicable brand guidelines. The woolgather license grants no rights to those marks.
 
-Claude, OpenAI and Cursor marks in the same directory identify their respective coding-agent connection options. These marks remain the property of Anthropic, OpenAI and Anysphere; their inclusion does not imply endorsement, and the woolgather software license grants no rights to them. Assets originate from the official [Claude Code documentation](https://code.claude.com/docs/), [OpenAI documentation](https://learn.chatgpt.com/favicon.png) and [Cursor website](https://cursor.com/marketing-static/favicon-light.svg).
+Claude, OpenAI and Cursor marks in the same directory identify their respective coding-agent connection options. These marks remain the property of Anthropic, OpenAI and Anysphere; their inclusion does not imply endorsement, and the woolgather software license grants no rights to them. The transparent Claude and Cursor vectors come from [Simple Icons](https://github.com/simple-icons/simple-icons), distributed under CC0-1.0; the complete notice is at `apps/web/public/notices/simple-icons-CC0.txt`. The OpenAI mark comes from the [official OpenAI documentation](https://learn.chatgpt.com/favicon.png).
 
 ## woolgather identity and artwork
 
