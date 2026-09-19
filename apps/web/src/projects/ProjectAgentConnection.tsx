@@ -223,7 +223,7 @@ export function AgentConnection({
                           alt=""
                         />
                       ) : (
-                        <Plug className="size-7" />
+                        <Plug className="size-7 p-1" />
                       )}
                       <span>
                         {entry.label}
